@@ -101,20 +101,20 @@ export class AVMasterGame {
                     this.audioSystem.initializeOnUserInteraction();
                     this.showLevelSelect();
                 });
-                
+
                 // Add mouse events for debugging
                 startGameBtn.addEventListener('mouseenter', () => {
                     console.log('🖱️ Mouse entered start-game-btn');
                 });
-                
+
                 startGameBtn.addEventListener('mouseleave', () => {
                     console.log('🖱️ Mouse left start-game-btn');
                 });
-                
+
                 startGameBtn.addEventListener('mousedown', () => {
                     console.log('🖱️ Mouse down on start-game-btn');
                 });
-                
+
                 startGameBtn.addEventListener('mouseup', () => {
                     console.log('🖱️ Mouse up on start-game-btn');
                 });
@@ -158,12 +158,20 @@ export class AVMasterGame {
             console.log('setupEventListeners() - Setting up level select events...');
             // Level select events
             document.addEventListener('click', (e) => {
+                console.log('🌐 Document click detected on:', e.target.tagName, e.target.className);
                 if (e.target.closest('.level-card')) {
                     const levelCard = e.target.closest('.level-card');
                     const levelId = levelCard.dataset.level;
+                    console.log('🎯 Level card clicked:', levelId);
+                    console.log('🔍 Unlocked levels:', this.gameState.unlockedLevels);
                     if (levelId && this.gameState.unlockedLevels.includes(levelId)) {
+                        console.log('✅ Level is unlocked, selecting:', levelId);
                         this.selectLevel(levelId);
+                    } else {
+                        console.log('❌ Level is locked or invalid:', levelId);
                     }
+                } else {
+                    console.log('❌ Click was not on a level card');
                 }
             });
             console.log('✓ level-card click event listener added');
@@ -376,6 +384,9 @@ export class AVMasterGame {
                     console.log(`Level card not found for: ${levelId}`);
                     return;
                 }
+                
+                console.log(`🔍 Found level card for: ${levelId}`);
+                console.log(`🔍 Level card element:`, levelCard);
 
                 const isUnlocked = this.gameState.unlockedLevels.includes(levelId);
                 const isCompleted = this.gameState.completedLevels.includes(levelId);
@@ -416,9 +427,16 @@ export class AVMasterGame {
      * Select a level to play
      */
     selectLevel(levelId) {
+        console.log('🎯 selectLevel() called with:', levelId);
+        console.log('🔍 Unlocked levels:', this.gameState.unlockedLevels);
+        console.log('🔍 Completed levels:', this.gameState.completedLevels);
+        
         // Allow access to both unlocked and completed levels
         if (this.gameState.unlockedLevels.includes(levelId) || this.gameState.completedLevels.includes(levelId)) {
+            console.log('✅ Level is accessible, loading:', levelId);
             this.loadLevel(levelId);
+        } else {
+            console.log('❌ Level is not accessible:', levelId);
         }
     }
 
