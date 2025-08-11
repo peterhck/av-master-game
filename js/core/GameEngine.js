@@ -193,7 +193,18 @@ export class AVMasterGame {
             });
             console.log('✓ keydown event listener added');
 
-            console.log('setupEventListeners() - Setting up detailed hint button...');
+            console.log('setupEventListeners() - Setting up hint buttons...');
+            // Hint button
+            const hintBtn = document.getElementById('hint');
+            if (hintBtn) {
+                hintBtn.addEventListener('click', () => {
+                    this.showHint();
+                });
+                console.log('✓ hint event listener added');
+            } else {
+                console.log('⚠ hint button not found');
+            }
+
             // Detailed hint button
             const detailedHintBtn = document.getElementById('detailed-hint');
             if (detailedHintBtn) {
@@ -934,7 +945,7 @@ export class AVMasterGame {
     updateAllConnectorsOnEquipment(equipment) {
         const connectors = equipment.querySelectorAll('.connector');
         console.log(`🔧 Found ${connectors.length} connectors on ${equipment.dataset.name}`);
-        
+
         connectors.forEach((connector, index) => {
             // Ensure each connector has proper pointer-events
             connector.style.pointerEvents = 'auto';
@@ -1420,7 +1431,7 @@ export class AVMasterGame {
         if (!levelData) return;
 
         const hint = this.generateHint(levelData);
-        this.showMessage(hint, 'hint');
+        this.showHintPopup(hint);
     }
 
     /**
@@ -1431,7 +1442,7 @@ export class AVMasterGame {
         if (!levelData) return;
 
         const hint = this.generateDetailedHint(levelData);
-        this.showMessage(hint, 'detailed-hint');
+        this.showHintPopup(hint, true);
 
         // Deduct points for using detailed hint
         this.gameState.score = Math.max(0, this.gameState.score - 50);
@@ -1439,32 +1450,152 @@ export class AVMasterGame {
     }
 
     /**
+     * Show hint popup
+     */
+    showHintPopup(message, isDetailed = false) {
+        const popup = document.createElement('div');
+        popup.className = 'hint-popup';
+        popup.innerHTML = `
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h3>${isDetailed ? 'Detailed Hint' : 'Hint'}</h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="popup-body">
+                    <p>${message}</p>
+                    ${isDetailed ? '<p class="hint-cost">Cost: 50 points</p>' : ''}
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        // Close popup
+        popup.querySelector('.close-btn').addEventListener('click', () => {
+            document.body.removeChild(popup);
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                document.body.removeChild(popup);
+            }
+        });
+
+        // Close on Escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                document.body.removeChild(popup);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    /**
      * Generate hint
      */
     generateHint(levelData) {
         const required = calculateRequiredConnections(levelData);
-        const missing = [];
+        const hints = [];
 
+        // Check each connection type
         Object.entries(required).forEach(([type, count]) => {
             const current = this.connectionProgress[type].current;
             if (current < count) {
-                missing.push(`${count - current} ${type.toUpperCase()} connections`);
+                const missing = count - current;
+                switch (type) {
+                    case 'power':
+                        hints.push(`🔌 You need ${missing} more power connection${missing > 1 ? 's' : ''}. Connect equipment to power sources.`);
+                        break;
+                    case 'xlr':
+                        hints.push(`🎤 You need ${missing} more XLR connection${missing > 1 ? 's' : ''}. Connect audio equipment with XLR cables.`);
+                        break;
+                    case 'wireless':
+                        hints.push(`📡 You need ${missing} more wireless connection${missing > 1 ? 's' : ''}. Connect wireless equipment.`);
+                        break;
+                    case 'ethernet':
+                        hints.push(`🌐 You need ${missing} more Ethernet connection${missing > 1 ? 's' : ''}. Connect network equipment.`);
+                        break;
+                    case 'dmx':
+                        hints.push(`💡 You need ${missing} more DMX connection${missing > 1 ? 's' : ''}. Connect lighting equipment.`);
+                        break;
+                    case 'hdmi':
+                        hints.push(`📺 You need ${missing} more HDMI connection${missing > 1 ? 's' : ''}. Connect video equipment.`);
+                        break;
+                }
             }
         });
 
-        if (missing.length === 0) {
-            return "All connections are complete! Great job!";
+        // Level-specific hints
+        if (this.currentLevel === 'audio-1') {
+            hints.push(`🎵 Level 1: Connect wireless mics → receivers → mixer → speakers`);
+        } else if (this.currentLevel === 'audio-2') {
+            hints.push(`🎵 Level 2: Connect XLR mics → mixer → effects processor → speakers`);
+        } else if (this.currentLevel === 'audio-3') {
+            hints.push(`🎵 Level 3: Connect mics + playback → mixer → wireless monitoring + multi-zone speakers`);
         }
 
-        return `You still need: ${missing.join(', ')}`;
+        return hints.length > 0 ? hints.join('\n\n') : '🎉 All connections look good! Try testing the system.';
     }
 
     /**
      * Generate detailed hint
      */
     generateDetailedHint(levelData) {
-        // This would contain more specific guidance
-        return "Check the equipment connectors and make sure you're using the correct cable types for each connection.";
+        const required = calculateRequiredConnections(levelData);
+        const detailedHints = [];
+
+        // Check each connection type with specific guidance
+        Object.entries(required).forEach(([type, count]) => {
+            const current = this.connectionProgress[type].current;
+            if (current < count) {
+                const missing = count - current;
+                switch (type) {
+                    case 'power':
+                        detailedHints.push(`🔌 **POWER CONNECTIONS MISSING: ${missing}**`);
+                        detailedHints.push(`Required: ${count} | Current: ${current}`);
+                        detailedHints.push(`Connect power distribution outputs to equipment power inputs.`);
+                        break;
+                    case 'xlr':
+                        detailedHints.push(`🎤 **XLR CONNECTIONS MISSING: ${missing}**`);
+                        detailedHints.push(`Required: ${count} | Current: ${current}`);
+                        if (this.currentLevel === 'audio-1') {
+                            detailedHints.push(`Connect mic receivers to mixer inputs, then mixer outputs to speakers.`);
+                        } else if (this.currentLevel === 'audio-2') {
+                            detailedHints.push(`Connect XLR mics to mixer inputs, mixer to effects processor, effects to speakers.`);
+                        } else {
+                            detailedHints.push(`Connect audio equipment using XLR cables for high-quality signal transmission.`);
+                        }
+                        break;
+                    case 'wireless':
+                        detailedHints.push(`📡 **WIRELESS CONNECTIONS MISSING: ${missing}**`);
+                        detailedHints.push(`Required: ${count} | Current: ${current}`);
+                        detailedHints.push(`Connect wireless mics to mic receivers using wireless cables.`);
+                        break;
+                    case 'ethernet':
+                        detailedHints.push(`🌐 **ETHERNET CONNECTIONS MISSING: ${missing}**`);
+                        detailedHints.push(`Required: ${count} | Current: ${current}`);
+                        detailedHints.push(`Connect network equipment using Ethernet cables.`);
+                        break;
+                    case 'dmx':
+                        detailedHints.push(`💡 **DMX CONNECTIONS MISSING: ${missing}**`);
+                        detailedHints.push(`Required: ${count} | Current: ${current}`);
+                        detailedHints.push(`Connect lighting equipment using DMX cables.`);
+                        break;
+                    case 'hdmi':
+                        detailedHints.push(`📺 **HDMI CONNECTIONS MISSING: ${missing}**`);
+                        detailedHints.push(`Required: ${count} | Current: ${current}`);
+                        detailedHints.push(`Connect video equipment using HDMI cables.`);
+                        break;
+                }
+            }
+        });
+
+        if (detailedHints.length === 0) {
+            return "🎉 **ALL CONNECTIONS COMPLETE!** The system should be ready to test.";
+        }
+
+        return detailedHints.join('\n\n');
     }
 
     /**
