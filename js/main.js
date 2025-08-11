@@ -143,6 +143,13 @@ async function initializeGame() {
             console.log('❌ Test button not found');
         }
 
+        // Step 8: Add global click handler for debugging
+        console.log('\n🌐 Step 8: Adding global click handler...');
+        document.addEventListener('click', (e) => {
+            console.log('🌐 Global click detected on:', e.target.tagName, e.target.id, e.target.className);
+        });
+        console.log('✅ Global click handler added');
+
         console.log('\n🎉 AV Master Game - Initialization completed successfully!');
         return true;
 
