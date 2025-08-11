@@ -128,27 +128,9 @@ async function initializeGame() {
         window.game = game;
         console.log('✅ Step 6 complete: Game made globally accessible');
 
-        // Step 7: Test button clickability
-        console.log('\n🧪 Step 7: Testing button clickability...');
-        const testBtn = document.getElementById('start-game-btn');
-        if (testBtn) {
-            console.log('🔍 Adding test click listener to start-game-btn');
-            testBtn.addEventListener('click', (e) => {
-                console.log('🧪 TEST CLICK DETECTED!');
-                e.preventDefault();
-                e.stopPropagation();
-            });
-            console.log('✅ Test click listener added');
-        } else {
-            console.log('❌ Test button not found');
-        }
-
-        // Step 8: Add global click handler for debugging
-        console.log('\n🌐 Step 8: Adding global click handler...');
-        document.addEventListener('click', (e) => {
-            console.log('🌐 Global click detected on:', e.target.tagName, e.target.id, e.target.className);
-        });
-        console.log('✅ Global click handler added');
+        // Step 7: Cleanup debugging
+        console.log('\n🧹 Step 7: Cleaning up debugging...');
+        console.log('✅ Debugging cleanup complete');
 
         console.log('\n🎉 AV Master Game - Initialization completed successfully!');
         return true;
