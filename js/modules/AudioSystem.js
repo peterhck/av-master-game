@@ -9,7 +9,7 @@ export class AudioSystem {
         this.audioSource = null;
         this.isAudioActive = false;
         this.audioAnimationFrame = null;
-        
+
         this.initAudio();
     }
 
@@ -112,7 +112,7 @@ export class AudioSystem {
         speakers.forEach(speaker => {
             const scale = 1 + (audioLevel * 0.2); // Scale up to 20% based on audio level
             speaker.style.transform = `scale(${scale})`;
-            
+
             // Add glow effect based on audio level
             const glowIntensity = audioLevel * 50;
             speaker.style.boxShadow = `0 0 ${glowIntensity}px rgba(0, 255, 136, ${audioLevel})`;

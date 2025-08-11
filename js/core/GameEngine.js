@@ -3,9 +3,9 @@
 
 import { AudioSystem } from '../modules/AudioSystem.js';
 import { getLevelData, LEVEL_ORDER } from '../data/LevelData.js';
-import { 
-    getConnectorColor, 
-    calculateRequiredConnections, 
+import {
+    getConnectorColor,
+    calculateRequiredConnections,
     getEquipmentInfo,
     saveToStorage,
     loadFromStorage,
@@ -57,7 +57,7 @@ export class AVMasterGame {
         this.loadGameState();
         this.setupEventListeners();
         this.showLoadingScreen();
-        
+
         // Simulate loading time
         setTimeout(() => {
             this.showMainMenu();
@@ -538,9 +538,9 @@ export class AVMasterGame {
      * Validate and create connection
      */
     validateAndCreateConnection(from, to, cableType, levelData) {
-        const validConnection = levelData.validConnections.find(conn => 
-            conn.from === from.connector.dataset.type && 
-            conn.to === to.connector.dataset.type && 
+        const validConnection = levelData.validConnections.find(conn =>
+            conn.from === from.connector.dataset.type &&
+            conn.to === to.connector.dataset.type &&
             conn.cable === cableType
         );
 
@@ -571,7 +571,7 @@ export class AVMasterGame {
         // Create the connection line immediately
         const fromCoords = this.getConnectorCoordinates(from.connector);
         const toCoords = this.getConnectorCoordinates(to.connector);
-        
+
         if (fromCoords && toCoords) {
             connectionData.line = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, getConnectorColor(from.connector.dataset.type));
             connectionData.fromCoords = fromCoords;
@@ -593,7 +593,7 @@ export class AVMasterGame {
     createInvalidConnection(from, to, cableType) {
         const fromCoords = this.getConnectorCoordinates(from.connector);
         const toCoords = this.getConnectorCoordinates(to.connector);
-        
+
         if (fromCoords && toCoords) {
             this.drawConnectionLineWithCoordinates(fromCoords, toCoords, '#ff0000');
         }
@@ -668,7 +668,7 @@ export class AVMasterGame {
         if (!levelData) return;
 
         const required = calculateRequiredConnections(levelData);
-        
+
         this.connectionProgress.power.required = required.power;
         this.connectionProgress.xlr.required = required.xlr;
         this.connectionProgress.wireless.required = required.wireless;
@@ -715,7 +715,7 @@ export class AVMasterGame {
      * Check if level is complete
      */
     checkLevelCompletion() {
-        const allComplete = Object.values(this.connectionProgress).every(progress => 
+        const allComplete = Object.values(this.connectionProgress).every(progress =>
             progress.current >= progress.required
         );
 
@@ -760,7 +760,7 @@ export class AVMasterGame {
      */
     showWinnerCelebration() {
         this.audioSystem.playVictorySound();
-        
+
         const celebration = document.createElement('div');
         celebration.className = 'winner-celebration';
         celebration.innerHTML = `
@@ -803,7 +803,7 @@ export class AVMasterGame {
      */
     showEquipmentInfo(equipmentType, equipmentName) {
         const info = getEquipmentInfo(equipmentType, equipmentName);
-        
+
         const popup = document.createElement('div');
         popup.className = 'equipment-info-popup';
         popup.innerHTML = `
@@ -890,7 +890,7 @@ export class AVMasterGame {
 
         const hint = this.generateDetailedHint(levelData);
         this.showMessage(hint, 'detailed-hint');
-        
+
         // Deduct points for using detailed hint
         this.gameState.score = Math.max(0, this.gameState.score - 50);
         this.updatePlayerStats();
@@ -969,7 +969,7 @@ export class AVMasterGame {
             if (connection.line && connection.from && connection.to) {
                 const fromCoords = this.getConnectorCoordinates(connection.from.connector);
                 const toCoords = this.getConnectorCoordinates(connection.to.connector);
-                
+
                 if (fromCoords && toCoords) {
                     this.updateConnectionLinePosition(connection.line, fromCoords, toCoords);
                 }
