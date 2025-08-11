@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="menu-buttons">
-                    <button id="start-game" class="menu-btn primary">
+                    <button id="start-game-btn" class="menu-btn primary">
                         <i class="fas fa-play"></i>
                         Start New Game
                     </button>
@@ -48,11 +48,11 @@
                         <i class="fas fa-undo"></i>
                         Continue
                     </button>
-                    <button id="tutorial" class="menu-btn secondary">
+                    <button id="tutorial-btn" class="menu-btn secondary">
                         <i class="fas fa-graduation-cap"></i>
                         Tutorial
                     </button>
-                    <button id="settings" class="menu-btn secondary">
+                    <button id="settings-btn" class="menu-btn secondary">
                         <i class="fas fa-cog"></i>
                         Settings
                     </button>
@@ -61,7 +61,15 @@
                 <div class="player-stats">
                     <div class="stat">
                         <i class="fas fa-star"></i>
-                        <span id="total-score">0</span>
+                        <span id="player-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-heart"></i>
+                        <span id="player-lives">3</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span id="player-time">00:00</span>
                     </div>
                     <div class="stat">
                         <i class="fas fa-trophy"></i>
@@ -81,7 +89,7 @@
                 <h2>Choose Your Challenge</h2>
             </div>
 
-            <div class="level-grid">
+            <div id="level-container" class="level-grid">
                 <div class="level-category">
                     <h3><i class="fas fa-volume-up"></i> Audio Systems</h3>
                     <div class="level-cards">
@@ -254,6 +262,9 @@
                         <span id="dmx-connections">0/0</span>
                     </div>
                 </div>
+                <div id="connection-progress" class="connection-progress">
+                    <!-- Connection progress will be dynamically generated -->
+                </div>
             </div>
 
             <div class="game-workspace">
@@ -268,6 +279,13 @@
                         <h4>Equipment</h4>
                         <div class="equipment-tools" id="equipment-tools">
                             <!-- Equipment tools will be dynamically generated -->
+                        </div>
+                    </div>
+
+                    <div class="tool-section">
+                        <h4>Connections</h4>
+                        <div class="connection-tools" id="connection-tools">
+                            <!-- Connection tools will be dynamically generated -->
                         </div>
                     </div>
 
