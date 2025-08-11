@@ -125,9 +125,18 @@ export class AVMasterGame {
      * Show level select screen
      */
     showLevelSelect() {
-        this.switchScreen('level-select');
-        this.currentScreen = 'level-select';
-        this.updateLevelStatus();
+        try {
+            console.log('Showing level select screen...');
+            this.switchScreen('level-select');
+            this.currentScreen = 'level-select';
+            
+            // Add a small delay to ensure the screen is visible before updating
+            setTimeout(() => {
+                this.updateLevelStatus();
+            }, 100);
+        } catch (error) {
+            console.error('Error showing level select:', error);
+        }
     }
 
     /**
@@ -163,39 +172,50 @@ export class AVMasterGame {
      * Update level status display
      */
     updateLevelStatus() {
-        // Update existing level cards instead of replacing content
-        LEVEL_ORDER.forEach(levelId => {
-            const levelCard = document.querySelector(`[data-level="${levelId}"]`);
-            if (!levelCard) return;
-
-            const isUnlocked = this.gameState.unlockedLevels.includes(levelId);
-            const isCompleted = this.gameState.completedLevels.includes(levelId);
-
-            // Update level status
-            const levelStatus = levelCard.querySelector('.level-status');
-            if (levelStatus) {
-                levelStatus.className = 'level-status';
-                if (isCompleted) {
-                    levelStatus.classList.add('completed');
-                    levelStatus.innerHTML = '<i class="fas fa-check"></i>';
-                } else if (!isUnlocked) {
-                    levelStatus.classList.add('locked');
-                    levelStatus.innerHTML = '<i class="fas fa-lock"></i>';
-                } else {
-                    levelStatus.classList.add('unlocked');
-                    levelStatus.innerHTML = '<i class="fas fa-play"></i>';
+        try {
+            console.log('Updating level status...');
+            
+            // Update existing level cards instead of replacing content
+            LEVEL_ORDER.forEach(levelId => {
+                const levelCard = document.querySelector(`[data-level="${levelId}"]`);
+                if (!levelCard) {
+                    console.log(`Level card not found for: ${levelId}`);
+                    return;
                 }
-            }
 
-            // Add click event if unlocked
-            if (isUnlocked) {
-                levelCard.style.cursor = 'pointer';
-                levelCard.addEventListener('click', () => this.selectLevel(levelId));
-            } else {
-                levelCard.style.cursor = 'not-allowed';
-                levelCard.removeEventListener('click', () => this.selectLevel(levelId));
-            }
-        });
+                const isUnlocked = this.gameState.unlockedLevels.includes(levelId);
+                const isCompleted = this.gameState.completedLevels.includes(levelId);
+
+                // Update level status
+                const levelStatus = levelCard.querySelector('.level-status');
+                if (levelStatus) {
+                    levelStatus.className = 'level-status';
+                    if (isCompleted) {
+                        levelStatus.classList.add('completed');
+                        levelStatus.innerHTML = '<i class="fas fa-check"></i>';
+                    } else if (!isUnlocked) {
+                        levelStatus.classList.add('locked');
+                        levelStatus.innerHTML = '<i class="fas fa-lock"></i>';
+                    } else {
+                        levelStatus.classList.add('unlocked');
+                        levelStatus.innerHTML = '<i class="fas fa-play"></i>';
+                    }
+                }
+
+                // Add click event if unlocked
+                if (isUnlocked) {
+                    levelCard.style.cursor = 'pointer';
+                    levelCard.addEventListener('click', () => this.selectLevel(levelId));
+                } else {
+                    levelCard.style.cursor = 'not-allowed';
+                    levelCard.removeEventListener('click', () => this.selectLevel(levelId));
+                }
+            });
+            
+            console.log('Level status update completed');
+        } catch (error) {
+            console.error('Error updating level status:', error);
+        }
     }
 
     /**
