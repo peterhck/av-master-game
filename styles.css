@@ -242,6 +242,7 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 2rem;
     overflow-y: auto;
+    border: 5px solid red !important;
 }
 
 .level-header {
@@ -382,6 +383,7 @@ body {
     background: #1a1a2e;
     color: white;
     height: 100%;
+    border: 5px solid blue !important;
 }
 
 .game-header {
