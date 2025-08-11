@@ -878,7 +878,7 @@ export class AVMasterGame {
      */
     updateConnectorVisualState(connector) {
         // Count how many connections this connector has
-        const connectionCount = this.connections.filter(conn => 
+        const connectionCount = this.connections.filter(conn =>
             conn.from.connector === connector || conn.to.connector === connector
         ).length;
 
@@ -903,7 +903,7 @@ export class AVMasterGame {
             countDisplay.className = 'connection-count';
             connector.appendChild(countDisplay);
         }
-        
+
         if (countDisplay) {
             countDisplay.textContent = connectionCount;
         }
@@ -959,6 +959,11 @@ export class AVMasterGame {
                 const cableType = option.dataset.type;
                 this.validateAndCreateConnection(from, to, cableType, levelData);
                 document.body.removeChild(dialog);
+                
+                // Reset connection mode after any connection attempt (valid or invalid)
+                this.connectionMode = false;
+                this.selectedConnector = null;
+                this.resetConnectorStates();
             });
         });
 
@@ -966,6 +971,11 @@ export class AVMasterGame {
         dialog.addEventListener('click', (e) => {
             if (e.target === dialog) {
                 document.body.removeChild(dialog);
+                
+                // Reset connection mode when dialog is closed without selection
+                this.connectionMode = false;
+                this.selectedConnector = null;
+                this.resetConnectorStates();
             }
         });
     }
@@ -1035,7 +1045,14 @@ export class AVMasterGame {
         const toCoords = this.getConnectorCoordinates(to.connector);
 
         if (fromCoords && toCoords) {
-            this.drawConnectionLineWithCoordinates(fromCoords, toCoords, '#ff0000');
+            const invalidLine = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, '#ff0000');
+            
+            // Remove the invalid connection line after 2 seconds
+            setTimeout(() => {
+                if (invalidLine && invalidLine.parentNode) {
+                    invalidLine.parentNode.removeChild(invalidLine);
+                }
+            }, 2000);
         }
 
         this.showMessage('Invalid connection! Check your cable type and connector compatibility.', 'error');
