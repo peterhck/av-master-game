@@ -185,12 +185,15 @@ body {
     gap: 0.5rem;
     min-width: 250px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1000;
 }
 
 .menu-btn.primary {
     background: linear-gradient(45deg, #00ff88, #00ccff);
     color: white;
     box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+    border: 3px solid red !important;
 }
 
 .menu-btn.secondary {
