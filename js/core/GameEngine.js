@@ -840,16 +840,6 @@ export class AVMasterGame {
      * Handle connector click
      */
     handleConnectorClick(connector, equipment) {
-        // Check if this connector is already connected
-        const isAlreadyConnected = this.connections.some(conn =>
-            (conn.from.connector === connector || conn.to.connector === connector)
-        );
-
-        if (isAlreadyConnected) {
-            console.log('🔌 Connector already connected, ignoring click');
-            return;
-        }
-
         if (this.connectionMode && this.selectedConnector) {
             // Don't allow connecting to the same connector
             if (this.selectedConnector.connector === connector) {
@@ -881,6 +871,42 @@ export class AVMasterGame {
         document.querySelectorAll('.connector').forEach(connector => {
             connector.classList.remove('selected');
         });
+    }
+
+    /**
+     * Update connector visual state based on connection count
+     */
+    updateConnectorVisualState(connector) {
+        // Count how many connections this connector has
+        const connectionCount = this.connections.filter(conn => 
+            conn.from.connector === connector || conn.to.connector === connector
+        ).length;
+
+        // Remove existing connection count classes
+        connector.classList.remove('connected-1', 'connected-2', 'connected-3', 'connected-many');
+
+        // Add appropriate class based on connection count
+        if (connectionCount === 1) {
+            connector.classList.add('connected-1');
+        } else if (connectionCount === 2) {
+            connector.classList.add('connected-2');
+        } else if (connectionCount === 3) {
+            connector.classList.add('connected-3');
+        } else if (connectionCount > 3) {
+            connector.classList.add('connected-many');
+        }
+
+        // Update connection count display if it exists
+        let countDisplay = connector.querySelector('.connection-count');
+        if (!countDisplay && connectionCount > 1) {
+            countDisplay = document.createElement('div');
+            countDisplay.className = 'connection-count';
+            connector.appendChild(countDisplay);
+        }
+        
+        if (countDisplay) {
+            countDisplay.textContent = connectionCount;
+        }
     }
 
     /**
@@ -988,13 +1014,13 @@ export class AVMasterGame {
             connectionData.toCoords = toCoords;
         }
 
-        // Mark connectors as connected
-        from.connector.classList.add('connected');
-        to.connector.classList.add('connected');
-
         // Apply animation
         this.applyConnectionAnimation(from.equipment, validConnection.animation);
         this.applyConnectionAnimation(to.equipment, validConnection.animation);
+
+        // Update connector visual state to show connection count
+        this.updateConnectorVisualState(from.connector);
+        this.updateConnectorVisualState(to.connector);
 
         // Update progress
         this.updateConnectionProgress();

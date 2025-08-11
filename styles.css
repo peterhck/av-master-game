@@ -1181,15 +1181,43 @@ body {
     box-shadow: 0 0 15px rgba(0, 204, 255, 0.8);
 }
 
-.connector.connected {
-    opacity: 0.6;
-    pointer-events: none;
+/* Connection count visual feedback */
+.connector.connected-1 .connector-dot {
+    border-color: #00ff88 !important;
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.6) !important;
 }
 
-.connector.connected .connector-dot {
-    background-color: #666 !important;
-    border-color: #999 !important;
-    box-shadow: 0 0 5px rgba(102, 102, 102, 0.5) !important;
+.connector.connected-2 .connector-dot {
+    border-color: #00ccff !important;
+    box-shadow: 0 0 10px rgba(0, 204, 255, 0.7) !important;
+}
+
+.connector.connected-3 .connector-dot {
+    border-color: #ffa502 !important;
+    box-shadow: 0 0 12px rgba(255, 165, 2, 0.8) !important;
+}
+
+.connector.connected-many .connector-dot {
+    border-color: #ff4757 !important;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.9) !important;
+}
+
+/* Connection count display */
+.connection-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4757;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 100;
 }
 
 /* Connector type colors */
