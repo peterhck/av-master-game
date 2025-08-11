@@ -56,20 +56,24 @@ export class AVMasterGame {
      */
     init() {
         try {
-            console.log('GameEngine.init() - Step 1: Loading game state...');
+            console.log('GameEngine.init() - Step 1: Clearing all screens...');
+            this.clearAllScreens();
+            console.log('✓ All screens cleared');
+
+            console.log('GameEngine.init() - Step 2: Loading game state...');
             this.loadGameState();
             console.log('✓ Game state loaded');
 
-            console.log('GameEngine.init() - Step 2: Setting up event listeners...');
+            console.log('GameEngine.init() - Step 3: Setting up event listeners...');
             this.setupEventListeners();
             console.log('✓ Event listeners set up');
 
-            console.log('GameEngine.init() - Step 3: Showing loading screen...');
+            console.log('GameEngine.init() - Step 4: Showing loading screen...');
             this.showLoadingScreen();
             console.log('✓ Loading screen shown');
 
             // Simulate loading time with progress updates
-            console.log('GameEngine.init() - Step 4: Starting loading sequence...');
+            console.log('GameEngine.init() - Step 5: Starting loading sequence...');
             this.startLoadingSequence();
             console.log('✓ Loading sequence started');
 
@@ -326,9 +330,14 @@ export class AVMasterGame {
             this.switchScreen('level-select');
             this.currentScreen = 'level-select';
 
+            // Verify screen switching worked
+            this.verifyScreenState('level-select');
+
             // Add a small delay to ensure the screen is visible before updating
             setTimeout(() => {
                 this.updateLevelStatus();
+                // Verify level cards are accessible
+                this.verifyLevelCardsAccessible();
             }, 100);
         } catch (error) {
             console.error('Error showing level select:', error);
@@ -336,15 +345,107 @@ export class AVMasterGame {
     }
 
     /**
+     * Clear all screens to ensure clean state
+     */
+    clearAllScreens() {
+        try {
+            console.log('clearAllScreens() - Clearing all screen states...');
+            
+            // Remove all active classes and set display to none
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+                screen.style.display = 'none';
+                screen.style.zIndex = '1';
+                console.log(`🔍 Cleared screen: ${screen.id}`);
+            });
+            
+            // Verify no screens are active
+            const activeScreens = document.querySelectorAll('.screen.active');
+            if (activeScreens.length > 0) {
+                console.warn(`⚠️ Warning: ${activeScreens.length} screens still active after clear:`, 
+                    Array.from(activeScreens).map(s => s.id));
+            } else {
+                console.log('✅ All screens cleared successfully');
+            }
+        } catch (error) {
+            console.error('❌ Error in clearAllScreens():', error);
+        }
+    }
+
+    /**
+     * Verify screen state is correct
+     */
+    verifyScreenState(expectedScreenId) {
+        try {
+            const activeScreens = document.querySelectorAll('.screen.active');
+            console.log(`🔍 Screen state verification:`);
+            console.log(`  Expected active screen: ${expectedScreenId}`);
+            console.log(`  Currently active screens:`, Array.from(activeScreens).map(s => s.id));
+            
+            if (activeScreens.length === 0) {
+                console.error(`❌ No screens are active!`);
+                return false;
+            } else if (activeScreens.length > 1) {
+                console.error(`❌ Multiple screens active:`, Array.from(activeScreens).map(s => s.id));
+                return false;
+            } else if (activeScreens[0].id !== expectedScreenId) {
+                console.error(`❌ Wrong screen active. Expected: ${expectedScreenId}, Got: ${activeScreens[0].id}`);
+                return false;
+            } else {
+                console.log(`✅ Screen state correct - ${expectedScreenId} is active`);
+                return true;
+            }
+        } catch (error) {
+            console.error('❌ Error in verifyScreenState():', error);
+            return false;
+        }
+    }
+
+    /**
+     * Verify level cards are accessible
+     */
+    verifyLevelCardsAccessible() {
+        try {
+            const levelCards = document.querySelectorAll('.level-card');
+            console.log(`🔍 Level cards accessibility check:`);
+            console.log(`  Total level cards found: ${levelCards.length}`);
+            
+            levelCards.forEach((card, index) => {
+                const levelId = card.dataset.level;
+                const isUnlocked = this.gameState.unlockedLevels.includes(levelId);
+                const computedStyle = window.getComputedStyle(card);
+                
+                console.log(`  Card ${index + 1} (${levelId}):`);
+                console.log(`    - Unlocked: ${isUnlocked}`);
+                console.log(`    - Display: ${computedStyle.display}`);
+                console.log(`    - Visibility: ${computedStyle.visibility}`);
+                console.log(`    - Z-index: ${computedStyle.zIndex}`);
+                console.log(`    - Cursor: ${computedStyle.cursor}`);
+                console.log(`    - Pointer-events: ${computedStyle.pointerEvents}`);
+            });
+        } catch (error) {
+            console.error('❌ Error in verifyLevelCardsAccessible():', error);
+        }
+    }
+
+    /**
      * Switch between screens
      */
-    switchScreen(screenId) {
+        switchScreen(screenId) {
         try {
             console.log(`switchScreen() - Switching to: ${screenId}`);
 
-            // Hide all screens by removing active class
+            // First, check if there are multiple active screens (this shouldn't happen)
+            const currentlyActive = document.querySelectorAll('.screen.active');
+            if (currentlyActive.length > 1) {
+                console.warn(`⚠️ Multiple active screens detected:`, Array.from(currentlyActive).map(s => s.id));
+            }
+
+            // Hide all screens by removing active class and setting display to none
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
+                screen.style.display = 'none';
+                screen.style.zIndex = '1';
                 console.log(`🔍 Hidden screen: ${screen.id}`);
             });
 
@@ -352,11 +453,21 @@ export class AVMasterGame {
             const targetScreen = document.getElementById(screenId);
             if (targetScreen) {
                 targetScreen.classList.add('active');
+                targetScreen.style.display = 'flex';
+                targetScreen.style.zIndex = '10';
                 console.log(`✓ Screen ${screenId} activated`);
                 
                 // Debug: Check which screens are currently active
                 const activeScreens = document.querySelectorAll('.screen.active');
                 console.log(`🔍 Active screens after switch:`, Array.from(activeScreens).map(s => s.id));
+                
+                // Verify only one screen is active
+                if (activeScreens.length !== 1) {
+                    console.error(`❌ Screen switching failed - ${activeScreens.length} screens are active!`);
+                    console.error(`Active screens:`, Array.from(activeScreens).map(s => s.id));
+                } else {
+                    console.log(`✅ Screen switching successful - only ${screenId} is active`);
+                }
             } else {
                 console.error(`❌ Screen ${screenId} not found`);
             }
@@ -418,19 +529,19 @@ export class AVMasterGame {
                     }
                 }
 
-                            // Add click event if unlocked
-            if (isUnlocked) {
-                levelCard.style.cursor = 'pointer';
-                // Remove any existing click listeners to prevent duplicates
-                levelCard.removeEventListener('click', () => this.selectLevel(levelId));
-                levelCard.addEventListener('click', () => {
-                    console.log('🎯 Level card clicked directly:', levelId);
-                    this.selectLevel(levelId);
-                });
-            } else {
-                levelCard.style.cursor = 'not-allowed';
-                levelCard.removeEventListener('click', () => this.selectLevel(levelId));
-            }
+                // Add click event if unlocked
+                if (isUnlocked) {
+                    levelCard.style.cursor = 'pointer';
+                    // Remove any existing click listeners to prevent duplicates
+                    levelCard.removeEventListener('click', () => this.selectLevel(levelId));
+                    levelCard.addEventListener('click', () => {
+                        console.log('🎯 Level card clicked directly:', levelId);
+                        this.selectLevel(levelId);
+                    });
+                } else {
+                    levelCard.style.cursor = 'not-allowed';
+                    levelCard.removeEventListener('click', () => this.selectLevel(levelId));
+                }
             });
 
             console.log('Level status update completed');
