@@ -84,9 +84,12 @@ export class AVMasterGame {
 
         // Level select events
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('level-btn')) {
-                const levelId = e.target.dataset.level;
-                this.selectLevel(levelId);
+            if (e.target.closest('.level-card')) {
+                const levelCard = e.target.closest('.level-card');
+                const levelId = levelCard.dataset.level;
+                if (levelId && this.gameState.unlockedLevels.includes(levelId)) {
+                    this.selectLevel(levelId);
+                }
             }
         });
 
@@ -160,37 +163,38 @@ export class AVMasterGame {
      * Update level status display
      */
     updateLevelStatus() {
-        const levelContainer = document.getElementById('level-container');
-        if (!levelContainer) return;
-
-        levelContainer.innerHTML = '';
-
+        // Update existing level cards instead of replacing content
         LEVEL_ORDER.forEach(levelId => {
-            const levelData = getLevelData(levelId);
-            if (!levelData) return;
-
-            const levelBtn = document.createElement('div');
-            levelBtn.className = 'level-btn';
-            levelBtn.dataset.level = levelId;
+            const levelCard = document.querySelector(`[data-level="${levelId}"]`);
+            if (!levelCard) return;
 
             const isUnlocked = this.gameState.unlockedLevels.includes(levelId);
             const isCompleted = this.gameState.completedLevels.includes(levelId);
 
-            levelBtn.classList.add(levelData.category);
-            if (isCompleted) levelBtn.classList.add('completed');
-            if (!isUnlocked) levelBtn.classList.add('locked');
-
-            levelBtn.innerHTML = `
-                <h3>${levelData.title}</h3>
-                <p>${levelData.description}</p>
-                <div class="level-difficulty ${levelData.difficulty}">${levelData.difficulty}</div>
-            `;
-
-            if (isUnlocked) {
-                levelBtn.addEventListener('click', () => this.selectLevel(levelId));
+            // Update level status
+            const levelStatus = levelCard.querySelector('.level-status');
+            if (levelStatus) {
+                levelStatus.className = 'level-status';
+                if (isCompleted) {
+                    levelStatus.classList.add('completed');
+                    levelStatus.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (!isUnlocked) {
+                    levelStatus.classList.add('locked');
+                    levelStatus.innerHTML = '<i class="fas fa-lock"></i>';
+                } else {
+                    levelStatus.classList.add('unlocked');
+                    levelStatus.innerHTML = '<i class="fas fa-play"></i>';
+                }
             }
 
-            levelContainer.appendChild(levelBtn);
+            // Add click event if unlocked
+            if (isUnlocked) {
+                levelCard.style.cursor = 'pointer';
+                levelCard.addEventListener('click', () => this.selectLevel(levelId));
+            } else {
+                levelCard.style.cursor = 'not-allowed';
+                levelCard.removeEventListener('click', () => this.selectLevel(levelId));
+            }
         });
     }
 
