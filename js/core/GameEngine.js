@@ -933,14 +933,16 @@ export class AVMasterGame {
      */
     updateAllConnectorsOnEquipment(equipment) {
         const connectors = equipment.querySelectorAll('.connector');
-        connectors.forEach(connector => {
+        console.log(`🔧 Found ${connectors.length} connectors on ${equipment.dataset.name}`);
+        
+        connectors.forEach((connector, index) => {
             // Ensure each connector has proper pointer-events
             connector.style.pointerEvents = 'auto';
 
             // Remove any potentially problematic classes that might interfere
             connector.classList.remove('disabled', 'inactive');
 
-            console.log(`🔧 Ensuring connector ${connector.dataset.type} on ${equipment.dataset.name} is clickable`);
+            console.log(`🔧 Connector ${index + 1}: ${connector.dataset.type} - pointer-events: ${connector.style.pointerEvents}`);
         });
     }
 
@@ -948,11 +950,14 @@ export class AVMasterGame {
      * Refresh all connectors on all equipment to ensure they remain clickable
      */
     refreshAllConnectors() {
-        this.equipment.forEach(equipmentData => {
+        console.log(`🔄 Refreshing connectors on ${this.equipment.length} equipment pieces...`);
+        this.equipment.forEach((equipmentData, index) => {
             if (equipmentData.element) {
+                console.log(`🔧 Refreshing equipment ${index + 1}: ${equipmentData.name}`);
                 this.updateAllConnectorsOnEquipment(equipmentData.element);
             }
         });
+        console.log('✅ All equipment connectors refreshed');
     }
 
     /**
@@ -1035,10 +1040,10 @@ export class AVMasterGame {
             to: to.connector.dataset.type,
             cableType: cableType
         });
-        
+
         console.log('🔍 From connector element:', from.connector);
         console.log('🔍 To connector element:', to.connector);
-        
+
         console.log('🔍 Available valid connections:', levelData.validConnections);
 
         // Check for valid connection in both directions
@@ -1098,10 +1103,12 @@ export class AVMasterGame {
         this.applyConnectionAnimation(to.equipment, validConnection.animation);
 
         // Update connector visual state to show connection count
+        console.log('🎨 Updating visual state for connected connectors...');
         this.updateConnectorVisualState(from.connector);
         this.updateConnectorVisualState(to.connector);
 
         // Update ALL connectors on both equipment to ensure they remain clickable
+        console.log('🔧 Ensuring all connectors remain clickable...');
         this.updateAllConnectorsOnEquipment(from.equipment);
         this.updateAllConnectorsOnEquipment(to.equipment);
 
@@ -1110,7 +1117,9 @@ export class AVMasterGame {
         this.checkLevelCompletion();
 
         // Refresh all connectors to ensure they remain clickable
+        console.log('🔄 Refreshing all connectors after connection...');
         this.refreshAllConnectors();
+        console.log('✅ All connectors refreshed');
     }
 
     /**
