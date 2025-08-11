@@ -840,7 +840,26 @@ export class AVMasterGame {
      * Handle connector click
      */
     handleConnectorClick(connector, equipment) {
+        // Check if this connector is already connected
+        const isAlreadyConnected = this.connections.some(conn =>
+            (conn.from.connector === connector || conn.to.connector === connector)
+        );
+
+        if (isAlreadyConnected) {
+            console.log('🔌 Connector already connected, ignoring click');
+            return;
+        }
+
         if (this.connectionMode && this.selectedConnector) {
+            // Don't allow connecting to the same connector
+            if (this.selectedConnector.connector === connector) {
+                console.log('🔌 Cannot connect to the same connector');
+                this.connectionMode = false;
+                this.selectedConnector = null;
+                this.resetConnectorStates();
+                return;
+            }
+
             // Create connection
             this.createConnection(this.selectedConnector, { connector, equipment });
             this.connectionMode = false;
@@ -851,6 +870,7 @@ export class AVMasterGame {
             this.connectionMode = true;
             this.selectedConnector = { connector, equipment };
             connector.classList.add('selected');
+            console.log('🔌 Started connection mode with:', connector.dataset.type);
         }
     }
 
@@ -877,14 +897,28 @@ export class AVMasterGame {
     showCableSelectionDialog(from, to, levelData) {
         const dialog = document.createElement('div');
         dialog.className = 'cable-selection-dialog';
+
+        // Get unique cable types from connections (not the connection instances)
+        const cableTypes = [...new Set(levelData.connections.map(conn => conn.type))];
+        const cableOptions = cableTypes.map(cableType => {
+            const connection = levelData.connections.find(conn => conn.type === cableType);
+            return {
+                type: cableType,
+                name: connection.name,
+                icon: connection.icon,
+                color: connection.color
+            };
+        });
+
         dialog.innerHTML = `
             <div class="dialog-content">
                 <h3>Select Cable Type</h3>
+                <p>Choose the appropriate cable to connect ${from.connector.dataset.type} to ${to.connector.dataset.type}</p>
                 <div class="cable-options">
-                    ${levelData.connections.map(connection => `
-                        <button class="cable-option" data-type="${connection.type}">
-                            <i class="${connection.icon}" style="color: ${connection.color}"></i>
-                            ${connection.name}
+                    ${cableOptions.map(cable => `
+                        <button class="cable-option" data-type="${cable.type}">
+                            <i class="${cable.icon}" style="color: ${cable.color}"></i>
+                            ${cable.name}
                         </button>
                     `).join('')}
                 </div>
@@ -953,6 +987,10 @@ export class AVMasterGame {
             connectionData.fromCoords = fromCoords;
             connectionData.toCoords = toCoords;
         }
+
+        // Mark connectors as connected
+        from.connector.classList.add('connected');
+        to.connector.classList.add('connected');
 
         // Apply animation
         this.applyConnectionAnimation(from.equipment, validConnection.animation);

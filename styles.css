@@ -1181,6 +1181,17 @@ body {
     box-shadow: 0 0 15px rgba(0, 204, 255, 0.8);
 }
 
+.connector.connected {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.connector.connected .connector-dot {
+    background-color: #666 !important;
+    border-color: #999 !important;
+    box-shadow: 0 0 5px rgba(102, 102, 102, 0.5) !important;
+}
+
 /* Connector type colors */
 .connector[data-type*="power"] .connector-dot {
     background: #ff4757;
