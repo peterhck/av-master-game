@@ -9,20 +9,35 @@ export class AudioSystem {
         this.audioSource = null;
         this.isAudioActive = false;
         this.audioAnimationFrame = null;
+        this.isInitialized = false;
 
-        this.initAudio();
+        // Don't initialize audio immediately - wait for user interaction
+        // this.initAudio();
     }
 
     /**
      * Initialize the audio context
      */
     initAudio() {
+        if (this.isInitialized) return;
+        
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.audioAnalyser = this.audioContext.createAnalyser();
             this.audioAnalyser.fftSize = 256;
+            this.isInitialized = true;
+            console.log('✓ Audio system initialized');
         } catch (e) {
-            console.log('Audio context not supported');
+            console.log('Audio context not supported or failed to initialize');
+        }
+    }
+
+    /**
+     * Initialize audio when user interacts (required by browsers)
+     */
+    async initializeOnUserInteraction() {
+        if (!this.isInitialized) {
+            this.initAudio();
         }
     }
 

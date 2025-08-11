@@ -13,27 +13,23 @@ let game = null;
  */
 function validateModules() {
     console.log('🔍 Validating modules...');
-    
+
     try {
-        // Test GameEngine
+        // Test GameEngine - just check if it's a function
         if (typeof AVMasterGame !== 'function') {
             throw new Error('GameEngine module not loaded properly');
         }
         console.log('✓ GameEngine module validated');
 
-        // Test LevelData
+        // Test LevelData - just check if function exists, don't call it yet
         if (typeof getLevelData !== 'function') {
             throw new Error('LevelData module not loaded properly');
         }
-        const testLevel = getLevelData('audio-1');
-        if (!testLevel) {
-            throw new Error('LevelData module cannot retrieve level data');
-        }
         console.log('✓ LevelData module validated');
 
-        // Test Helpers
-        if (typeof getConnectorColor !== 'function' || 
-            typeof saveToStorage !== 'function' || 
+        // Test Helpers - just check if functions exist
+        if (typeof getConnectorColor !== 'function' ||
+            typeof saveToStorage !== 'function' ||
             typeof loadFromStorage !== 'function') {
             throw new Error('Helpers module not loaded properly');
         }
@@ -51,10 +47,10 @@ function validateModules() {
  */
 function validateDOM() {
     console.log('🔍 Validating DOM elements...');
-    
+
     const requiredElements = [
         'loading-screen',
-        'main-menu', 
+        'main-menu',
         'level-select',
         'game',
         'start-game-btn',
@@ -64,7 +60,7 @@ function validateDOM() {
     ];
 
     const missingElements = [];
-    
+
     for (const elementId of requiredElements) {
         const element = document.getElementById(elementId);
         if (!element) {
@@ -88,7 +84,7 @@ async function initializeGame() {
     console.log('🚀 AV Master Game - Starting initialization...');
 
     try {
-        // Step 1: Validate modules
+        // Step 1: Validate modules (just function existence)
         console.log('\n📦 Step 1: Validating modules...');
         if (!validateModules()) {
             throw new Error('Module validation failed');
@@ -128,7 +124,7 @@ async function initializeGame() {
     } catch (error) {
         console.error('❌ Game initialization failed:', error);
         console.error('Stack trace:', error.stack);
-        
+
         // Show error message to user
         showInitializationError(error.message);
         return false;

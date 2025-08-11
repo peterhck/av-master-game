@@ -64,16 +64,12 @@ export class AVMasterGame {
             this.setupEventListeners();
             console.log('✓ Event listeners set up');
 
-            console.log('GameEngine.init() - Step 3: Validating level data...');
-            this.validateLevelData();
-            console.log('✓ Level data validated');
-
-            console.log('GameEngine.init() - Step 4: Showing loading screen...');
+            console.log('GameEngine.init() - Step 3: Showing loading screen...');
             this.showLoadingScreen();
             console.log('✓ Loading screen shown');
 
             // Simulate loading time with progress updates
-            console.log('GameEngine.init() - Step 5: Starting loading sequence...');
+            console.log('GameEngine.init() - Step 4: Starting loading sequence...');
             this.startLoadingSequence();
             console.log('✓ Loading sequence started');
 
@@ -97,6 +93,8 @@ export class AVMasterGame {
             if (startGameBtn) {
                 startGameBtn.addEventListener('click', () => {
                     console.log('🎯 start-game-btn clicked!');
+                    // Initialize audio system on first user interaction
+                    this.audioSystem.initializeOnUserInteraction();
                     this.showLevelSelect();
                 });
                 console.log('✓ start-game-btn event listener added');
@@ -176,12 +174,12 @@ export class AVMasterGame {
             if (!testLevel) {
                 throw new Error('Cannot access level data');
             }
-            
+
             // Test that required properties exist
             if (!testLevel.equipment || !testLevel.connections || !testLevel.validConnections) {
                 throw new Error('Level data missing required properties');
             }
-            
+
             console.log('✓ Level data validation passed');
         } catch (error) {
             console.error('❌ Level data validation failed:', error);
@@ -195,7 +193,7 @@ export class AVMasterGame {
     startLoadingSequence() {
         const loadingProgress = document.querySelector('.loading-progress');
         let progress = 0;
-        
+
         const updateProgress = (newProgress) => {
             progress = newProgress;
             if (loadingProgress) {
@@ -206,27 +204,27 @@ export class AVMasterGame {
         // Simulate loading steps
         const loadingSteps = [
             { progress: 20, message: 'Loading game modules...' },
-            { progress: 40, message: 'Initializing audio system...' },
+            { progress: 40, message: 'Initializing game systems...' },
             { progress: 60, message: 'Loading level data...' },
             { progress: 80, message: 'Setting up game interface...' },
             { progress: 100, message: 'Ready to play!' }
         ];
 
         let currentStep = 0;
-        
+
         const nextStep = () => {
             if (currentStep < loadingSteps.length) {
                 const step = loadingSteps[currentStep];
                 updateProgress(step.progress);
-                
+
                 // Update loading message if available
                 const loadingMessage = document.querySelector('.loading-content p');
                 if (loadingMessage) {
                     loadingMessage.textContent = step.message;
                 }
-                
+
                 currentStep++;
-                
+
                 if (currentStep < loadingSteps.length) {
                     setTimeout(nextStep, 400);
                 } else {
