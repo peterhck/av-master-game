@@ -350,7 +350,7 @@ export class AVMasterGame {
     clearAllScreens() {
         try {
             console.log('clearAllScreens() - Clearing all screen states...');
-            
+
             // Remove all active classes and set display to none
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -358,11 +358,11 @@ export class AVMasterGame {
                 screen.style.zIndex = '1';
                 console.log(`🔍 Cleared screen: ${screen.id}`);
             });
-            
+
             // Verify no screens are active
             const activeScreens = document.querySelectorAll('.screen.active');
             if (activeScreens.length > 0) {
-                console.warn(`⚠️ Warning: ${activeScreens.length} screens still active after clear:`, 
+                console.warn(`⚠️ Warning: ${activeScreens.length} screens still active after clear:`,
                     Array.from(activeScreens).map(s => s.id));
             } else {
                 console.log('✅ All screens cleared successfully');
@@ -381,7 +381,7 @@ export class AVMasterGame {
             console.log(`🔍 Screen state verification:`);
             console.log(`  Expected active screen: ${expectedScreenId}`);
             console.log(`  Currently active screens:`, Array.from(activeScreens).map(s => s.id));
-            
+
             if (activeScreens.length === 0) {
                 console.error(`❌ No screens are active!`);
                 return false;
@@ -409,12 +409,12 @@ export class AVMasterGame {
             const levelCards = document.querySelectorAll('.level-card');
             console.log(`🔍 Level cards accessibility check:`);
             console.log(`  Total level cards found: ${levelCards.length}`);
-            
+
             levelCards.forEach((card, index) => {
                 const levelId = card.dataset.level;
                 const isUnlocked = this.gameState.unlockedLevels.includes(levelId);
                 const computedStyle = window.getComputedStyle(card);
-                
+
                 console.log(`  Card ${index + 1} (${levelId}):`);
                 console.log(`    - Unlocked: ${isUnlocked}`);
                 console.log(`    - Display: ${computedStyle.display}`);
@@ -431,7 +431,7 @@ export class AVMasterGame {
     /**
      * Switch between screens
      */
-        switchScreen(screenId) {
+    switchScreen(screenId) {
         try {
             console.log(`switchScreen() - Switching to: ${screenId}`);
 
@@ -456,11 +456,11 @@ export class AVMasterGame {
                 targetScreen.style.display = 'flex';
                 targetScreen.style.zIndex = '10';
                 console.log(`✓ Screen ${screenId} activated`);
-                
+
                 // Debug: Check which screens are currently active
                 const activeScreens = document.querySelectorAll('.screen.active');
                 console.log(`🔍 Active screens after switch:`, Array.from(activeScreens).map(s => s.id));
-                
+
                 // Verify only one screen is active
                 if (activeScreens.length !== 1) {
                     console.error(`❌ Screen switching failed - ${activeScreens.length} screens are active!`);
@@ -639,8 +639,10 @@ export class AVMasterGame {
      * Setup the toolbar with equipment
      */
     setupToolbar(levelData) {
+        console.log('🔧 Setting up toolbar with level data:', levelData);
         this.setupEquipmentTools(levelData.equipment);
-        this.setupConnectionTools(levelData.connections);
+        // Don't show connections in toolbar - they should only appear when connecting
+        // this.setupConnectionTools(levelData.connections);
         this.setupSettingsTools(levelData.settings);
     }
 
@@ -781,6 +783,16 @@ export class AVMasterGame {
                 ${this.createConnectorsHTML(equipmentData.connectors)}
             `;
 
+            // Add click event listeners to connectors
+            const connectors = equipmentElement.querySelectorAll('.connector');
+            connectors.forEach(connector => {
+                connector.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    console.log('🔌 Connector clicked:', connector.dataset.type, connector.dataset.position);
+                    this.handleConnectorClick(connector, equipmentElement);
+                });
+            });
+
             // Add equipment info click handler
             const helpBtn = equipmentElement.querySelector('.equipment-help');
             if (helpBtn) {
@@ -814,10 +826,10 @@ export class AVMasterGame {
         return connectors.map(connector => {
             const color = getConnectorColor(connector.type);
             return `
-                <div class="connector ${connector.type}" 
+                <div class="connector ${connector.position}" 
                      data-type="${connector.type}" 
-                     data-position="${connector.position}"
-                     style="background-color: ${color};">
+                     data-position="${connector.position}">
+                    <div class="connector-dot" style="background-color: ${color};"></div>
                     <span class="connector-label">${connector.label}</span>
                 </div>
             `;
