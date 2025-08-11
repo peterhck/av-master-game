@@ -75,7 +75,7 @@ export class AVMasterGame {
                 this.showMainMenu();
                 console.log('✓ Main menu shown');
             }, 2000);
-            
+
             console.log('GameEngine.init() - Initialization sequence completed');
         } catch (error) {
             console.error('❌ Error in GameEngine.init():', error);
@@ -90,7 +90,7 @@ export class AVMasterGame {
     setupEventListeners() {
         try {
             console.log('setupEventListeners() - Setting up main menu events...');
-            
+
             // Main menu events
             const startGameBtn = document.getElementById('start-game-btn');
             if (startGameBtn) {
@@ -153,7 +153,7 @@ export class AVMasterGame {
             } else {
                 console.log('⚠ detailed-hint button not found');
             }
-            
+
             console.log('setupEventListeners() - All event listeners set up successfully');
         } catch (error) {
             console.error('❌ Error in setupEventListeners():', error);
@@ -201,15 +201,25 @@ export class AVMasterGame {
      * Switch between screens
      */
     switchScreen(screenId) {
-        // Hide all screens
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.style.display = 'none';
-        });
+        try {
+            console.log(`switchScreen() - Switching to: ${screenId}`);
+            
+            // Hide all screens by removing active class
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
 
-        // Show target screen
-        const targetScreen = document.getElementById(screenId);
-        if (targetScreen) {
-            targetScreen.style.display = 'block';
+            // Show target screen by adding active class
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                console.log(`✓ Screen ${screenId} activated`);
+            } else {
+                console.error(`❌ Screen ${screenId} not found`);
+            }
+        } catch (error) {
+            console.error('❌ Error in switchScreen():', error);
+            throw error;
         }
     }
 
@@ -375,7 +385,7 @@ export class AVMasterGame {
         equipment.forEach(item => {
             for (let i = 0; i < item.quantity; i++) {
                 const toolElement = document.createElement('div');
-                toolElement.className = 'equipment-tool';
+                toolElement.className = 'tool-item';
                 toolElement.draggable = true;
                 toolElement.dataset.type = item.type;
                 toolElement.dataset.name = item.name;
@@ -402,7 +412,7 @@ export class AVMasterGame {
 
         connections.forEach(connection => {
             const toolElement = document.createElement('div');
-            toolElement.className = 'connection-tool';
+            toolElement.className = 'tool-item';
             toolElement.dataset.type = connection.type;
             toolElement.style.color = connection.color;
 
@@ -426,7 +436,7 @@ export class AVMasterGame {
 
         settings.forEach(setting => {
             const toolElement = document.createElement('div');
-            toolElement.className = 'setting-tool';
+            toolElement.className = 'tool-item';
             toolElement.dataset.type = setting.type;
 
             toolElement.innerHTML = `
@@ -1167,7 +1177,7 @@ export class AVMasterGame {
             console.log('loadGameState() - Loading from localStorage...');
             const saved = loadFromStorage('avMasterGameState');
             console.log('loadGameState() - Retrieved data:', saved);
-            
+
             if (saved) {
                 this.gameState = { ...this.gameState, ...saved };
                 console.log('loadGameState() - Game state updated:', this.gameState);
