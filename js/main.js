@@ -105,8 +105,18 @@ async function initializeGame() {
 
         // Step 4: Initialize game engine
         console.log('\n⚙️ Step 4: Initializing game engine...');
+        console.log('🔍 DOM state before init:', {
+            mainMenu: !!document.getElementById('main-menu'),
+            startGameBtn: !!document.getElementById('start-game-btn'),
+            currentScreen: document.querySelector('.screen.active')?.id
+        });
         game.init();
         console.log('✅ Step 4 complete: Game engine initialized');
+        console.log('🔍 DOM state after init:', {
+            mainMenu: !!document.getElementById('main-menu'),
+            startGameBtn: !!document.getElementById('start-game-btn'),
+            currentScreen: document.querySelector('.screen.active')?.id
+        });
 
         // Step 5: Setup global event listeners
         console.log('\n🎯 Step 5: Setting up global event listeners...');
@@ -117,6 +127,21 @@ async function initializeGame() {
         console.log('\n🌐 Step 6: Making game globally accessible...');
         window.game = game;
         console.log('✅ Step 6 complete: Game made globally accessible');
+
+        // Step 7: Test button clickability
+        console.log('\n🧪 Step 7: Testing button clickability...');
+        const testBtn = document.getElementById('start-game-btn');
+        if (testBtn) {
+            console.log('🔍 Adding test click listener to start-game-btn');
+            testBtn.addEventListener('click', (e) => {
+                console.log('🧪 TEST CLICK DETECTED!');
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            console.log('✅ Test click listener added');
+        } else {
+            console.log('❌ Test button not found');
+        }
 
         console.log('\n🎉 AV Master Game - Initialization completed successfully!');
         return true;

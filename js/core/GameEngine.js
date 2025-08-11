@@ -90,16 +90,30 @@ export class AVMasterGame {
 
             // Main menu events
             const startGameBtn = document.getElementById('start-game-btn');
+            console.log('🔍 Looking for start-game-btn:', startGameBtn);
             if (startGameBtn) {
-                startGameBtn.addEventListener('click', () => {
+                console.log('✅ Found start-game-btn, adding event listener...');
+                startGameBtn.addEventListener('click', (e) => {
                     console.log('🎯 start-game-btn clicked!');
+                    e.preventDefault();
+                    e.stopPropagation();
                     // Initialize audio system on first user interaction
                     this.audioSystem.initializeOnUserInteraction();
                     this.showLevelSelect();
                 });
                 console.log('✓ start-game-btn event listener added');
+                
+                // Test if the button is clickable
+                console.log('🔍 Button properties:', {
+                    disabled: startGameBtn.disabled,
+                    style: startGameBtn.style.display,
+                    className: startGameBtn.className,
+                    innerHTML: startGameBtn.innerHTML.substring(0, 50) + '...'
+                });
             } else {
                 console.log('⚠ start-game-btn not found');
+                console.log('🔍 Available buttons:', document.querySelectorAll('button').length);
+                console.log('🔍 All button IDs:', Array.from(document.querySelectorAll('button')).map(b => b.id));
             }
 
             const tutorialBtn = document.getElementById('tutorial-btn');
