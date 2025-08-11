@@ -161,7 +161,7 @@ export class AVMasterGame {
                 console.log('🌐 Document click detected on:', e.target.tagName, e.target.className, e.target.id);
                 console.log('🔍 Click target element:', e.target);
                 console.log('🔍 Click coordinates:', e.clientX, e.clientY);
-                
+
                 // Check if click is on a level card or its children
                 const levelCard = e.target.closest('.level-card');
                 if (levelCard) {
@@ -345,6 +345,7 @@ export class AVMasterGame {
             // Hide all screens by removing active class
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
+                console.log(`🔍 Hidden screen: ${screen.id}`);
             });
 
             // Show target screen by adding active class
@@ -352,6 +353,10 @@ export class AVMasterGame {
             if (targetScreen) {
                 targetScreen.classList.add('active');
                 console.log(`✓ Screen ${screenId} activated`);
+                
+                // Debug: Check which screens are currently active
+                const activeScreens = document.querySelectorAll('.screen.active');
+                console.log(`🔍 Active screens after switch:`, Array.from(activeScreens).map(s => s.id));
             } else {
                 console.error(`❌ Screen ${screenId} not found`);
             }
@@ -413,14 +418,19 @@ export class AVMasterGame {
                     }
                 }
 
-                // Add click event if unlocked
-                if (isUnlocked) {
-                    levelCard.style.cursor = 'pointer';
-                    levelCard.addEventListener('click', () => this.selectLevel(levelId));
-                } else {
-                    levelCard.style.cursor = 'not-allowed';
-                    levelCard.removeEventListener('click', () => this.selectLevel(levelId));
-                }
+                            // Add click event if unlocked
+            if (isUnlocked) {
+                levelCard.style.cursor = 'pointer';
+                // Remove any existing click listeners to prevent duplicates
+                levelCard.removeEventListener('click', () => this.selectLevel(levelId));
+                levelCard.addEventListener('click', () => {
+                    console.log('🎯 Level card clicked directly:', levelId);
+                    this.selectLevel(levelId);
+                });
+            } else {
+                levelCard.style.cursor = 'not-allowed';
+                levelCard.removeEventListener('click', () => this.selectLevel(levelId));
+            }
             });
 
             console.log('Level status update completed');
