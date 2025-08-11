@@ -247,6 +247,20 @@ export class AVMasterGame {
                         console.log('GameEngine.init() - Step 6: Showing main menu...');
                         this.showMainMenu();
                         console.log('✓ Main menu shown');
+                        
+                        // Debug: Check if button is available after showing main menu
+                        setTimeout(() => {
+                            const debugBtn = document.getElementById('start-game-btn');
+                            console.log('🔍 Debug: Button after showMainMenu:', debugBtn);
+                            if (debugBtn) {
+                                console.log('🔍 Debug: Button properties:', {
+                                    disabled: debugBtn.disabled,
+                                    style: debugBtn.style.display,
+                                    className: debugBtn.className,
+                                    parentElement: debugBtn.parentElement?.id
+                                });
+                            }
+                        }, 100);
                     }, 500);
                 }
             }
@@ -335,6 +349,8 @@ export class AVMasterGame {
     updateLevelStatus() {
         try {
             console.log('Updating level status...');
+            console.log('🔍 LEVEL_ORDER:', LEVEL_ORDER);
+            console.log('🔍 Game state:', this.gameState);
 
             // Update existing level cards instead of replacing content
             LEVEL_ORDER.forEach(levelId => {
