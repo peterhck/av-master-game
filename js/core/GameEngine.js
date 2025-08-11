@@ -791,6 +791,10 @@ export class AVMasterGame {
                     console.log('🔌 Connector clicked:', connector.dataset.type, connector.dataset.position);
                     this.handleConnectorClick(connector, equipmentElement);
                 });
+                
+                // Ensure connector is properly initialized
+                connector.style.pointerEvents = 'auto';
+                connector.classList.remove('disabled', 'inactive');
             });
 
             // Add equipment info click handler
@@ -847,7 +851,7 @@ export class AVMasterGame {
     handleConnectorClick(connector, equipment) {
         console.log(`🔌 Connector clicked: ${connector.dataset.type}, connectionMode: ${this.connectionMode}`);
         console.log(`🔌 Connector pointer-events: ${connector.style.pointerEvents}, computed: ${window.getComputedStyle(connector).pointerEvents}`);
-        
+
         if (this.connectionMode && this.selectedConnector) {
             // Don't allow connecting to the same connector
             if (this.selectedConnector.connector === connector) {
@@ -922,6 +926,33 @@ export class AVMasterGame {
         // Ensure connector remains clickable
         connector.style.pointerEvents = 'auto';
         console.log(`🔌 Connector ${connector.dataset.type} pointer-events: ${connector.style.pointerEvents}`);
+    }
+
+    /**
+     * Update all connectors on a piece of equipment to ensure they remain clickable
+     */
+    updateAllConnectorsOnEquipment(equipment) {
+        const connectors = equipment.querySelectorAll('.connector');
+        connectors.forEach(connector => {
+            // Ensure each connector has proper pointer-events
+            connector.style.pointerEvents = 'auto';
+            
+            // Remove any potentially problematic classes that might interfere
+            connector.classList.remove('disabled', 'inactive');
+            
+            console.log(`🔧 Ensuring connector ${connector.dataset.type} on ${equipment.dataset.name} is clickable`);
+        });
+    }
+
+    /**
+     * Refresh all connectors on all equipment to ensure they remain clickable
+     */
+    refreshAllConnectors() {
+        this.equipment.forEach(equipmentData => {
+            if (equipmentData.element) {
+                this.updateAllConnectorsOnEquipment(equipmentData.element);
+            }
+        });
     }
 
     /**
@@ -1046,10 +1077,17 @@ export class AVMasterGame {
         // Update connector visual state to show connection count
         this.updateConnectorVisualState(from.connector);
         this.updateConnectorVisualState(to.connector);
+        
+        // Update ALL connectors on both equipment to ensure they remain clickable
+        this.updateAllConnectorsOnEquipment(from.equipment);
+        this.updateAllConnectorsOnEquipment(to.equipment);
 
         // Update progress
         this.updateConnectionProgress();
         this.checkLevelCompletion();
+        
+        // Refresh all connectors to ensure they remain clickable
+        this.refreshAllConnectors();
     }
 
     /**
