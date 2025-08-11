@@ -95,6 +95,7 @@ export class AVMasterGame {
             const startGameBtn = document.getElementById('start-game-btn');
             if (startGameBtn) {
                 startGameBtn.addEventListener('click', () => {
+                    console.log('🎯 start-game-btn clicked!');
                     this.showLevelSelect();
                 });
                 console.log('✓ start-game-btn event listener added');
@@ -105,6 +106,7 @@ export class AVMasterGame {
             const tutorialBtn = document.getElementById('tutorial-btn');
             if (tutorialBtn) {
                 tutorialBtn.addEventListener('click', () => {
+                    console.log('🎯 tutorial-btn clicked!');
                     this.showTutorial();
                 });
                 console.log('✓ tutorial-btn event listener added');
@@ -115,6 +117,7 @@ export class AVMasterGame {
             const settingsBtn = document.getElementById('settings-btn');
             if (settingsBtn) {
                 settingsBtn.addEventListener('click', () => {
+                    console.log('🎯 settings-btn clicked!');
                     this.showSettings();
                 });
                 console.log('✓ settings-btn event listener added');
@@ -1178,16 +1181,32 @@ export class AVMasterGame {
             const saved = loadFromStorage('avMasterGameState');
             console.log('loadGameState() - Retrieved data:', saved);
 
-            if (saved) {
+            if (saved && typeof saved === 'object') {
+                // Only merge if saved data is a valid object
                 this.gameState = { ...this.gameState, ...saved };
                 console.log('loadGameState() - Game state updated:', this.gameState);
             } else {
                 console.log('loadGameState() - No saved data found, using default state');
+                // Ensure default state is preserved
+                this.gameState = {
+                    score: 0,
+                    lives: 3,
+                    time: 0,
+                    completedLevels: [],
+                    unlockedLevels: ['audio-1']
+                };
             }
         } catch (error) {
             console.error('❌ Error in loadGameState():', error);
             console.error('Stack trace:', error.stack);
-            throw error;
+            // Ensure default state is preserved even on error
+            this.gameState = {
+                score: 0,
+                lives: 3,
+                time: 0,
+                completedLevels: [],
+                unlockedLevels: ['audio-1']
+            };
         }
     }
 
