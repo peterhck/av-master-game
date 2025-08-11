@@ -814,6 +814,11 @@ export class AVMasterGame {
             });
 
             stageArea.appendChild(equipmentElement);
+
+            // Remove the equipment from the toolbar after placement
+            if (toolElement && toolElement.parentNode) {
+                toolElement.parentNode.removeChild(toolElement);
+            }
         }
     }
 
@@ -840,6 +845,9 @@ export class AVMasterGame {
      * Handle connector click
      */
     handleConnectorClick(connector, equipment) {
+        console.log(`🔌 Connector clicked: ${connector.dataset.type}, connectionMode: ${this.connectionMode}`);
+        console.log(`🔌 Connector pointer-events: ${connector.style.pointerEvents}, computed: ${window.getComputedStyle(connector).pointerEvents}`);
+        
         if (this.connectionMode && this.selectedConnector) {
             // Don't allow connecting to the same connector
             if (this.selectedConnector.connector === connector) {
@@ -882,6 +890,8 @@ export class AVMasterGame {
             conn.from.connector === connector || conn.to.connector === connector
         ).length;
 
+        console.log(`🔌 Updating connector visual state: ${connector.dataset.type} has ${connectionCount} connections`);
+
         // Remove existing connection count classes
         connector.classList.remove('connected-1', 'connected-2', 'connected-3', 'connected-many');
 
@@ -901,12 +911,17 @@ export class AVMasterGame {
         if (!countDisplay && connectionCount > 1) {
             countDisplay = document.createElement('div');
             countDisplay.className = 'connection-count';
+            countDisplay.style.pointerEvents = 'none'; // Prevent interference with clicks
             connector.appendChild(countDisplay);
         }
 
         if (countDisplay) {
             countDisplay.textContent = connectionCount;
         }
+
+        // Ensure connector remains clickable
+        connector.style.pointerEvents = 'auto';
+        console.log(`🔌 Connector ${connector.dataset.type} pointer-events: ${connector.style.pointerEvents}`);
     }
 
     /**
@@ -959,7 +974,7 @@ export class AVMasterGame {
                 const cableType = option.dataset.type;
                 this.validateAndCreateConnection(from, to, cableType, levelData);
                 document.body.removeChild(dialog);
-                
+
                 // Reset connection mode after any connection attempt (valid or invalid)
                 this.connectionMode = false;
                 this.selectedConnector = null;
@@ -971,7 +986,7 @@ export class AVMasterGame {
         dialog.addEventListener('click', (e) => {
             if (e.target === dialog) {
                 document.body.removeChild(dialog);
-                
+
                 // Reset connection mode when dialog is closed without selection
                 this.connectionMode = false;
                 this.selectedConnector = null;
@@ -1046,7 +1061,7 @@ export class AVMasterGame {
 
         if (fromCoords && toCoords) {
             const invalidLine = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, '#ff0000');
-            
+
             // Remove the invalid connection line after 2 seconds
             setTimeout(() => {
                 if (invalidLine && invalidLine.parentNode) {
