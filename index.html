@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AV Master - Live Event Learning Game</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen active">
+            <div class="loading-content">
+                <div class="logo">
+                    <i class="fas fa-microphone-alt"></i>
+                    <h1>AV Master</h1>
+                </div>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <p>Loading your AV adventure...</p>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen">
+            <div class="menu-content">
+                <div class="logo">
+                    <i class="fas fa-microphone-alt"></i>
+                    <h1>AV Master</h1>
+                    <p>Master the Art of Live Events</p>
+                </div>
+
+                <div class="menu-buttons">
+                    <button id="start-game" class="menu-btn primary">
+                        <i class="fas fa-play"></i>
+                        Start New Game
+                    </button>
+                    <button id="continue-game" class="menu-btn secondary">
+                        <i class="fas fa-undo"></i>
+                        Continue
+                    </button>
+                    <button id="tutorial" class="menu-btn secondary">
+                        <i class="fas fa-graduation-cap"></i>
+                        Tutorial
+                    </button>
+                    <button id="settings" class="menu-btn secondary">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </button>
+                </div>
+
+                <div class="player-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span id="total-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-trophy"></i>
+                        <span id="level-completed">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Selection -->
+        <div id="level-select" class="screen">
+            <div class="level-header">
+                <button id="back-to-menu" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Menu
+                </button>
+                <h2>Choose Your Challenge</h2>
+            </div>
+
+            <div class="level-grid">
+                <div class="level-category">
+                    <h3><i class="fas fa-volume-up"></i> Audio Systems</h3>
+                    <div class="level-cards">
+                        <div class="level-card" data-level="audio-1" data-difficulty="beginner">
+                            <div class="level-icon"><i class="fas fa-microphone"></i></div>
+                            <h4>Mic Setup</h4>
+                            <p>Learn microphone placement and basic audio routing</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="audio-2" data-difficulty="intermediate">
+                            <div class="level-icon"><i class="fas fa-sliders-h"></i></div>
+                            <h4>Mixing Console</h4>
+                            <p>Master the mixing console and EQ settings</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="audio-3" data-difficulty="advanced">
+                            <div class="level-icon"><i class="fas fa-wave-square"></i></div>
+                            <h4>Sound Design</h4>
+                            <p>Advanced audio processing and effects</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-category">
+                    <h3><i class="fas fa-lightbulb"></i> Lighting Systems</h3>
+                    <div class="level-cards">
+                        <div class="level-card" data-level="lighting-1" data-difficulty="beginner">
+                            <div class="level-icon"><i class="fas fa-lightbulb"></i></div>
+                            <h4>Basic Lighting</h4>
+                            <p>Set up basic stage lighting and positioning</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="lighting-2" data-difficulty="intermediate">
+                            <div class="level-icon"><i class="fas fa-palette"></i></div>
+                            <h4>Color Theory</h4>
+                            <p>Learn color mixing and mood lighting</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="lighting-3" data-difficulty="advanced">
+                            <div class="level-icon"><i class="fas fa-magic"></i></div>
+                            <h4>Moving Lights</h4>
+                            <p>Program moving lights and complex patterns</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-category">
+                    <h3><i class="fas fa-video"></i> Video Systems</h3>
+                    <div class="level-cards">
+                        <div class="level-card" data-level="video-1" data-difficulty="beginner">
+                            <div class="level-icon"><i class="fas fa-camera"></i></div>
+                            <h4>Camera Setup</h4>
+                            <p>Position cameras and basic video routing</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="video-2" data-difficulty="intermediate">
+                            <div class="level-icon"><i class="fas fa-film"></i></div>
+                            <h4>Video Switching</h4>
+                            <p>Learn video switching and transitions</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="video-3" data-difficulty="advanced">
+                            <div class="level-icon"><i class="fas fa-project-diagram"></i></div>
+                            <h4>Projection Mapping</h4>
+                            <p>Advanced projection and mapping techniques</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-category">
+                    <h3><i class="fas fa-theater-masks"></i> Set Design</h3>
+                    <div class="level-cards">
+                        <div class="level-card" data-level="set-1" data-difficulty="beginner">
+                            <div class="level-icon"><i class="fas fa-cube"></i></div>
+                            <h4>Basic Set</h4>
+                            <p>Design simple stage layouts and props</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="set-2" data-difficulty="intermediate">
+                            <div class="level-icon"><i class="fas fa-paint-brush"></i></div>
+                            <h4>Creative Design</h4>
+                            <p>Create themed sets and visual effects</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="level-card" data-level="set-3" data-difficulty="advanced">
+                            <div class="level-icon"><i class="fas fa-chess-board"></i></div>
+                            <h4>Complex Sets</h4>
+                            <p>Design multi-level and interactive sets</p>
+                            <div class="level-status locked">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Play Area -->
+        <div id="game-play" class="screen">
+            <div class="game-header">
+                <div class="game-info">
+                    <button id="pause-game" class="game-btn">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <div class="level-info">
+                        <h3 id="current-level-title">Level Title</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span id="game-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span id="game-time">00:00</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-heart"></i>
+                        <span id="game-lives">3</span>
+                    </div>
+                </div>
+                <div class="progress-tracker">
+                    <div class="progress-item">
+                        <i class="fas fa-bolt"></i>
+                        <span id="power-connections">0/0</span>
+                    </div>
+                    <div class="progress-item">
+                        <i class="fas fa-microphone"></i>
+                        <span id="xlr-connections">0/0</span>
+                    </div>
+                    <div class="progress-item">
+                        <i class="fas fa-wifi"></i>
+                        <span id="wireless-connections">0/0</span>
+                    </div>
+                    <div class="progress-item">
+                        <i class="fas fa-network-wired"></i>
+                        <span id="ethernet-connections">0/0</span>
+                    </div>
+                    <div class="progress-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <span id="dmx-connections">0/0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-workspace">
+                <div class="workspace-area">
+                    <div class="stage-area" id="stage-area">
+                        <!-- Stage content will be dynamically generated -->
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <div class="tool-section">
+                        <h4>Equipment</h4>
+                        <div class="equipment-tools" id="equipment-tools">
+                            <!-- Equipment tools will be dynamically generated -->
+                        </div>
+                    </div>
+
+                    <div class="tool-section">
+                        <h4>Settings</h4>
+                        <div class="settings-tools" id="settings-tools">
+                            <!-- Settings tools will be dynamically generated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button id="test-setup" class="control-btn primary">
+                    <i class="fas fa-play"></i>
+                    Test Setup
+                </button>
+                <button id="reset-level" class="control-btn secondary">
+                    <i class="fas fa-redo"></i>
+                    Reset
+                </button>
+                <button id="hint" class="control-btn secondary">
+                    <i class="fas fa-lightbulb"></i>
+                    Hint
+                </button>
+                <button id="detailed-hint" class="control-btn secondary">
+                    <i class="fas fa-search"></i>
+                    Detailed Hint
+                </button>
+            </div>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="screen overlay">
+            <div class="pause-content">
+                <h2>Game Paused</h2>
+                <div class="pause-buttons">
+                    <button id="resume-game" class="menu-btn primary">
+                        <i class="fas fa-play"></i>
+                        Resume
+                    </button>
+                    <button id="restart-level" class="menu-btn secondary">
+                        <i class="fas fa-redo"></i>
+                        Restart Level
+                    </button>
+                    <button id="exit-to-menu" class="menu-btn secondary">
+                        <i class="fas fa-home"></i>
+                        Exit to Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Complete -->
+        <div id="level-complete" class="screen overlay">
+            <div class="complete-content">
+                <div class="complete-header">
+                    <i class="fas fa-trophy"></i>
+                    <h2>Level Complete!</h2>
+                </div>
+
+                <div class="complete-stats">
+                    <div class="stat">
+                        <span class="label">Score</span>
+                        <span class="value" id="final-score">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Time</span>
+                        <span class="value" id="final-time">00:00</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Stars</span>
+                        <span class="value" id="final-stars">0</span>
+                    </div>
+                </div>
+
+                <div class="complete-buttons">
+                    <button id="next-level" class="menu-btn primary">
+                        <i class="fas fa-arrow-right"></i>
+                        Next Level
+                    </button>
+                    <button id="replay-level" class="menu-btn secondary">
+                        <i class="fas fa-redo"></i>
+                        Replay
+                    </button>
+                    <button id="level-select-btn" class="menu-btn secondary">
+                        <i class="fas fa-list"></i>
+                        Level Select
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorial Modal -->
+        <div id="tutorial-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Tutorial</h3>
+                    <button id="close-tutorial" class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tutorial-step active" data-step="1">
+                        <h4>Welcome to AV Master!</h4>
+                        <p>Learn the fundamentals of audio-visual installation and live event production through
+                            interactive challenges.</p>
+                        <div class="tutorial-image">
+                            <i class="fas fa-microphone-alt"></i>
+                        </div>
+                    </div>
+                    <div class="tutorial-step" data-step="2">
+                        <h4>How to Play</h4>
+                        <p>Drag equipment from the toolbar to the stage area. Connect components with cables and
+                            configure settings to complete each challenge.</p>
+                        <div class="tutorial-image">
+                            <i class="fas fa-mouse-pointer"></i>
+                        </div>
+                    </div>
+                    <div class="tutorial-step" data-step="3">
+                        <h4>Equipment Types</h4>
+                        <p>You'll work with microphones, speakers, lights, cameras, projectors, and more. Each piece has
+                            specific functions and connections.</p>
+                        <div class="tutorial-image">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="prev-tutorial" class="tutorial-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Previous
+                    </button>
+                    <div class="tutorial-dots">
+                        <span class="dot active" data-step="1"></span>
+                        <span class="dot" data-step="2"></span>
+                        <span class="dot" data-step="3"></span>
+                    </div>
+                    <button id="next-tutorial" class="tutorial-btn">
+                        Next
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
