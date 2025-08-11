@@ -1355,7 +1355,10 @@ export class AVMasterGame {
      * Show equipment information
      */
     showEquipmentInfo(equipmentType, equipmentName) {
+        console.log('🔍 Showing equipment info for:', equipmentType, equipmentName);
+        
         const info = getEquipmentInfo(equipmentType, equipmentName);
+        console.log('🔍 Equipment info:', info);
 
         const popup = document.createElement('div');
         popup.className = 'equipment-info-popup';
@@ -1374,17 +1377,30 @@ export class AVMasterGame {
         `;
 
         document.body.appendChild(popup);
+        console.log('🔍 Equipment info popup added to DOM');
 
         // Close popup
         popup.querySelector('.close-btn').addEventListener('click', () => {
+            console.log('🔍 Closing equipment info popup');
             document.body.removeChild(popup);
         });
 
         popup.addEventListener('click', (e) => {
             if (e.target === popup) {
+                console.log('🔍 Closing equipment info popup (click outside)');
                 document.body.removeChild(popup);
             }
         });
+
+        // Close on Escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                console.log('🔍 Closing equipment info popup (Escape key)');
+                document.body.removeChild(popup);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
     }
 
     /**
@@ -1427,10 +1443,15 @@ export class AVMasterGame {
      * Show hint
      */
     showHint() {
+        console.log('💡 Showing hint for level:', this.currentLevel);
         const levelData = getLevelData(this.currentLevel);
-        if (!levelData) return;
+        if (!levelData) {
+            console.log('❌ No level data found for:', this.currentLevel);
+            return;
+        }
 
         const hint = this.generateHint(levelData);
+        console.log('💡 Generated hint:', hint);
         this.showHintPopup(hint);
     }
 
@@ -1438,10 +1459,15 @@ export class AVMasterGame {
      * Show detailed hint
      */
     showDetailedHint() {
+        console.log('🔍 Showing detailed hint for level:', this.currentLevel);
         const levelData = getLevelData(this.currentLevel);
-        if (!levelData) return;
+        if (!levelData) {
+            console.log('❌ No level data found for:', this.currentLevel);
+            return;
+        }
 
         const hint = this.generateDetailedHint(levelData);
+        console.log('🔍 Generated detailed hint:', hint);
         this.showHintPopup(hint, true);
 
         // Deduct points for using detailed hint
@@ -1453,6 +1479,9 @@ export class AVMasterGame {
      * Show hint popup
      */
     showHintPopup(message, isDetailed = false) {
+        console.log('📋 Creating hint popup:', isDetailed ? 'detailed' : 'basic');
+        console.log('📋 Message:', message);
+        
         const popup = document.createElement('div');
         popup.className = 'hint-popup';
         popup.innerHTML = `
@@ -1469,14 +1498,17 @@ export class AVMasterGame {
         `;
 
         document.body.appendChild(popup);
+        console.log('📋 Hint popup added to DOM');
 
         // Close popup
         popup.querySelector('.close-btn').addEventListener('click', () => {
+            console.log('📋 Closing hint popup (X button)');
             document.body.removeChild(popup);
         });
 
         popup.addEventListener('click', (e) => {
             if (e.target === popup) {
+                console.log('📋 Closing hint popup (click outside)');
                 document.body.removeChild(popup);
             }
         });
@@ -1484,6 +1516,7 @@ export class AVMasterGame {
         // Close on Escape key
         const handleEscape = (e) => {
             if (e.key === 'Escape') {
+                console.log('📋 Closing hint popup (Escape key)');
                 document.body.removeChild(popup);
                 document.removeEventListener('keydown', handleEscape);
             }
