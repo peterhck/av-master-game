@@ -47,7 +47,8 @@ export class AVMasterGame {
         // Initialize audio system
         this.audioSystem = new AudioSystem();
 
-        this.init();
+        // Don't initialize immediately - wait for DOM to be ready
+        // this.init();
     }
 
     /**

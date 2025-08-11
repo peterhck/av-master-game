@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create game instance
     const game = new AVMasterGame();
 
+    // Initialize the game after DOM is ready
+    game.init();
+
     // Make game globally accessible for debugging
     window.game = game;
 
