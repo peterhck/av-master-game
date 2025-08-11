@@ -128,9 +128,25 @@ async function initializeGame() {
         window.game = game;
         console.log('✅ Step 6 complete: Game made globally accessible');
 
-        // Step 7: Cleanup debugging
-        console.log('\n🧹 Step 7: Cleaning up debugging...');
-        console.log('✅ Debugging cleanup complete');
+        // Step 7: Test button clickability
+        console.log('\n🧪 Step 7: Testing button clickability...');
+        setTimeout(() => {
+            const testBtn = document.getElementById('start-game-btn');
+            if (testBtn) {
+                console.log('🔍 Adding direct test click listener...');
+                testBtn.onclick = (e) => {
+                    console.log('🧪 DIRECT CLICK DETECTED!');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    alert('Button is clickable!');
+                };
+                console.log('✅ Direct click listener added');
+            } else {
+                console.log('❌ Test button not found in timeout');
+            }
+        }, 1000);
+        
+        console.log('✅ Button testing setup complete');
 
         console.log('\n🎉 AV Master Game - Initialization completed successfully!');
         return true;

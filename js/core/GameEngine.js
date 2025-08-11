@@ -101,6 +101,23 @@ export class AVMasterGame {
                     this.audioSystem.initializeOnUserInteraction();
                     this.showLevelSelect();
                 });
+                
+                // Add mouse events for debugging
+                startGameBtn.addEventListener('mouseenter', () => {
+                    console.log('🖱️ Mouse entered start-game-btn');
+                });
+                
+                startGameBtn.addEventListener('mouseleave', () => {
+                    console.log('🖱️ Mouse left start-game-btn');
+                });
+                
+                startGameBtn.addEventListener('mousedown', () => {
+                    console.log('🖱️ Mouse down on start-game-btn');
+                });
+                
+                startGameBtn.addEventListener('mouseup', () => {
+                    console.log('🖱️ Mouse up on start-game-btn');
+                });
                 console.log('✓ start-game-btn event listener added');
 
                 // Test if the button is clickable
