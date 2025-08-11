@@ -102,7 +102,7 @@ export class AVMasterGame {
                     this.showLevelSelect();
                 });
                 console.log('✓ start-game-btn event listener added');
-                
+
                 // Test if the button is clickable
                 console.log('🔍 Button properties:', {
                     disabled: startGameBtn.disabled,
@@ -247,7 +247,7 @@ export class AVMasterGame {
                         console.log('GameEngine.init() - Step 6: Showing main menu...');
                         this.showMainMenu();
                         console.log('✓ Main menu shown');
-                        
+
                         // Debug: Check if button is available after showing main menu
                         setTimeout(() => {
                             const debugBtn = document.getElementById('start-game-btn');
@@ -273,8 +273,8 @@ export class AVMasterGame {
      * Show loading screen
      */
     showLoadingScreen() {
-        this.switchScreen('loading');
-        this.currentScreen = 'loading';
+        this.switchScreen('loading-screen');
+        this.currentScreen = 'loading-screen';
     }
 
     /**
