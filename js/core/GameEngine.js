@@ -203,7 +203,7 @@ export class AVMasterGame {
     switchScreen(screenId) {
         try {
             console.log(`switchScreen() - Switching to: ${screenId}`);
-            
+
             // Hide all screens by removing active class
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -505,7 +505,7 @@ export class AVMasterGame {
                 <div class="equipment-icon">
                     <i class="${equipmentData.icon}"></i>
                 </div>
-                <div class="equipment-name">${equipmentName}</div>
+                <div class="equipment-label">${equipmentName}</div>
                 <div class="equipment-help">?</div>
                 ${this.createConnectorsHTML(equipmentData.connectors)}
             `;
