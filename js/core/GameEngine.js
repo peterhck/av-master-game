@@ -55,53 +55,111 @@ export class AVMasterGame {
      * Initialize the game
      */
     init() {
-        this.loadGameState();
-        this.setupEventListeners();
-        this.showLoadingScreen();
+        try {
+            console.log('GameEngine.init() - Step 1: Loading game state...');
+            this.loadGameState();
+            console.log('✓ Game state loaded');
 
-        // Simulate loading time
-        setTimeout(() => {
-            this.showMainMenu();
-        }, 2000);
+            console.log('GameEngine.init() - Step 2: Setting up event listeners...');
+            this.setupEventListeners();
+            console.log('✓ Event listeners set up');
+
+            console.log('GameEngine.init() - Step 3: Showing loading screen...');
+            this.showLoadingScreen();
+            console.log('✓ Loading screen shown');
+
+            // Simulate loading time
+            console.log('GameEngine.init() - Step 4: Setting up main menu timer...');
+            setTimeout(() => {
+                console.log('GameEngine.init() - Step 5: Showing main menu...');
+                this.showMainMenu();
+                console.log('✓ Main menu shown');
+            }, 2000);
+            
+            console.log('GameEngine.init() - Initialization sequence completed');
+        } catch (error) {
+            console.error('❌ Error in GameEngine.init():', error);
+            console.error('Stack trace:', error.stack);
+            throw error;
+        }
     }
 
     /**
      * Setup event listeners
      */
     setupEventListeners() {
-        // Main menu events
-        document.getElementById('start-game-btn')?.addEventListener('click', () => {
-            this.showLevelSelect();
-        });
-
-        document.getElementById('tutorial-btn')?.addEventListener('click', () => {
-            this.showTutorial();
-        });
-
-        document.getElementById('settings-btn')?.addEventListener('click', () => {
-            this.showSettings();
-        });
-
-        // Level select events
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.level-card')) {
-                const levelCard = e.target.closest('.level-card');
-                const levelId = levelCard.dataset.level;
-                if (levelId && this.gameState.unlockedLevels.includes(levelId)) {
-                    this.selectLevel(levelId);
-                }
+        try {
+            console.log('setupEventListeners() - Setting up main menu events...');
+            
+            // Main menu events
+            const startGameBtn = document.getElementById('start-game-btn');
+            if (startGameBtn) {
+                startGameBtn.addEventListener('click', () => {
+                    this.showLevelSelect();
+                });
+                console.log('✓ start-game-btn event listener added');
+            } else {
+                console.log('⚠ start-game-btn not found');
             }
-        });
 
-        // Game controls
-        document.addEventListener('keydown', (e) => {
-            this.handleKeyPress(e);
-        });
+            const tutorialBtn = document.getElementById('tutorial-btn');
+            if (tutorialBtn) {
+                tutorialBtn.addEventListener('click', () => {
+                    this.showTutorial();
+                });
+                console.log('✓ tutorial-btn event listener added');
+            } else {
+                console.log('⚠ tutorial-btn not found');
+            }
 
-        // Detailed hint button
-        document.getElementById('detailed-hint')?.addEventListener('click', () => {
-            this.showDetailedHint();
-        });
+            const settingsBtn = document.getElementById('settings-btn');
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', () => {
+                    this.showSettings();
+                });
+                console.log('✓ settings-btn event listener added');
+            } else {
+                console.log('⚠ settings-btn not found');
+            }
+
+            console.log('setupEventListeners() - Setting up level select events...');
+            // Level select events
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.level-card')) {
+                    const levelCard = e.target.closest('.level-card');
+                    const levelId = levelCard.dataset.level;
+                    if (levelId && this.gameState.unlockedLevels.includes(levelId)) {
+                        this.selectLevel(levelId);
+                    }
+                }
+            });
+            console.log('✓ level-card click event listener added');
+
+            console.log('setupEventListeners() - Setting up game controls...');
+            // Game controls
+            document.addEventListener('keydown', (e) => {
+                this.handleKeyPress(e);
+            });
+            console.log('✓ keydown event listener added');
+
+            console.log('setupEventListeners() - Setting up detailed hint button...');
+            // Detailed hint button
+            const detailedHintBtn = document.getElementById('detailed-hint');
+            if (detailedHintBtn) {
+                detailedHintBtn.addEventListener('click', () => {
+                    this.showDetailedHint();
+                });
+                console.log('✓ detailed-hint event listener added');
+            } else {
+                console.log('⚠ detailed-hint button not found');
+            }
+            
+            console.log('setupEventListeners() - All event listeners set up successfully');
+        } catch (error) {
+            console.error('❌ Error in setupEventListeners():', error);
+            console.error('Stack trace:', error.stack);
+            throw error;
+        }
     }
 
     /**
@@ -129,7 +187,7 @@ export class AVMasterGame {
             console.log('Showing level select screen...');
             this.switchScreen('level-select');
             this.currentScreen = 'level-select';
-            
+
             // Add a small delay to ensure the screen is visible before updating
             setTimeout(() => {
                 this.updateLevelStatus();
@@ -174,7 +232,7 @@ export class AVMasterGame {
     updateLevelStatus() {
         try {
             console.log('Updating level status...');
-            
+
             // Update existing level cards instead of replacing content
             LEVEL_ORDER.forEach(levelId => {
                 const levelCard = document.querySelector(`[data-level="${levelId}"]`);
@@ -211,7 +269,7 @@ export class AVMasterGame {
                     levelCard.removeEventListener('click', () => this.selectLevel(levelId));
                 }
             });
-            
+
             console.log('Level status update completed');
         } catch (error) {
             console.error('Error updating level status:', error);
@@ -1105,9 +1163,21 @@ export class AVMasterGame {
      * Load game state from localStorage
      */
     loadGameState() {
-        const saved = loadFromStorage('avMasterGameState');
-        if (saved) {
-            this.gameState = { ...this.gameState, ...saved };
+        try {
+            console.log('loadGameState() - Loading from localStorage...');
+            const saved = loadFromStorage('avMasterGameState');
+            console.log('loadGameState() - Retrieved data:', saved);
+            
+            if (saved) {
+                this.gameState = { ...this.gameState, ...saved };
+                console.log('loadGameState() - Game state updated:', this.gameState);
+            } else {
+                console.log('loadGameState() - No saved data found, using default state');
+            }
+        } catch (error) {
+            console.error('❌ Error in loadGameState():', error);
+            console.error('Stack trace:', error.stack);
+            throw error;
         }
     }
 

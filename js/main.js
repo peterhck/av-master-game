@@ -7,14 +7,25 @@ import { AVMasterGame } from './core/GameEngine.js';
 document.addEventListener('DOMContentLoaded', () => {
     console.log('AV Master Game - Initializing...');
 
-    // Create game instance
-    const game = new AVMasterGame();
+    try {
+        // Create game instance
+        console.log('Step 1: Creating game instance...');
+        const game = new AVMasterGame();
+        console.log('✓ Game instance created');
 
-    // Initialize the game after DOM is ready
-    game.init();
+        // Initialize the game after DOM is ready
+        console.log('Step 2: Calling game.init()...');
+        game.init();
+        console.log('✓ Game initialized successfully');
 
-    // Make game globally accessible for debugging
-    window.game = game;
+        // Make game globally accessible for debugging
+        window.game = game;
+        console.log('✓ Game made globally accessible');
+    } catch (error) {
+        console.error('❌ Error during game initialization:', error);
+        console.error('Stack trace:', error.stack);
+        return;
+    }
 
     // Setup drag and drop for stage area
     const stageArea = document.getElementById('stage-area');
