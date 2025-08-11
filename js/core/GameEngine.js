@@ -64,17 +64,18 @@ export class AVMasterGame {
             this.setupEventListeners();
             console.log('✓ Event listeners set up');
 
-            console.log('GameEngine.init() - Step 3: Showing loading screen...');
+            console.log('GameEngine.init() - Step 3: Validating level data...');
+            this.validateLevelData();
+            console.log('✓ Level data validated');
+
+            console.log('GameEngine.init() - Step 4: Showing loading screen...');
             this.showLoadingScreen();
             console.log('✓ Loading screen shown');
 
-            // Simulate loading time
-            console.log('GameEngine.init() - Step 4: Setting up main menu timer...');
-            setTimeout(() => {
-                console.log('GameEngine.init() - Step 5: Showing main menu...');
-                this.showMainMenu();
-                console.log('✓ Main menu shown');
-            }, 2000);
+            // Simulate loading time with progress updates
+            console.log('GameEngine.init() - Step 5: Starting loading sequence...');
+            this.startLoadingSequence();
+            console.log('✓ Loading sequence started');
 
             console.log('GameEngine.init() - Initialization sequence completed');
         } catch (error) {
@@ -163,6 +164,83 @@ export class AVMasterGame {
             console.error('Stack trace:', error.stack);
             throw error;
         }
+    }
+
+    /**
+     * Validate level data is accessible
+     */
+    validateLevelData() {
+        try {
+            // Test that we can access level data
+            const testLevel = getLevelData('audio-1');
+            if (!testLevel) {
+                throw new Error('Cannot access level data');
+            }
+            
+            // Test that required properties exist
+            if (!testLevel.equipment || !testLevel.connections || !testLevel.validConnections) {
+                throw new Error('Level data missing required properties');
+            }
+            
+            console.log('✓ Level data validation passed');
+        } catch (error) {
+            console.error('❌ Level data validation failed:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Start loading sequence with progress updates
+     */
+    startLoadingSequence() {
+        const loadingProgress = document.querySelector('.loading-progress');
+        let progress = 0;
+        
+        const updateProgress = (newProgress) => {
+            progress = newProgress;
+            if (loadingProgress) {
+                loadingProgress.style.width = `${progress}%`;
+            }
+        };
+
+        // Simulate loading steps
+        const loadingSteps = [
+            { progress: 20, message: 'Loading game modules...' },
+            { progress: 40, message: 'Initializing audio system...' },
+            { progress: 60, message: 'Loading level data...' },
+            { progress: 80, message: 'Setting up game interface...' },
+            { progress: 100, message: 'Ready to play!' }
+        ];
+
+        let currentStep = 0;
+        
+        const nextStep = () => {
+            if (currentStep < loadingSteps.length) {
+                const step = loadingSteps[currentStep];
+                updateProgress(step.progress);
+                
+                // Update loading message if available
+                const loadingMessage = document.querySelector('.loading-content p');
+                if (loadingMessage) {
+                    loadingMessage.textContent = step.message;
+                }
+                
+                currentStep++;
+                
+                if (currentStep < loadingSteps.length) {
+                    setTimeout(nextStep, 400);
+                } else {
+                    // Loading complete, show main menu
+                    setTimeout(() => {
+                        console.log('GameEngine.init() - Step 6: Showing main menu...');
+                        this.showMainMenu();
+                        console.log('✓ Main menu shown');
+                    }, 500);
+                }
+            }
+        };
+
+        nextStep();
     }
 
     /**
