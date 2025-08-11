@@ -791,7 +791,7 @@ export class AVMasterGame {
                     console.log('🔌 Connector clicked:', connector.dataset.type, connector.dataset.position);
                     this.handleConnectorClick(connector, equipmentElement);
                 });
-                
+
                 // Ensure connector is properly initialized
                 connector.style.pointerEvents = 'auto';
                 connector.classList.remove('disabled', 'inactive');
@@ -936,10 +936,10 @@ export class AVMasterGame {
         connectors.forEach(connector => {
             // Ensure each connector has proper pointer-events
             connector.style.pointerEvents = 'auto';
-            
+
             // Remove any potentially problematic classes that might interfere
             connector.classList.remove('disabled', 'inactive');
-            
+
             console.log(`🔧 Ensuring connector ${connector.dataset.type} on ${equipment.dataset.name} is clickable`);
         });
     }
@@ -1030,11 +1030,34 @@ export class AVMasterGame {
      * Validate and create connection
      */
     validateAndCreateConnection(from, to, cableType, levelData) {
-        const validConnection = levelData.validConnections.find(conn =>
+        console.log('🔍 Validating connection:', {
+            from: from.connector.dataset.type,
+            to: to.connector.dataset.type,
+            cableType: cableType
+        });
+        
+        console.log('🔍 From connector element:', from.connector);
+        console.log('🔍 To connector element:', to.connector);
+        
+        console.log('🔍 Available valid connections:', levelData.validConnections);
+
+        // Check for valid connection in both directions
+        let validConnection = levelData.validConnections.find(conn =>
             conn.from === from.connector.dataset.type &&
             conn.to === to.connector.dataset.type &&
             conn.cable === cableType
         );
+
+        // If not found, check the reverse direction
+        if (!validConnection) {
+            validConnection = levelData.validConnections.find(conn =>
+                conn.from === to.connector.dataset.type &&
+                conn.to === from.connector.dataset.type &&
+                conn.cable === cableType
+            );
+        }
+
+        console.log('🔍 Found valid connection:', validConnection);
 
         if (validConnection) {
             this.createValidConnection(from, to, validConnection);
@@ -1077,7 +1100,7 @@ export class AVMasterGame {
         // Update connector visual state to show connection count
         this.updateConnectorVisualState(from.connector);
         this.updateConnectorVisualState(to.connector);
-        
+
         // Update ALL connectors on both equipment to ensure they remain clickable
         this.updateAllConnectorsOnEquipment(from.equipment);
         this.updateAllConnectorsOnEquipment(to.equipment);
@@ -1085,7 +1108,7 @@ export class AVMasterGame {
         // Update progress
         this.updateConnectionProgress();
         this.checkLevelCompletion();
-        
+
         // Refresh all connectors to ensure they remain clickable
         this.refreshAllConnectors();
     }
