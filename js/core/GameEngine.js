@@ -868,6 +868,18 @@ export class AVMasterGame {
      * Clear all connection lines
      */
     clearAllConnectionLines() {
+        // Clear SVG connection lines
+        const stageArea = document.getElementById('stage-area');
+        if (stageArea) {
+            const svgLines = stageArea.querySelectorAll('svg');
+            svgLines.forEach(svg => {
+                if (svg.parentNode) {
+                    svg.parentNode.removeChild(svg);
+                }
+            });
+        }
+        
+        // Clear any elements with connection-line class
         const connectionLines = document.querySelectorAll('.connection-line');
         connectionLines.forEach(line => {
             if (line.parentNode) {
@@ -1190,7 +1202,18 @@ export class AVMasterGame {
     createConnectorsHTML(connectors) {
         if (!connectors || connectors.length === 0) return '';
 
-        return connectors.map(connector => {
+        // Group connectors by type to ensure unique connector types per equipment
+        const uniqueConnectors = [];
+        const seenTypes = new Set();
+
+        connectors.forEach(connector => {
+            if (!seenTypes.has(connector.type)) {
+                seenTypes.add(connector.type);
+                uniqueConnectors.push(connector);
+            }
+        });
+
+        return uniqueConnectors.map(connector => {
             const color = getConnectorColor(connector.type);
             return `
                 <div class="connector ${connector.position}" 
@@ -1274,15 +1297,24 @@ export class AVMasterGame {
             connector.classList.add('connected-many');
         }
 
-        // Update connection count display if it exists
+        // Update connection count display
         let countDisplay = connector.querySelector('.connection-count');
-        if (!countDisplay && connectionCount > 1) {
+        
+        // Remove existing count display if no connections
+        if (connectionCount <= 1 && countDisplay) {
+            countDisplay.remove();
+            countDisplay = null;
+        }
+        
+        // Create count display if multiple connections
+        if (connectionCount > 1 && !countDisplay) {
             countDisplay = document.createElement('div');
             countDisplay.className = 'connection-count';
             countDisplay.style.pointerEvents = 'none'; // Prevent interference with clicks
             connector.appendChild(countDisplay);
         }
 
+        // Update count text
         if (countDisplay) {
             countDisplay.textContent = connectionCount;
         }
@@ -1329,7 +1361,7 @@ export class AVMasterGame {
      */
     forceRefreshConnectors() {
         console.log('🔧 Force refreshing all connectors...');
-        
+
         // Remove all existing connector event listeners
         document.querySelectorAll('.connector').forEach(connector => {
             const newConnector = connector.cloneNode(true);
@@ -1338,7 +1370,7 @@ export class AVMasterGame {
 
         // Re-setup connector event listeners
         this.setupConnectorEventListeners();
-        
+
         // Force update all connector visual states
         this.equipment.forEach(equipmentData => {
             if (equipmentData.element) {
@@ -1348,7 +1380,7 @@ export class AVMasterGame {
                 });
             }
         });
-        
+
         console.log('✅ Force refresh complete');
     }
 
@@ -1359,7 +1391,7 @@ export class AVMasterGame {
         document.querySelectorAll('.connector').forEach(connector => {
             // Remove existing listeners
             connector.removeEventListener('click', this.handleConnectorClick);
-            
+
             // Add new click listener
             connector.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1617,7 +1649,8 @@ export class AVMasterGame {
         svg.style.top = '0';
         svg.style.left = '0';
         svg.style.pointerEvents = 'none';
-        svg.style.zIndex = '1000';
+        svg.style.zIndex = '5';
+        svg.classList.add('connection-line');
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         const d = `M ${fromCoords.x} ${fromCoords.y} L ${toCoords.x} ${toCoords.y}`;
