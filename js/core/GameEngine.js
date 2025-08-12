@@ -1003,8 +1003,8 @@ export class AVMasterGame {
         if (!stageArea) return;
 
         stageArea.innerHTML = '';
-        stageArea.style.width = levelData.stageSetup?.width || 800 + 'px';
-        stageArea.style.height = levelData.stageSetup?.height || 600 + 'px';
+        stageArea.style.width = (levelData.stageSetup?.width || 1000) + 'px';
+        stageArea.style.height = (levelData.stageSetup?.height || 800) + 'px';
 
         // Add stage zones if defined
         if (levelData.stageSetup?.zones) {
@@ -1428,7 +1428,7 @@ export class AVMasterGame {
             this.handleStageClick = (e) => {
                 console.log('🔍 Click event target:', e.target.tagName, e.target.className);
                 console.log('🔍 Click event path:', e.composedPath().map(el => `${el.tagName}${el.className ? '.' + el.className.split(' ').join('.') : ''}`).join(' > '));
-                
+
                 const connector = e.target.closest('.connector');
                 if (connector) {
                     e.preventDefault();
@@ -1483,7 +1483,7 @@ export class AVMasterGame {
         console.log('🔍 Debugging all connectors on equipment:', equipment.dataset.name);
         const connectors = equipment.querySelectorAll('.connector');
         console.log(`🔍 Found ${connectors.length} connectors:`);
-        
+
         connectors.forEach((connector, index) => {
             const rect = connector.getBoundingClientRect();
             console.log(`  ${index + 1}. ${connector.dataset.type} (${connector.dataset.position})`);
