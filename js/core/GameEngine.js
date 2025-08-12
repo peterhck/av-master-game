@@ -650,12 +650,12 @@ export class AVMasterGame {
     }
 
     /**
-     * Update level name display in top left corner
+     * Update level name display in level title area
      */
     updateLevelNameDisplay(levelData) {
-        const levelNameElement = document.getElementById('current-level-name');
-        if (levelNameElement && levelData.title) {
-            levelNameElement.textContent = levelData.title;
+        const levelTitleElement = document.getElementById('current-level-title');
+        if (levelTitleElement && levelData.title) {
+            levelTitleElement.textContent = levelData.title;
         }
     }
 
@@ -2023,15 +2023,15 @@ export class AVMasterGame {
      */
     pauseGame() {
         console.log('⏸️ Pausing game and returning to level selector');
-        
+
         // Stop the game timer
         this.stopGameTimer();
-        
+
         // Clear any active connection mode
         this.connectionMode = false;
         this.selectedConnector = null;
         this.resetConnectorStates();
-        
+
         // Clear any open popups
         const popups = document.querySelectorAll('.equipment-info-popup, .hint-popup, .equipment-settings-popup');
         popups.forEach(popup => {
@@ -2039,7 +2039,7 @@ export class AVMasterGame {
                 popup.parentNode.removeChild(popup);
             }
         });
-        
+
         // Switch to level selection screen
         this.showLevelSelect();
     }

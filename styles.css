@@ -406,20 +406,7 @@ body {
     gap: 1rem;
 }
 
-.level-display {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    min-width: 200px;
-}
 
-.level-display h3 {
-    margin: 0;
-    color: #3498db;
-    font-size: 1.2rem;
-    font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
 
 .pause-btn {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
