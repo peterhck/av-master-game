@@ -1291,11 +1291,57 @@ body {
 
 .popup-body p {
     margin: 0 0 15px 0;
+    line-height: 1.6;
 }
 
 .popup-body strong {
     color: #3498db;
     font-weight: 600;
+}
+
+/* Info sections for equipment popup */
+.info-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.info-section h4 {
+    margin: 0 0 10px 0;
+    color: #3498db;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.info-section p {
+    margin: 0;
+    color: #ecf0f1;
+    line-height: 1.5;
+}
+
+/* Hint content styling */
+.hint-content {
+    line-height: 1.6;
+}
+
+.hint-content p {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 6px;
+    border-left: 3px solid #3498db;
+}
+
+.hint-content strong {
+    color: #3498db;
+    font-weight: 600;
+}
+
+.hint-content em {
+    color: #95a5a6;
+    font-style: italic;
 }
 
 .hint-cost {
