@@ -868,10 +868,10 @@ export class AVMasterGame {
      * Clear all connection lines
      */
     clearAllConnectionLines() {
-        // Clear SVG connection lines
+        // Clear only SVG elements with connection-line class
         const stageArea = document.getElementById('stage-area');
         if (stageArea) {
-            const svgLines = stageArea.querySelectorAll('svg');
+            const svgLines = stageArea.querySelectorAll('svg.connection-line');
             svgLines.forEach(svg => {
                 if (svg.parentNode) {
                     svg.parentNode.removeChild(svg);
@@ -879,13 +879,39 @@ export class AVMasterGame {
             });
         }
         
-        // Clear any elements with connection-line class
-        const connectionLines = document.querySelectorAll('.connection-line');
+        // Clear any other elements with connection-line class
+        const connectionLines = document.querySelectorAll('.connection-line:not(svg)');
         connectionLines.forEach(line => {
             if (line.parentNode) {
                 line.parentNode.removeChild(line);
             }
         });
+    }
+
+    /**
+     * Redraw all connection lines
+     */
+    redrawAllConnectionLines() {
+        console.log('🔄 Redrawing all connection lines...');
+        
+        // Clear existing lines
+        this.clearAllConnectionLines();
+        
+        // Redraw all valid connections
+        this.connections.forEach(connection => {
+            if (connection.from && connection.to) {
+                const fromCoords = this.getConnectorCoordinates(connection.from.connector);
+                const toCoords = this.getConnectorCoordinates(connection.to.connector);
+                
+                if (fromCoords && toCoords) {
+                    connection.line = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, getConnectorColor(connection.from.connector.dataset.type));
+                    connection.fromCoords = fromCoords;
+                    connection.toCoords = toCoords;
+                }
+            }
+        });
+        
+        console.log(`✅ Redrew ${this.connections.length} connection lines`);
     }
 
     /**
@@ -1299,13 +1325,13 @@ export class AVMasterGame {
 
         // Update connection count display
         let countDisplay = connector.querySelector('.connection-count');
-        
+
         // Remove existing count display if no connections
         if (connectionCount <= 1 && countDisplay) {
             countDisplay.remove();
             countDisplay = null;
         }
-        
+
         // Create count display if multiple connections
         if (connectionCount > 1 && !countDisplay) {
             countDisplay = document.createElement('div');
@@ -1594,11 +1620,10 @@ export class AVMasterGame {
         this.updateConnectionProgress();
         this.checkLevelCompletion();
 
-        // Refresh all connectors to ensure they remain clickable
-        console.log('🔄 Refreshing all connectors after connection...');
+        // Update connector states to ensure they remain clickable
+        console.log('🔄 Updating connector states after connection...');
         this.refreshAllConnectors();
-        this.forceRefreshConnectors();
-        console.log('✅ All connectors refreshed');
+        console.log('✅ All connectors updated');
     }
 
     /**
