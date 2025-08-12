@@ -817,6 +817,12 @@ export class AVMasterGame {
                 });
             }
 
+            // Add double-click handler for equipment settings
+            equipmentElement.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                this.showEquipmentSettings(equipmentType, equipmentName, equipmentElement);
+            });
+
             // Make equipment draggable
             this.makeEquipmentDraggable(equipmentElement);
 
@@ -1413,6 +1419,61 @@ export class AVMasterGame {
     }
 
     /**
+     * Show equipment settings popup
+     */
+    showEquipmentSettings(equipmentType, equipmentName, equipmentElement) {
+        console.log('⚙️ Showing equipment settings for:', equipmentType, equipmentName);
+        
+        const settings = this.getEquipmentSettings(equipmentType, equipmentName);
+        console.log('⚙️ Equipment settings:', settings);
+
+        const popup = document.createElement('div');
+        popup.className = 'equipment-settings-popup';
+        popup.innerHTML = `
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h3>${equipmentName} Settings</h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="popup-body">
+                    <div class="settings-content">
+                        ${this.generateSettingsHTML(settings, equipmentElement)}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+        console.log('⚙️ Equipment settings popup added to DOM');
+
+        // Add event listeners to settings controls
+        this.setupSettingsEventListeners(popup, equipmentElement);
+
+        // Close popup
+        popup.querySelector('.close-btn').addEventListener('click', () => {
+            console.log('⚙️ Closing equipment settings popup');
+            document.body.removeChild(popup);
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                console.log('⚙️ Closing equipment settings popup (click outside)');
+                document.body.removeChild(popup);
+            }
+        });
+
+        // Close on Escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                console.log('⚙️ Closing equipment settings popup (Escape key)');
+                document.body.removeChild(popup);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    /**
      * Show message
      */
     showMessage(message, type = 'info') {
@@ -1836,6 +1897,227 @@ export class AVMasterGame {
      */
     saveGameState() {
         saveToStorage('avMasterGameState', this.gameState);
+    }
+
+    /**
+     * Get equipment settings based on type
+     */
+    getEquipmentSettings(equipmentType, equipmentName) {
+        const settings = {
+            'microphone': {
+                'Wireless Vocal Mic': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 75, label: 'Volume' },
+                    gain: { type: 'slider', min: 0, max: 60, value: 30, label: 'Gain' },
+                    battery: { type: 'display', value: '85%', label: 'Battery' },
+                    channel: { type: 'select', options: ['1', '2', '3', '4'], value: '1', label: 'Channel' }
+                },
+                'Vocal Mic': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 80, label: 'Volume' },
+                    gain: { type: 'slider', min: 0, max: 60, value: 35, label: 'Gain' },
+                    phantom: { type: 'toggle', value: true, label: 'Phantom Power' }
+                },
+                'Instrument Mic': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 70, label: 'Volume' },
+                    gain: { type: 'slider', min: 0, max: 60, value: 25, label: 'Gain' },
+                    phantom: { type: 'toggle', value: false, label: 'Phantom Power' }
+                }
+            },
+            'mixing-console': {
+                'Mixing Console': {
+                    masterVolume: { type: 'slider', min: 0, max: 100, value: 60, label: 'Master Volume' },
+                    eq: { type: 'slider', min: -12, max: 12, value: 0, label: 'EQ' },
+                    effects: { type: 'toggle', value: false, label: 'Effects' }
+                },
+                '8-Channel Mixer': {
+                    masterVolume: { type: 'slider', min: 0, max: 100, value: 65, label: 'Master Volume' },
+                    channel1: { type: 'slider', min: 0, max: 100, value: 70, label: 'Channel 1' },
+                    channel2: { type: 'slider', min: 0, max: 100, value: 65, label: 'Channel 2' },
+                    effects: { type: 'toggle', value: true, label: 'Effects' }
+                },
+                '24-Channel Mixer': {
+                    masterVolume: { type: 'slider', min: 0, max: 100, value: 70, label: 'Master Volume' },
+                    channel1: { type: 'slider', min: 0, max: 100, value: 75, label: 'Channel 1' },
+                    channel2: { type: 'slider', min: 0, max: 100, value: 70, label: 'Channel 2' },
+                    channel3: { type: 'slider', min: 0, max: 100, value: 65, label: 'Channel 3' },
+                    effects: { type: 'toggle', value: true, label: 'Effects' },
+                    recording: { type: 'toggle', value: false, label: 'Recording' }
+                }
+            },
+            'speaker': {
+                'Main Speaker': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 80, label: 'Volume' },
+                    crossover: { type: 'slider', min: 50, max: 200, value: 100, label: 'Crossover (Hz)' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Monitor Speaker': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 75, label: 'Volume' },
+                    eq: { type: 'slider', min: -12, max: 12, value: 0, label: 'EQ' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'power-distro': {
+                'Power Distribution': {
+                    mainPower: { type: 'toggle', value: true, label: 'Main Power' },
+                    circuit1: { type: 'toggle', value: true, label: 'Circuit 1' },
+                    circuit2: { type: 'toggle', value: true, label: 'Circuit 2' },
+                    circuit3: { type: 'toggle', value: true, label: 'Circuit 3' },
+                    load: { type: 'display', value: '45%', label: 'Load' }
+                }
+            },
+            'light-fixture': {
+                'Moving Head Light': {
+                    intensity: { type: 'slider', min: 0, max: 100, value: 80, label: 'Intensity' },
+                    pan: { type: 'slider', min: 0, max: 360, value: 180, label: 'Pan' },
+                    tilt: { type: 'slider', min: -90, max: 90, value: 0, label: 'Tilt' },
+                    color: { type: 'select', options: ['White', 'Red', 'Blue', 'Green', 'Yellow'], value: 'White', label: 'Color' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'LED Par Light': {
+                    intensity: { type: 'slider', min: 0, max: 100, value: 75, label: 'Intensity' },
+                    color: { type: 'select', options: ['White', 'Red', 'Blue', 'Green', 'Yellow', 'Purple'], value: 'White', label: 'Color' },
+                    strobe: { type: 'toggle', value: false, label: 'Strobe' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'dmx-controller': {
+                'DMX Controller': {
+                    masterFader: { type: 'slider', min: 0, max: 100, value: 80, label: 'Master Fader' },
+                    scene1: { type: 'toggle', value: true, label: 'Scene 1' },
+                    scene2: { type: 'toggle', value: false, label: 'Scene 2' },
+                    scene3: { type: 'toggle', value: false, label: 'Scene 3' },
+                    auto: { type: 'toggle', value: false, label: 'Auto Mode' }
+                }
+            }
+        };
+
+        return settings[equipmentType]?.[equipmentName] || {};
+    }
+
+    /**
+     * Generate HTML for settings controls
+     */
+    generateSettingsHTML(settings, equipmentElement) {
+        if (Object.keys(settings).length === 0) {
+            return '<p class="no-settings">No settings available for this equipment.</p>';
+        }
+
+        let html = '';
+        Object.entries(settings).forEach(([key, setting]) => {
+            html += '<div class="setting-item">';
+            html += `<label>${setting.label}</label>`;
+            
+            switch (setting.type) {
+                case 'slider':
+                    html += `<input type="range" min="${setting.min}" max="${setting.max}" value="${setting.value}" data-setting="${key}" class="setting-slider">`;
+                    html += `<span class="setting-value">${setting.value}</span>`;
+                    break;
+                case 'toggle':
+                    html += `<input type="checkbox" ${setting.value ? 'checked' : ''} data-setting="${key}" class="setting-toggle">`;
+                    html += `<span class="setting-value">${setting.value ? 'ON' : 'OFF'}</span>`;
+                    break;
+                case 'select':
+                    html += `<select data-setting="${key}" class="setting-select">`;
+                    setting.options.forEach(option => {
+                        html += `<option value="${option}" ${option === setting.value ? 'selected' : ''}>${option}</option>`;
+                    });
+                    html += '</select>';
+                    break;
+                case 'display':
+                    html += `<span class="setting-display">${setting.value}</span>`;
+                    break;
+            }
+            
+            html += '</div>';
+        });
+
+        return html;
+    }
+
+    /**
+     * Setup event listeners for settings controls
+     */
+    setupSettingsEventListeners(popup, equipmentElement) {
+        // Slider controls
+        popup.querySelectorAll('.setting-slider').forEach(slider => {
+            const valueDisplay = slider.nextElementSibling;
+            slider.addEventListener('input', (e) => {
+                const value = e.target.value;
+                valueDisplay.textContent = value;
+                this.updateEquipmentSetting(equipmentElement, e.target.dataset.setting, value);
+            });
+        });
+
+        // Toggle controls
+        popup.querySelectorAll('.setting-toggle').forEach(toggle => {
+            const valueDisplay = toggle.nextElementSibling;
+            toggle.addEventListener('change', (e) => {
+                const value = e.target.checked;
+                valueDisplay.textContent = value ? 'ON' : 'OFF';
+                this.updateEquipmentSetting(equipmentElement, e.target.dataset.setting, value);
+            });
+        });
+
+        // Select controls
+        popup.querySelectorAll('.setting-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const value = e.target.value;
+                this.updateEquipmentSetting(equipmentElement, e.target.dataset.setting, value);
+            });
+        });
+    }
+
+    /**
+     * Update equipment setting
+     */
+    updateEquipmentSetting(equipmentElement, setting, value) {
+        console.log('⚙️ Updating setting:', setting, 'to', value, 'for equipment:', equipmentElement.dataset.name);
+        
+        // Store setting in equipment element
+        if (!equipmentElement.dataset.settings) {
+            equipmentElement.dataset.settings = '{}';
+        }
+        const settings = JSON.parse(equipmentElement.dataset.settings);
+        settings[setting] = value;
+        equipmentElement.dataset.settings = JSON.stringify(settings);
+        
+        // Apply visual effects based on settings
+        this.applyEquipmentSettings(equipmentElement, settings);
+    }
+
+    /**
+     * Apply equipment settings visually
+     */
+    applyEquipmentSettings(equipmentElement, settings) {
+        const equipmentType = equipmentElement.dataset.type;
+        const equipmentName = equipmentElement.dataset.name;
+        
+        // Apply different visual effects based on equipment type and settings
+        if (equipmentType === 'light-fixture') {
+            if (settings.intensity !== undefined) {
+                const intensity = parseInt(settings.intensity) / 100;
+                equipmentElement.style.opacity = 0.3 + (intensity * 0.7);
+            }
+            if (settings.power !== undefined && !settings.power) {
+                equipmentElement.style.filter = 'grayscale(100%)';
+            } else {
+                equipmentElement.style.filter = 'none';
+            }
+        } else if (equipmentType === 'speaker') {
+            if (settings.volume !== undefined) {
+                const volume = parseInt(settings.volume) / 100;
+                equipmentElement.style.transform = `scale(${0.8 + (volume * 0.2)})`;
+            }
+            if (settings.power !== undefined && !settings.power) {
+                equipmentElement.style.filter = 'grayscale(100%)';
+            } else {
+                equipmentElement.style.filter = 'none';
+            }
+        } else if (equipmentType === 'mixing-console') {
+            if (settings.masterVolume !== undefined) {
+                const volume = parseInt(settings.masterVolume) / 100;
+                equipmentElement.style.opacity = 0.5 + (volume * 0.5);
+            }
+        }
     }
 
     /**
