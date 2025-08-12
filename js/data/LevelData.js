@@ -367,15 +367,15 @@ export const LEVEL_DATA = {
             { type: 'wireless-freq', name: 'Wireless Frequency', icon: 'fas fa-wifi' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 700,
+            width: 800,
+            height: 600,
             zones: [
-                { name: 'Stage Front', x: 200, y: 100, width: 300, height: 150 },
-                { name: 'Stage Back', x: 200, y: 300, width: 300, height: 150 },
-                { name: 'FOH Position', x: 500, y: 200, width: 150, height: 100 },
-                { name: 'Monitor Zone', x: 100, y: 500, width: 200, height: 100 },
-                { name: 'Power Station', x: 50, y: 400, width: 80, height: 80 },
-                { name: 'Wireless Zone', x: 700, y: 300, width: 150, height: 100 }
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Monitor Zone', x: 80, y: 400, width: 150, height: 80 },
+                { name: 'Power Station', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Wireless Zone', x: 550, y: 250, width: 120, height: 80 }
             ]
         }
     },
@@ -459,7 +459,630 @@ export const LEVEL_DATA = {
         settings: [
             { type: 'intensity', name: 'Intensity', icon: 'fas fa-sliders-h' },
             { type: 'color', name: 'Color Temperature', icon: 'fas fa-palette' }
-        ]
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Power Station', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Lighting Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'lighting-2': {
+        title: 'Advanced Stage Lighting',
+        category: 'lighting',
+        difficulty: 'intermediate',
+        description: 'Set up advanced stage lighting with moving heads and effects',
+        objectives: [
+            'Position moving head lights',
+            'Connect advanced DMX control system',
+            'Power all lighting equipment',
+            'Create dynamic lighting zones'
+        ],
+        equipment: [
+            {
+                type: 'moving-head',
+                name: 'Moving Head Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 4,
+                requiresPower: true,
+                connectors: [
+                    { type: 'dmx-in', position: 'bottom', label: 'DMX In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'dimmer',
+                name: 'Advanced Dimmer',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-out', position: 'top', label: 'DMX Out' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 3' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 4' }
+                ]
+            },
+            {
+                type: 'power-distro',
+                name: 'Power Distribution',
+                icon: 'fas fa-plug',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 6, color: '#ff4757' },
+            { type: 'dmx-cable', name: 'DMX Cable', icon: 'fas fa-plug', quantity: 4, color: '#ffa502' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'dmx-out', to: 'dmx-in', cable: 'dmx-cable', animation: 'dmx-circle' }
+        ],
+        settings: [
+            { type: 'intensity', name: 'Intensity', icon: 'fas fa-sliders-h' },
+            { type: 'color', name: 'Color Temperature', icon: 'fas fa-palette' },
+            { type: 'movement', name: 'Movement', icon: 'fas fa-arrows-alt' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Power Station', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Lighting Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'lighting-3': {
+        title: 'Professional Lighting System',
+        category: 'lighting',
+        difficulty: 'advanced',
+        description: 'Set up a complete professional lighting system with multiple fixture types',
+        objectives: [
+            'Position multiple fixture types',
+            'Connect complex DMX control system',
+            'Power all lighting equipment',
+            'Create comprehensive lighting zones'
+        ],
+        equipment: [
+            {
+                type: 'moving-head',
+                name: 'Moving Head Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'dmx-in', position: 'bottom', label: 'DMX In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'par-light',
+                name: 'PAR Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 4,
+                requiresPower: true,
+                connectors: [
+                    { type: 'dmx-in', position: 'bottom', label: 'DMX In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'dimmer',
+                name: 'Professional Dimmer',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-out', position: 'top', label: 'DMX Out' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 3' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 4' }
+                ]
+            },
+            {
+                type: 'power-distro',
+                name: 'Power Distribution',
+                icon: 'fas fa-plug',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 8, color: '#ff4757' },
+            { type: 'dmx-cable', name: 'DMX Cable', icon: 'fas fa-plug', quantity: 6, color: '#ffa502' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'dmx-out', to: 'dmx-in', cable: 'dmx-cable', animation: 'dmx-circle' }
+        ],
+        settings: [
+            { type: 'intensity', name: 'Intensity', icon: 'fas fa-sliders-h' },
+            { type: 'color', name: 'Color Temperature', icon: 'fas fa-palette' },
+            { type: 'movement', name: 'Movement', icon: 'fas fa-arrows-alt' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Power Station', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Lighting Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'video-1': {
+        title: 'Basic Video System',
+        category: 'video',
+        difficulty: 'beginner',
+        description: 'Set up basic video projection system',
+        objectives: [
+            'Position projector and screen',
+            'Connect video sources',
+            'Power all video equipment',
+            'Create basic video zones'
+        ],
+        equipment: [
+            {
+                type: 'projector',
+                name: 'Video Projector',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Projection Screen',
+                icon: 'fas fa-square',
+                quantity: 1,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'media-player',
+                name: 'Media Player',
+                icon: 'fas fa-play',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
+                ]
+            },
+            {
+                type: 'power-distro',
+                name: 'Power Distribution',
+                icon: 'fas fa-plug',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 3, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 1, color: '#00ccff' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' }
+        ],
+        settings: [
+            { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
+            { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Power Station', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Video Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'video-2': {
+        title: 'Multi-Screen Video System',
+        category: 'video',
+        difficulty: 'intermediate',
+        description: 'Set up multi-screen video system with switching',
+        objectives: [
+            'Position multiple screens',
+            'Connect video switcher',
+            'Power all video equipment',
+            'Create multi-screen zones'
+        ],
+        equipment: [
+            {
+                type: 'screen',
+                name: 'LED Screen',
+                icon: 'fas fa-tv',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'video-switcher',
+                name: 'Video Switcher',
+                icon: 'fas fa-random',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 2' },
+                    { type: 'hdmi-out', position: 'front', label: 'Output 1' },
+                    { type: 'hdmi-out', position: 'front', label: 'Output 2' }
+                ]
+            },
+            {
+                type: 'media-player',
+                name: 'Media Player',
+                icon: 'fas fa-play',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
+                ]
+            },
+            {
+                type: 'power-distro',
+                name: 'Power Distribution',
+                icon: 'fas fa-plug',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 3' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 5, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 4, color: '#00ccff' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' }
+        ],
+        settings: [
+            { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
+            { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' },
+            { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Power Station', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Video Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'video-3': {
+        title: 'Professional Video System',
+        category: 'video',
+        difficulty: 'advanced',
+        description: 'Set up professional video system with live switching and effects',
+        objectives: [
+            'Position professional video equipment',
+            'Connect live video switcher',
+            'Power all video equipment',
+            'Create professional video zones'
+        ],
+        equipment: [
+            {
+                type: 'screen',
+                name: 'Professional LED Wall',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'video-switcher',
+                name: 'Live Video Switcher',
+                icon: 'fas fa-random',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 2' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 3' },
+                    { type: 'hdmi-out', position: 'front', label: 'Output' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Video Camera',
+                icon: 'fas fa-video',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
+                ]
+            },
+            {
+                type: 'media-player',
+                name: 'Media Player',
+                icon: 'fas fa-play',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
+                ]
+            },
+            {
+                type: 'power-distro',
+                name: 'Power Distribution',
+                icon: 'fas fa-plug',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 3' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 4' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 5, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 5, color: '#00ccff' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' }
+        ],
+        settings: [
+            { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
+            { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' },
+            { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Power Station', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Video Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'set-1': {
+        title: 'Basic Stage Set',
+        category: 'set',
+        difficulty: 'beginner',
+        description: 'Set up basic stage set with props and staging',
+        objectives: [
+            'Position basic stage props',
+            'Set up staging elements',
+            'Create basic set zones',
+            'Organize stage layout'
+        ],
+        equipment: [
+            {
+                type: 'stage-prop',
+                name: 'Stage Prop',
+                icon: 'fas fa-cube',
+                quantity: 3,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-curtain',
+                name: 'Stage Curtain',
+                icon: 'fas fa-scroll',
+                quantity: 1,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-platform',
+                name: 'Stage Platform',
+                icon: 'fas fa-square',
+                quantity: 2,
+                requiresPower: false,
+                connectors: []
+            }
+        ],
+        connections: [],
+        validConnections: [],
+        settings: [
+            { type: 'position', name: 'Position', icon: 'fas fa-arrows-alt' },
+            { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Storage Area', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Set Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'set-2': {
+        title: 'Intermediate Stage Set',
+        category: 'set',
+        difficulty: 'intermediate',
+        description: 'Set up intermediate stage set with multiple elements',
+        objectives: [
+            'Position multiple stage elements',
+            'Set up complex staging',
+            'Create intermediate set zones',
+            'Organize complex layout'
+        ],
+        equipment: [
+            {
+                type: 'stage-prop',
+                name: 'Stage Prop',
+                icon: 'fas fa-cube',
+                quantity: 5,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-curtain',
+                name: 'Stage Curtain',
+                icon: 'fas fa-scroll',
+                quantity: 2,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-platform',
+                name: 'Stage Platform',
+                icon: 'fas fa-square',
+                quantity: 3,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-ladder',
+                name: 'Stage Ladder',
+                icon: 'fas fa-arrows-alt-v',
+                quantity: 1,
+                requiresPower: false,
+                connectors: []
+            }
+        ],
+        connections: [],
+        validConnections: [],
+        settings: [
+            { type: 'position', name: 'Position', icon: 'fas fa-arrows-alt' },
+            { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Storage Area', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Set Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
+    },
+    'set-3': {
+        title: 'Professional Stage Set',
+        category: 'set',
+        difficulty: 'advanced',
+        description: 'Set up professional stage set with complex staging',
+        objectives: [
+            'Position professional stage elements',
+            'Set up complex staging system',
+            'Create professional set zones',
+            'Organize complex layout'
+        ],
+        equipment: [
+            {
+                type: 'stage-prop',
+                name: 'Stage Prop',
+                icon: 'fas fa-cube',
+                quantity: 8,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-curtain',
+                name: 'Stage Curtain',
+                icon: 'fas fa-scroll',
+                quantity: 3,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-platform',
+                name: 'Stage Platform',
+                icon: 'fas fa-square',
+                quantity: 4,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-ladder',
+                name: 'Stage Ladder',
+                icon: 'fas fa-arrows-alt-v',
+                quantity: 2,
+                requiresPower: false,
+                connectors: []
+            },
+            {
+                type: 'stage-rigging',
+                name: 'Stage Rigging',
+                icon: 'fas fa-link',
+                quantity: 1,
+                requiresPower: false,
+                connectors: []
+            }
+        ],
+        connections: [],
+        validConnections: [],
+        settings: [
+            { type: 'position', name: 'Position', icon: 'fas fa-arrows-alt' },
+            { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
+        ],
+        stageSetup: {
+            width: 800,
+            height: 600,
+            zones: [
+                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
+                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
+                { name: 'FOH Position', x: 400, y: 150, width: 120, height: 80 },
+                { name: 'Storage Area', x: 40, y: 320, width: 60, height: 60 },
+                { name: 'Set Control', x: 550, y: 250, width: 120, height: 80 }
+            ]
+        }
     }
 };
 
