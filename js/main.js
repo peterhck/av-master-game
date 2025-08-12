@@ -138,14 +138,13 @@ async function initializeGame() {
                     console.log('🧪 DIRECT CLICK DETECTED!');
                     e.preventDefault();
                     e.stopPropagation();
-                    alert('Button is clickable!');
                 };
                 console.log('✅ Direct click listener added');
             } else {
                 console.log('❌ Test button not found in timeout');
             }
         }, 1000);
-        
+
         console.log('✅ Button testing setup complete');
 
         console.log('\n🎉 AV Master Game - Initialization completed successfully!');
