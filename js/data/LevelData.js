@@ -89,13 +89,13 @@ export const LEVEL_DATA = {
             { type: 'eq', name: 'EQ Settings', icon: 'fas fa-wave-square' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Left', x: 100, y: 200, width: 200, height: 150 },
-                { name: 'Stage Right', x: 700, y: 200, width: 200, height: 150 },
-                { name: 'FOH', x: 450, y: 500, width: 100, height: 100 },
-                { name: 'Power Station', x: 50, y: 500, width: 80, height: 80 }
+                { name: 'Stage Left', x: '10%', y: '25%', width: '20%', height: '20%' },
+                { name: 'Stage Right', x: '70%', y: '25%', width: '20%', height: '20%' },
+                { name: 'FOH', x: '45%', y: '60%', width: '10%', height: '12%' },
+                { name: 'Power Station', x: '5%', y: '60%', width: '8%', height: '10%' }
             ]
         }
     },
@@ -209,7 +209,19 @@ export const LEVEL_DATA = {
             { type: 'eq', name: 'EQ Settings', icon: 'fas fa-wave-square' },
             { type: 'pan', name: 'Pan Control', icon: 'fas fa-arrows-alt-h' },
             { type: 'effects', name: 'Effects', icon: 'fas fa-magic' }
-        ]
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Monitor Zone', x: '8%', y: '60%', width: '15%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Wireless Zone', x: '75%', y: '30%', width: '12%', height: '10%' }
+            ]
+        }
     },
     'audio-3': {
         title: 'Professional Live Sound System',
@@ -367,15 +379,15 @@ export const LEVEL_DATA = {
             { type: 'wireless-freq', name: 'Wireless Frequency', icon: 'fas fa-wifi' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Monitor Zone', x: 80, y: 500, width: 150, height: 80 },
-                { name: 'Power Station', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Wireless Zone', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Monitor Zone', x: '8%', y: '60%', width: '15%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Wireless Zone', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -461,14 +473,14 @@ export const LEVEL_DATA = {
             { type: 'color', name: 'Color Temperature', icon: 'fas fa-palette' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Power Station', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Lighting Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Lighting Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -536,14 +548,14 @@ export const LEVEL_DATA = {
             { type: 'movement', name: 'Movement', icon: 'fas fa-arrows-alt' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Power Station', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Lighting Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Lighting Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -622,14 +634,14 @@ export const LEVEL_DATA = {
             { type: 'movement', name: 'Movement', icon: 'fas fa-arrows-alt' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Power Station', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Lighting Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Lighting Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -700,14 +712,14 @@ export const LEVEL_DATA = {
             { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Power Station', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Video Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Video Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -725,7 +737,7 @@ export const LEVEL_DATA = {
         equipment: [
             {
                 type: 'screen',
-                name: 'LED Screen',
+                name: 'Video Screen',
                 icon: 'fas fa-tv',
                 quantity: 2,
                 requiresPower: true,
@@ -768,7 +780,8 @@ export const LEVEL_DATA = {
                 connectors: [
                     { type: 'power-out', position: 'right', label: 'Power Out 1' },
                     { type: 'power-out', position: 'right', label: 'Power Out 2' },
-                    { type: 'power-out', position: 'right', label: 'Power Out 3' }
+                    { type: 'power-out', position: 'right', label: 'Power Out 3' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 4' }
                 ]
             }
         ],
@@ -786,14 +799,14 @@ export const LEVEL_DATA = {
             { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Power Station', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Video Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Video Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -884,14 +897,14 @@ export const LEVEL_DATA = {
             { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Power Station', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Video Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Video Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -939,14 +952,14 @@ export const LEVEL_DATA = {
             { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Storage Area', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Set Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Storage Area', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Set Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -985,14 +998,6 @@ export const LEVEL_DATA = {
                 quantity: 3,
                 requiresPower: false,
                 connectors: []
-            },
-            {
-                type: 'stage-ladder',
-                name: 'Stage Ladder',
-                icon: 'fas fa-arrows-alt-v',
-                quantity: 1,
-                requiresPower: false,
-                connectors: []
             }
         ],
         connections: [],
@@ -1002,14 +1007,14 @@ export const LEVEL_DATA = {
             { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Storage Area', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Set Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Storage Area', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Set Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     },
@@ -1073,14 +1078,14 @@ export const LEVEL_DATA = {
             { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
         ],
         stageSetup: {
-            width: 1000,
-            height: 800,
+            width: '100%',
+            height: '100%',
             zones: [
-                { name: 'Stage Front', x: 150, y: 100, width: 250, height: 120 },
-                { name: 'Stage Back', x: 150, y: 250, width: 250, height: 120 },
-                { name: 'FOH Position', x: 500, y: 150, width: 120, height: 80 },
-                { name: 'Storage Area', x: 40, y: 420, width: 60, height: 60 },
-                { name: 'Set Control', x: 750, y: 250, width: 120, height: 80 }
+                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
+                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
+                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
+                { name: 'Storage Area', x: '4%', y: '50%', width: '6%', height: '8%' },
+                { name: 'Set Control', x: '75%', y: '30%', width: '12%', height: '10%' }
             ]
         }
     }

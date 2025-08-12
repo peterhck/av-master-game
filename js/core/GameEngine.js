@@ -1003,18 +1003,19 @@ export class AVMasterGame {
         if (!stageArea) return;
 
         stageArea.innerHTML = '';
-        stageArea.style.width = (levelData.stageSetup?.width || 1000) + 'px';
-        stageArea.style.height = (levelData.stageSetup?.height || 800) + 'px';
+        // Canvas is now responsive - no need to set fixed dimensions
+        // stageArea.style.width = (levelData.stageSetup?.width || 1000) + 'px';
+        // stageArea.style.height = (levelData.stageSetup?.height || 800) + 'px';
 
         // Add stage zones if defined
         if (levelData.stageSetup?.zones) {
             levelData.stageSetup.zones.forEach(zone => {
                 const zoneEl = document.createElement('div');
                 zoneEl.className = 'stage-zone';
-                zoneEl.style.left = zone.x + 'px';
-                zoneEl.style.top = zone.y + 'px';
-                zoneEl.style.width = zone.width + 'px';
-                zoneEl.style.height = zone.height + 'px';
+                zoneEl.style.left = zone.x;
+                zoneEl.style.top = zone.y;
+                zoneEl.style.width = zone.width;
+                zoneEl.style.height = zone.height;
                 zoneEl.textContent = zone.name;
                 stageArea.appendChild(zoneEl);
             });
