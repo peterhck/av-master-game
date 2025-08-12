@@ -249,6 +249,37 @@ export class AVMasterGame {
                 console.log('⚠ reset-level button not found');
             }
 
+            // Level complete screen buttons
+            const nextLevelBtn = document.getElementById('next-level');
+            if (nextLevelBtn) {
+                nextLevelBtn.addEventListener('click', () => {
+                    this.goToNextLevel();
+                });
+                console.log('✓ next-level event listener added');
+            } else {
+                console.log('⚠ next-level button not found');
+            }
+
+            const replayLevelBtn = document.getElementById('replay-level');
+            if (replayLevelBtn) {
+                replayLevelBtn.addEventListener('click', () => {
+                    this.replayLevel();
+                });
+                console.log('✓ replay-level event listener added');
+            } else {
+                console.log('⚠ replay-level button not found');
+            }
+
+            const levelSelectBtn = document.getElementById('level-select-btn');
+            if (levelSelectBtn) {
+                levelSelectBtn.addEventListener('click', () => {
+                    this.showLevelSelect();
+                });
+                console.log('✓ level-select-btn event listener added');
+            } else {
+                console.log('⚠ level-select-btn button not found');
+            }
+
             console.log('setupEventListeners() - All event listeners set up successfully');
         } catch (error) {
             console.error('❌ Error in setupEventListeners():', error);
@@ -843,6 +874,81 @@ export class AVMasterGame {
                 line.parentNode.removeChild(line);
             }
         });
+    }
+
+    /**
+     * Show level complete popup
+     */
+    showLevelComplete() {
+        console.log('🎉 Showing level complete popup');
+        
+        // Stop the game timer
+        this.stopGameTimer();
+        
+        // Calculate final stats
+        const finalScore = this.gameState.score;
+        const finalTime = this.gameState.time;
+        const stars = Math.min(3, Math.floor(finalScore / 100));
+        
+        // Update the level complete screen with final stats
+        const finalScoreEl = document.getElementById('final-score');
+        const finalTimeEl = document.getElementById('final-time');
+        const finalStarsEl = document.getElementById('final-stars');
+        
+        if (finalScoreEl) finalScoreEl.textContent = finalScore;
+        if (finalTimeEl) {
+            const minutes = Math.floor(finalTime / 60);
+            const seconds = (finalTime % 60).toString().padStart(2, '0');
+            finalTimeEl.textContent = `${minutes}:${seconds}`;
+        }
+        if (finalStarsEl) finalStarsEl.textContent = stars;
+        
+        // Mark level as completed
+        if (!this.gameState.completedLevels.includes(this.currentLevel)) {
+            this.gameState.completedLevels.push(this.currentLevel);
+            this.saveToStorage();
+        }
+        
+        // Unlock next level
+        this.unlockNextLevel();
+        
+        // Switch to level complete screen
+        this.switchScreen('level-complete');
+        
+        console.log('🎉 Level complete popup shown');
+    }
+
+    /**
+     * Go to next level
+     */
+    goToNextLevel() {
+        console.log('➡️ Going to next level');
+        
+        const levelOrder = [
+            'audio-1', 'audio-2', 'audio-3',
+            'lighting-1', 'lighting-2', 'lighting-3',
+            'video-1', 'video-2', 'video-3',
+            'set-1', 'set-2', 'set-3'
+        ];
+        
+        const currentIndex = levelOrder.indexOf(this.currentLevel);
+        if (currentIndex !== -1 && currentIndex < levelOrder.length - 1) {
+            const nextLevel = levelOrder[currentIndex + 1];
+            console.log('➡️ Loading next level:', nextLevel);
+            this.loadLevel(nextLevel);
+        } else {
+            console.log('🎉 All levels completed!');
+            this.showMessage('Congratulations! You have completed all levels!', 'success');
+            this.showLevelSelect();
+        }
+    }
+
+    /**
+     * Replay current level
+     */
+    replayLevel() {
+        console.log('🔄 Replaying level:', this.currentLevel);
+        this.loadLevel(this.currentLevel);
     }
 
     /**
@@ -1705,7 +1811,7 @@ export class AVMasterGame {
         document.addEventListener('keydown', handleEscape);
     }
 
-    
+
 
     /**
      * Show message
