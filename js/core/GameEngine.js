@@ -690,7 +690,7 @@ export class AVMasterGame {
      */
     testSetup() {
         console.log('🧪 Testing setup for level:', this.currentLevel);
-        
+
         const levelData = getLevelData(this.currentLevel);
         if (!levelData) {
             console.error('❌ No level data found for:', this.currentLevel);
@@ -699,11 +699,11 @@ export class AVMasterGame {
 
         // Validate all connections
         const validationResult = this.validateLevelCompletion(levelData);
-        
+
         if (validationResult.isComplete) {
             console.log('✅ Setup test passed! All connections are valid.');
             this.showMessage('✅ Setup test passed! All connections are valid.', 'success');
-            
+
             // Show celebration if level is complete
             if (!this.gameState.completedLevels.includes(this.currentLevel)) {
                 this.showLevelComplete();
@@ -711,7 +711,7 @@ export class AVMasterGame {
         } else {
             console.log('❌ Setup test failed. Missing connections:', validationResult.missingConnections);
             this.showMessage(`❌ Setup test failed. Missing: ${validationResult.missingConnections.join(', ')}`, 'error');
-            
+
             // Highlight missing connections
             this.highlightMissingConnections(validationResult.missingConnections);
         }
@@ -722,7 +722,7 @@ export class AVMasterGame {
      */
     resetLevel() {
         console.log('🔄 Resetting level:', this.currentLevel);
-        
+
         // Confirm with user
         if (!confirm('Are you sure you want to reset this level? All progress will be lost.')) {
             return;
@@ -730,15 +730,15 @@ export class AVMasterGame {
 
         // Stop the game timer
         this.stopGameTimer();
-        
+
         // Clear all connections
         this.connections = [];
         this.successfulConnections = 0;
         this.totalRequiredConnections = 0;
-        
+
         // Clear connection lines
         this.clearAllConnectionLines();
-        
+
         // Reset connection progress
         this.connectionProgress = {
             power: { current: 0, required: 0 },
@@ -748,12 +748,12 @@ export class AVMasterGame {
             dmx: { current: 0, required: 0 },
             hdmi: { current: 0, required: 0 }
         };
-        
+
         // Clear any active connection mode
         this.connectionMode = false;
         this.selectedConnector = null;
         this.resetConnectorStates();
-        
+
         // Clear any open popups
         const popups = document.querySelectorAll('.equipment-info-popup, .hint-popup, .equipment-settings-popup');
         popups.forEach(popup => {
@@ -761,10 +761,10 @@ export class AVMasterGame {
                 popup.parentNode.removeChild(popup);
             }
         });
-        
+
         // Reload the level
         this.loadLevel(this.currentLevel);
-        
+
         console.log('🔄 Level reset complete');
         this.showMessage('Level reset complete. Start fresh!', 'info');
     }
@@ -806,7 +806,7 @@ export class AVMasterGame {
         this.equipment.forEach(equipment => {
             const equipmentType = equipment.type;
             const equipmentName = equipment.name;
-            
+
             // Check if this equipment needs connections based on missing types
             const needsConnection = missingConnections.some(missing => {
                 if (missing.includes('power') && equipmentType === 'power-distro') return true;
@@ -2019,11 +2019,29 @@ export class AVMasterGame {
     }
 
     /**
-     * Pause game
+     * Pause game and return to level selector
      */
     pauseGame() {
+        console.log('⏸️ Pausing game and returning to level selector');
+        
+        // Stop the game timer
         this.stopGameTimer();
-        this.showMessage('Game paused. Press any key to resume.', 'info');
+        
+        // Clear any active connection mode
+        this.connectionMode = false;
+        this.selectedConnector = null;
+        this.resetConnectorStates();
+        
+        // Clear any open popups
+        const popups = document.querySelectorAll('.equipment-info-popup, .hint-popup, .equipment-settings-popup');
+        popups.forEach(popup => {
+            if (popup.parentNode) {
+                popup.parentNode.removeChild(popup);
+            }
+        });
+        
+        // Switch to level selection screen
+        this.showLevelSelect();
     }
 
     /**
