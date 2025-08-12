@@ -676,6 +676,7 @@ export class AVMasterGame {
 
         this.setupStage(levelData);
         this.setupToolbar(levelData);
+        this.setupConnectorEventListeners(); // Set up event delegation
         this.updateConnectionProgress();
         this.startGameTimer();
     }
@@ -902,8 +903,8 @@ export class AVMasterGame {
             if (connection.fromCoords && connection.toCoords) {
                 // Use stored coordinates instead of recalculating
                 connection.line = this.drawConnectionLineWithCoordinates(
-                    connection.fromCoords, 
-                    connection.toCoords, 
+                    connection.fromCoords,
+                    connection.toCoords,
                     getConnectorColor(connection.fromConnectorType)
                 );
             }
@@ -1168,15 +1169,9 @@ export class AVMasterGame {
                 ${this.createConnectorsHTML(equipmentData.connectors)}
             `;
 
-            // Add click event listeners to connectors
+            // Ensure connectors are properly initialized (event listeners will be set up globally)
             const connectors = equipmentElement.querySelectorAll('.connector');
             connectors.forEach(connector => {
-                connector.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    console.log('🔌 Connector clicked:', connector.dataset.type, connector.dataset.position);
-                    this.handleConnectorClick(connector, equipmentElement);
-                });
-
                 // Ensure connector is properly initialized
                 connector.style.pointerEvents = 'auto';
                 connector.classList.remove('disabled', 'inactive');
@@ -1214,9 +1209,6 @@ export class AVMasterGame {
             if (toolElement && toolElement.parentNode) {
                 toolElement.parentNode.removeChild(toolElement);
             }
-
-            // Ensure all connectors are properly set up
-            this.setupConnectorEventListeners();
         }
     }
 
@@ -1296,20 +1288,20 @@ export class AVMasterGame {
         });
     }
 
-        /**
-     * Update connector visual state based on connection count
-     */
+    /**
+ * Update connector visual state based on connection count
+ */
     updateConnectorVisualState(connector) {
         // Count how many connections this connector has using the new structure
         const connectionCount = this.connections.filter(conn => {
             const equipment = connector.closest('.equipment');
             if (!equipment) return false;
-            
+
             const equipmentName = equipment.dataset.name;
             const connectorType = connector.dataset.type;
-            
+
             return (conn.fromEquipment === equipmentName && conn.fromConnectorType === connectorType) ||
-                   (conn.toEquipment === equipmentName && conn.toConnectorType === connectorType);
+                (conn.toEquipment === equipmentName && conn.toConnectorType === connectorType);
         }).length;
 
         console.log(`🔌 Updating connector visual state: ${connector.dataset.type} has ${connectionCount} connections`);
@@ -1330,13 +1322,13 @@ export class AVMasterGame {
 
         // Update connection count display
         let countDisplay = connector.querySelector('.connection-count');
-        
+
         // Remove existing count display if no connections
         if (connectionCount <= 1 && countDisplay) {
             countDisplay.remove();
             countDisplay = null;
         }
-        
+
         // Create count display if multiple connections
         if (connectionCount > 1 && !countDisplay) {
             countDisplay = document.createElement('div');
@@ -1416,32 +1408,59 @@ export class AVMasterGame {
     }
 
     /**
-     * Setup connector event listeners
+     * Setup connector event listeners using event delegation
      */
     setupConnectorEventListeners() {
-        document.querySelectorAll('.connector').forEach(connector => {
-            // Remove existing listeners
-            connector.removeEventListener('click', this.handleConnectorClick);
-
-            // Add new click listener
-            connector.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const equipment = connector.closest('.equipment');
-                if (equipment) {
-                    this.handleConnectorClick(connector, equipment);
+        // Remove any existing event delegation listener
+        const stageArea = document.getElementById('stage-area');
+        if (stageArea) {
+            if (this.handleStageClick) {
+                stageArea.removeEventListener('click', this.handleStageClick);
+            }
+            
+            // Add event delegation listener to stage area
+            this.handleStageClick = (e) => {
+                const connector = e.target.closest('.connector');
+                if (connector) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const equipment = connector.closest('.equipment');
+                    if (equipment) {
+                        console.log('🔌 Connector clicked via delegation:', connector.dataset.type);
+                        this.handleConnectorClick(connector, equipment);
+                    }
                 }
-            });
+            };
+            
+            stageArea.addEventListener('click', this.handleStageClick);
+        }
 
-            // Add hover effects
-            connector.addEventListener('mouseenter', () => {
-                connector.style.transform = 'scale(1.2)';
-            });
-
-            connector.addEventListener('mouseleave', () => {
-                connector.style.transform = 'scale(1)';
-            });
-        });
+        // Add hover effects using event delegation as well
+        if (stageArea) {
+            if (this.handleStageMouseEnter) {
+                stageArea.removeEventListener('mouseenter', this.handleStageMouseEnter);
+            }
+            if (this.handleStageMouseLeave) {
+                stageArea.removeEventListener('mouseleave', this.handleStageMouseLeave);
+            }
+            
+            this.handleStageMouseEnter = (e) => {
+                const connector = e.target.closest('.connector');
+                if (connector) {
+                    connector.style.transform = 'scale(1.2)';
+                }
+            };
+            
+            this.handleStageMouseLeave = (e) => {
+                const connector = e.target.closest('.connector');
+                if (connector) {
+                    connector.style.transform = 'scale(1)';
+                }
+            };
+            
+            stageArea.addEventListener('mouseenter', this.handleStageMouseEnter, true);
+            stageArea.addEventListener('mouseleave', this.handleStageMouseLeave, true);
+        }
     }
 
     /**
@@ -1609,7 +1628,7 @@ export class AVMasterGame {
         if (fromCoords && toCoords) {
             connectionData.fromCoords = fromCoords;
             connectionData.toCoords = toCoords;
-            
+
             // Create the connection line
             connectionData.line = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, getConnectorColor(from.connector.dataset.type));
         }
@@ -1727,7 +1746,7 @@ export class AVMasterGame {
     findConnectorElement(equipmentName, connectorType) {
         const equipment = document.querySelector(`[data-name="${equipmentName}"]`);
         if (!equipment) return null;
-        
+
         return equipment.querySelector(`[data-type="${connectorType}"]`);
     }
 
