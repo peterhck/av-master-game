@@ -227,6 +227,28 @@ export class AVMasterGame {
                 console.log('⚠ pause-game button not found');
             }
 
+            // Test setup button
+            const testSetupBtn = document.getElementById('test-setup');
+            if (testSetupBtn) {
+                testSetupBtn.addEventListener('click', () => {
+                    this.testSetup();
+                });
+                console.log('✓ test-setup event listener added');
+            } else {
+                console.log('⚠ test-setup button not found');
+            }
+
+            // Reset level button
+            const resetLevelBtn = document.getElementById('reset-level');
+            if (resetLevelBtn) {
+                resetLevelBtn.addEventListener('click', () => {
+                    this.resetLevel();
+                });
+                console.log('✓ reset-level event listener added');
+            } else {
+                console.log('⚠ reset-level button not found');
+            }
+
             console.log('setupEventListeners() - All event listeners set up successfully');
         } catch (error) {
             console.error('❌ Error in setupEventListeners():', error);
@@ -642,9 +664,90 @@ export class AVMasterGame {
      */
     pauseGame() {
         console.log('⏸️ Pausing game and returning to level selector');
-        
+
         // Stop the game timer
         this.stopGameTimer();
+
+        // Clear any active connection mode
+        this.connectionMode = false;
+        this.selectedConnector = null;
+        this.resetConnectorStates();
+
+        // Clear any open popups
+        const popups = document.querySelectorAll('.equipment-info-popup, .hint-popup, .equipment-settings-popup');
+        popups.forEach(popup => {
+            if (popup.parentNode) {
+                popup.parentNode.removeChild(popup);
+            }
+        });
+
+        // Switch to level selection screen
+        this.showLevelSelect();
+    }
+
+    /**
+     * Test the current setup
+     */
+    testSetup() {
+        console.log('🧪 Testing setup for level:', this.currentLevel);
+        
+        const levelData = getLevelData(this.currentLevel);
+        if (!levelData) {
+            console.error('❌ No level data found for:', this.currentLevel);
+            return;
+        }
+
+        // Validate all connections
+        const validationResult = this.validateLevelCompletion(levelData);
+        
+        if (validationResult.isComplete) {
+            console.log('✅ Setup test passed! All connections are valid.');
+            this.showMessage('✅ Setup test passed! All connections are valid.', 'success');
+            
+            // Show celebration if level is complete
+            if (!this.gameState.completedLevels.includes(this.currentLevel)) {
+                this.showLevelComplete();
+            }
+        } else {
+            console.log('❌ Setup test failed. Missing connections:', validationResult.missingConnections);
+            this.showMessage(`❌ Setup test failed. Missing: ${validationResult.missingConnections.join(', ')}`, 'error');
+            
+            // Highlight missing connections
+            this.highlightMissingConnections(validationResult.missingConnections);
+        }
+    }
+
+    /**
+     * Reset the current level
+     */
+    resetLevel() {
+        console.log('🔄 Resetting level:', this.currentLevel);
+        
+        // Confirm with user
+        if (!confirm('Are you sure you want to reset this level? All progress will be lost.')) {
+            return;
+        }
+
+        // Stop the game timer
+        this.stopGameTimer();
+        
+        // Clear all connections
+        this.connections = [];
+        this.successfulConnections = 0;
+        this.totalRequiredConnections = 0;
+        
+        // Clear connection lines
+        this.clearAllConnectionLines();
+        
+        // Reset connection progress
+        this.connectionProgress = {
+            power: { current: 0, required: 0 },
+            xlr: { current: 0, required: 0 },
+            wireless: { current: 0, required: 0 },
+            ethernet: { current: 0, required: 0 },
+            dmx: { current: 0, required: 0 },
+            hdmi: { current: 0, required: 0 }
+        };
         
         // Clear any active connection mode
         this.connectionMode = false;
@@ -659,8 +762,87 @@ export class AVMasterGame {
             }
         });
         
-        // Switch to level selection screen
-        this.showLevelSelect();
+        // Reload the level
+        this.loadLevel(this.currentLevel);
+        
+        console.log('🔄 Level reset complete');
+        this.showMessage('Level reset complete. Start fresh!', 'info');
+    }
+
+    /**
+     * Validate level completion
+     */
+    validateLevelCompletion(levelData) {
+        const required = calculateRequiredConnections(levelData);
+        const missingConnections = [];
+        let isComplete = true;
+
+        // Check each connection type
+        Object.entries(required).forEach(([type, count]) => {
+            const current = this.connectionProgress[type].current;
+            if (current < count) {
+                isComplete = false;
+                const missing = count - current;
+                missingConnections.push(`${missing} ${type} connection${missing > 1 ? 's' : ''}`);
+            }
+        });
+
+        return {
+            isComplete,
+            missingConnections
+        };
+    }
+
+    /**
+     * Highlight missing connections
+     */
+    highlightMissingConnections(missingConnections) {
+        // Remove any existing highlights
+        document.querySelectorAll('.equipment').forEach(equipment => {
+            equipment.style.border = '';
+        });
+
+        // Add red border to equipment that need connections
+        this.equipment.forEach(equipment => {
+            const equipmentType = equipment.type;
+            const equipmentName = equipment.name;
+            
+            // Check if this equipment needs connections based on missing types
+            const needsConnection = missingConnections.some(missing => {
+                if (missing.includes('power') && equipmentType === 'power-distro') return true;
+                if (missing.includes('xlr') && (equipmentType === 'microphone' || equipmentType === 'mixing-console' || equipmentType === 'speaker')) return true;
+                if (missing.includes('wireless') && (equipmentType === 'microphone' || equipmentType === 'speaker')) return true;
+                if (missing.includes('ethernet') && equipmentType === 'mixing-console') return true;
+                if (missing.includes('dmx') && (equipmentType === 'light-fixture' || equipmentType === 'dmx-controller')) return true;
+                if (missing.includes('hdmi') && equipmentType === 'video-equipment') return true;
+                return false;
+            });
+
+            if (needsConnection) {
+                equipment.element.style.border = '3px solid #e74c3c';
+                equipment.element.style.boxShadow = '0 0 10px rgba(231, 76, 60, 0.5)';
+            }
+        });
+
+        // Remove highlights after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.equipment').forEach(equipment => {
+                equipment.style.border = '';
+                equipment.style.boxShadow = '';
+            });
+        }, 5000);
+    }
+
+    /**
+     * Clear all connection lines
+     */
+    clearAllConnectionLines() {
+        const connectionLines = document.querySelectorAll('.connection-line');
+        connectionLines.forEach(line => {
+            if (line.parentNode) {
+                line.parentNode.removeChild(line);
+            }
+        });
     }
 
     /**
