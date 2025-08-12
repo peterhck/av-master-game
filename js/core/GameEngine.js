@@ -216,6 +216,17 @@ export class AVMasterGame {
                 console.log('⚠ detailed-hint button not found');
             }
 
+            // Pause button
+            const pauseBtn = document.getElementById('pause-game');
+            if (pauseBtn) {
+                pauseBtn.addEventListener('click', () => {
+                    this.pauseGame();
+                });
+                console.log('✓ pause-game event listener added');
+            } else {
+                console.log('⚠ pause-game button not found');
+            }
+
             console.log('setupEventListeners() - All event listeners set up successfully');
         } catch (error) {
             console.error('❌ Error in setupEventListeners():', error);
@@ -595,6 +606,9 @@ export class AVMasterGame {
         this.switchScreen('game');
         this.currentScreen = 'game';
 
+        // Update level name display
+        this.updateLevelNameDisplay(levelData);
+
         // Reset game state for this level
         this.connections = [];
         this.equipment = [];
@@ -611,6 +625,42 @@ export class AVMasterGame {
         this.setupToolbar(levelData);
         this.updateConnectionProgress();
         this.startGameTimer();
+    }
+
+    /**
+     * Update level name display in top left corner
+     */
+    updateLevelNameDisplay(levelData) {
+        const levelNameElement = document.getElementById('current-level-name');
+        if (levelNameElement && levelData.title) {
+            levelNameElement.textContent = levelData.title;
+        }
+    }
+
+    /**
+     * Pause game and return to level selector
+     */
+    pauseGame() {
+        console.log('⏸️ Pausing game and returning to level selector');
+        
+        // Stop the game timer
+        this.stopGameTimer();
+        
+        // Clear any active connection mode
+        this.connectionMode = false;
+        this.selectedConnector = null;
+        this.resetConnectorStates();
+        
+        // Clear any open popups
+        const popups = document.querySelectorAll('.equipment-info-popup, .hint-popup, .equipment-settings-popup');
+        popups.forEach(popup => {
+            if (popup.parentNode) {
+                popup.parentNode.removeChild(popup);
+            }
+        });
+        
+        // Switch to level selection screen
+        this.showLevelSelect();
     }
 
     /**
@@ -1423,7 +1473,7 @@ export class AVMasterGame {
      */
     showEquipmentSettings(equipmentType, equipmentName, equipmentElement) {
         console.log('⚙️ Showing equipment settings for:', equipmentType, equipmentName);
-        
+
         const settings = this.getEquipmentSettings(equipmentType, equipmentName);
         console.log('⚙️ Equipment settings:', settings);
 
@@ -2005,7 +2055,7 @@ export class AVMasterGame {
         Object.entries(settings).forEach(([key, setting]) => {
             html += '<div class="setting-item">';
             html += `<label>${setting.label}</label>`;
-            
+
             switch (setting.type) {
                 case 'slider':
                     html += `<input type="range" min="${setting.min}" max="${setting.max}" value="${setting.value}" data-setting="${key}" class="setting-slider">`;
@@ -2026,7 +2076,7 @@ export class AVMasterGame {
                     html += `<span class="setting-display">${setting.value}</span>`;
                     break;
             }
-            
+
             html += '</div>';
         });
 
@@ -2071,7 +2121,7 @@ export class AVMasterGame {
      */
     updateEquipmentSetting(equipmentElement, setting, value) {
         console.log('⚙️ Updating setting:', setting, 'to', value, 'for equipment:', equipmentElement.dataset.name);
-        
+
         // Store setting in equipment element
         if (!equipmentElement.dataset.settings) {
             equipmentElement.dataset.settings = '{}';
@@ -2079,7 +2129,7 @@ export class AVMasterGame {
         const settings = JSON.parse(equipmentElement.dataset.settings);
         settings[setting] = value;
         equipmentElement.dataset.settings = JSON.stringify(settings);
-        
+
         // Apply visual effects based on settings
         this.applyEquipmentSettings(equipmentElement, settings);
     }
@@ -2090,7 +2140,7 @@ export class AVMasterGame {
     applyEquipmentSettings(equipmentElement, settings) {
         const equipmentType = equipmentElement.dataset.type;
         const equipmentName = equipmentElement.dataset.name;
-        
+
         // Apply different visual effects based on equipment type and settings
         if (equipmentType === 'light-fixture') {
             if (settings.intensity !== undefined) {
