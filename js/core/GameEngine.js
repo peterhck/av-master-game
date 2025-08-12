@@ -1152,11 +1152,11 @@ export class AVMasterGame {
         equipmentElement.className = 'equipment';
         equipmentElement.dataset.type = equipmentType;
         equipmentElement.dataset.name = equipmentName;
-        
+
         // Generate unique ID for this equipment instance
         const uniqueId = generateId();
         equipmentElement.dataset.uniqueId = uniqueId;
-        
+
         equipmentElement.style.left = x + 'px';
         equipmentElement.style.top = y + 'px';
 
@@ -1426,6 +1426,9 @@ export class AVMasterGame {
 
             // Add event delegation listener to stage area
             this.handleStageClick = (e) => {
+                console.log('🔍 Click event target:', e.target.tagName, e.target.className);
+                console.log('🔍 Click event path:', e.composedPath().map(el => `${el.tagName}${el.className ? '.' + el.className.split(' ').join('.') : ''}`).join(' > '));
+                
                 const connector = e.target.closest('.connector');
                 if (connector) {
                     e.preventDefault();
@@ -1433,8 +1436,12 @@ export class AVMasterGame {
                     const equipment = connector.closest('.equipment');
                     if (equipment) {
                         console.log('🔌 Connector clicked via delegation:', connector.dataset.type);
+                        console.log('🔌 Connector position:', connector.dataset.position);
+                        console.log('🔌 Equipment:', equipment.dataset.name, equipment.dataset.uniqueId);
                         this.handleConnectorClick(connector, equipment);
                     }
+                } else {
+                    console.log('🔍 No connector found in click path');
                 }
             };
 
@@ -1467,6 +1474,25 @@ export class AVMasterGame {
             stageArea.addEventListener('mouseenter', this.handleStageMouseEnter, true);
             stageArea.addEventListener('mouseleave', this.handleStageMouseLeave, true);
         }
+    }
+
+    /**
+     * Debug all connectors on equipment
+     */
+    debugEquipmentConnectors(equipment) {
+        console.log('🔍 Debugging all connectors on equipment:', equipment.dataset.name);
+        const connectors = equipment.querySelectorAll('.connector');
+        console.log(`🔍 Found ${connectors.length} connectors:`);
+        
+        connectors.forEach((connector, index) => {
+            const rect = connector.getBoundingClientRect();
+            console.log(`  ${index + 1}. ${connector.dataset.type} (${connector.dataset.position})`);
+            console.log(`     Position: ${rect.left}, ${rect.top}, ${rect.width}x${rect.height}`);
+            console.log(`     Z-index: ${window.getComputedStyle(connector).zIndex}`);
+            console.log(`     Pointer-events: ${window.getComputedStyle(connector).pointerEvents}`);
+            console.log(`     Display: ${window.getComputedStyle(connector).display}`);
+            console.log(`     Visibility: ${window.getComputedStyle(connector).visibility}`);
+        });
     }
 
     /**
@@ -1748,13 +1774,13 @@ export class AVMasterGame {
         };
     }
 
-        /**
-     * Find connector element by equipment unique ID and connector type
-     */
+    /**
+ * Find connector element by equipment unique ID and connector type
+ */
     findConnectorElement(equipmentId, connectorType) {
         const equipment = document.querySelector(`[data-unique-id="${equipmentId}"]`);
         if (!equipment) return null;
-        
+
         return equipment.querySelector(`[data-type="${connectorType}"]`);
     }
 
@@ -2043,6 +2069,16 @@ export class AVMasterGame {
                 if (this.currentScreen === 'game') {
                     console.log('🔧 Force refreshing connectors (R key pressed)');
                     this.forceRefreshConnectors();
+                }
+                break;
+            case 'e':
+                if (this.currentScreen === 'game') {
+                    console.log('🔍 Debugging all equipment connectors (E key pressed)');
+                    this.equipment.forEach(equipmentData => {
+                        if (equipmentData.element) {
+                            this.debugEquipmentConnectors(equipmentData.element);
+                        }
+                    });
                 }
                 break;
         }
