@@ -103,7 +103,7 @@ export class AVMasterGame {
                     e.stopPropagation();
                     // Initialize audio system on first user interaction
                     this.audioSystem.initializeOnUserInteraction();
-                    this.showTestPopup();
+                    this.showLevelSelect();
                 });
 
                 // Add mouse events for debugging
@@ -1705,70 +1705,7 @@ export class AVMasterGame {
         document.addEventListener('keydown', handleEscape);
     }
 
-    /**
-     * Show test popup
-     */
-    showTestPopup() {
-        console.log('🧪 Showing test popup');
-        
-        const popup = document.createElement('div');
-        popup.className = 'test-popup';
-        popup.innerHTML = `
-            <div class="popup-content">
-                <div class="popup-header">
-                    <h3>🧪 Test Popup</h3>
-                    <button class="close-btn">&times;</button>
-                </div>
-                <div class="popup-body">
-                    <div class="test-content">
-                        <p><strong>🎯 Test Successful!</strong></p>
-                        <p>This is a test popup to verify the Start New Game button is working correctly.</p>
-                        <p><em>Click the button below to proceed to level selection.</em></p>
-                        <button id="proceed-to-levels" class="proceed-btn">
-                            <i class="fas fa-play"></i>
-                            Proceed to Levels
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(popup);
-        console.log('🧪 Test popup added to DOM');
-
-        // Proceed button
-        const proceedBtn = popup.querySelector('#proceed-to-levels');
-        if (proceedBtn) {
-            proceedBtn.addEventListener('click', () => {
-                console.log('🧪 Proceed button clicked');
-                document.body.removeChild(popup);
-                this.showLevelSelect();
-            });
-        }
-
-        // Close popup
-        popup.querySelector('.close-btn').addEventListener('click', () => {
-            console.log('🧪 Closing test popup (X button)');
-            document.body.removeChild(popup);
-        });
-
-        popup.addEventListener('click', (e) => {
-            if (e.target === popup) {
-                console.log('🧪 Closing test popup (click outside)');
-                document.body.removeChild(popup);
-            }
-        });
-
-        // Close on Escape key
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') {
-                console.log('🧪 Closing test popup (Escape key)');
-                document.body.removeChild(popup);
-                document.removeEventListener('keydown', handleEscape);
-            }
-        };
-        document.addEventListener('keydown', handleEscape);
-    }
+    
 
     /**
      * Show message
