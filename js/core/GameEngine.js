@@ -881,20 +881,20 @@ export class AVMasterGame {
      */
     showLevelComplete() {
         console.log('🎉 Showing level complete popup');
-        
+
         // Stop the game timer
         this.stopGameTimer();
-        
+
         // Calculate final stats
         const finalScore = this.gameState.score;
         const finalTime = this.gameState.time;
         const stars = Math.min(3, Math.floor(finalScore / 100));
-        
+
         // Update the level complete screen with final stats
         const finalScoreEl = document.getElementById('final-score');
         const finalTimeEl = document.getElementById('final-time');
         const finalStarsEl = document.getElementById('final-stars');
-        
+
         if (finalScoreEl) finalScoreEl.textContent = finalScore;
         if (finalTimeEl) {
             const minutes = Math.floor(finalTime / 60);
@@ -902,19 +902,19 @@ export class AVMasterGame {
             finalTimeEl.textContent = `${minutes}:${seconds}`;
         }
         if (finalStarsEl) finalStarsEl.textContent = stars;
-        
+
         // Mark level as completed
         if (!this.gameState.completedLevels.includes(this.currentLevel)) {
             this.gameState.completedLevels.push(this.currentLevel);
             this.saveToStorage();
         }
-        
+
         // Unlock next level
         this.unlockNextLevel();
-        
+
         // Switch to level complete screen
         this.switchScreen('level-complete');
-        
+
         console.log('🎉 Level complete popup shown');
     }
 
@@ -923,14 +923,14 @@ export class AVMasterGame {
      */
     goToNextLevel() {
         console.log('➡️ Going to next level');
-        
+
         const levelOrder = [
             'audio-1', 'audio-2', 'audio-3',
             'lighting-1', 'lighting-2', 'lighting-3',
             'video-1', 'video-2', 'video-3',
             'set-1', 'set-2', 'set-3'
         ];
-        
+
         const currentIndex = levelOrder.indexOf(this.currentLevel);
         if (currentIndex !== -1 && currentIndex < levelOrder.length - 1) {
             const nextLevel = levelOrder[currentIndex + 1];
@@ -1206,6 +1206,12 @@ export class AVMasterGame {
     handleConnectorClick(connector, equipment) {
         console.log(`🔌 Connector clicked: ${connector.dataset.type}, connectionMode: ${this.connectionMode}`);
         console.log(`🔌 Connector pointer-events: ${connector.style.pointerEvents}, computed: ${window.getComputedStyle(connector).pointerEvents}`);
+        console.log(`🔌 Connector z-index: ${window.getComputedStyle(connector).zIndex}`);
+        console.log(`🔌 Connector position: ${connector.offsetLeft}, ${connector.offsetTop}`);
+        console.log(`🔌 Equipment: ${equipment.dataset.name}, type: ${equipment.dataset.type}`);
+
+        // Debug clickability if there are issues
+        this.debugConnectorClickability(connector);
 
         if (this.connectionMode && this.selectedConnector) {
             // Don't allow connecting to the same connector
@@ -1313,6 +1319,31 @@ export class AVMasterGame {
             }
         });
         console.log('✅ All equipment connectors refreshed');
+    }
+
+    /**
+     * Debug connector clickability issues
+     */
+    debugConnectorClickability(connector) {
+        console.log('🔍 Debugging connector clickability...');
+        
+        const rect = connector.getBoundingClientRect();
+        const elementsAtPoint = document.elementsFromPoint(
+            rect.left + rect.width / 2,
+            rect.top + rect.height / 2
+        );
+        
+        console.log('🔍 Elements at connector center point:');
+        elementsAtPoint.forEach((el, index) => {
+            console.log(`  ${index + 1}. ${el.tagName}${el.className ? '.' + el.className.split(' ').join('.') : ''} - z-index: ${window.getComputedStyle(el).zIndex}`);
+        });
+        
+        // Check if connector is the top element
+        if (elementsAtPoint[0] === connector || elementsAtPoint[0].contains(connector)) {
+            console.log('✅ Connector is clickable - it\'s the top element');
+        } else {
+            console.log('❌ Connector is blocked by:', elementsAtPoint[0]);
+        }
     }
 
     /**

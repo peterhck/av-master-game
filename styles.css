@@ -1245,7 +1245,8 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    z-index: 100;
+    z-index: 90;
+    pointer-events: none;
 }
 
 /* Popup Styles */
@@ -1448,7 +1449,7 @@ body {
 .connection-line {
     position: absolute;
     pointer-events: auto;
-    z-index: 1000;
+    z-index: 5;
     cursor: pointer;
 }
 
