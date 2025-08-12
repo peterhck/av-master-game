@@ -1100,6 +1100,9 @@ body {
     border: 2px solid transparent !important;
     border-radius: 50% !important;
     transition: all 0.3s ease !important;
+    /* Ensure connectors are always interactive */
+    position: relative !important;
+    display: block !important;
 }
 
 .connector-dot {
@@ -1109,6 +1112,13 @@ body {
     border: 3px solid white !important;
     box-shadow: 0 0 10px rgba(0, 255, 136, 0.6) !important;
     transition: all 0.3s ease !important;
+    /* Ensure connector dots are always interactive */
+    position: relative !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background: #00ff88 !important;
+    border-radius: 50% !important;
 }
 
 /* UNIVERSAL HOVER EFFECTS */

@@ -1178,6 +1178,9 @@ export class AVMasterGame {
             if (toolElement && toolElement.parentNode) {
                 toolElement.parentNode.removeChild(toolElement);
             }
+
+            // Ensure all connectors are properly set up
+            this.setupConnectorEventListeners();
         }
     }
 
@@ -1322,22 +1325,79 @@ export class AVMasterGame {
     }
 
     /**
+     * Force refresh all connector states and ensure they're working
+     */
+    forceRefreshConnectors() {
+        console.log('🔧 Force refreshing all connectors...');
+        
+        // Remove all existing connector event listeners
+        document.querySelectorAll('.connector').forEach(connector => {
+            const newConnector = connector.cloneNode(true);
+            connector.parentNode.replaceChild(newConnector, connector);
+        });
+
+        // Re-setup connector event listeners
+        this.setupConnectorEventListeners();
+        
+        // Force update all connector visual states
+        this.equipment.forEach(equipmentData => {
+            if (equipmentData.element) {
+                const connectors = equipmentData.element.querySelectorAll('.connector');
+                connectors.forEach(connector => {
+                    this.updateConnectorVisualState(connector);
+                });
+            }
+        });
+        
+        console.log('✅ Force refresh complete');
+    }
+
+    /**
+     * Setup connector event listeners
+     */
+    setupConnectorEventListeners() {
+        document.querySelectorAll('.connector').forEach(connector => {
+            // Remove existing listeners
+            connector.removeEventListener('click', this.handleConnectorClick);
+            
+            // Add new click listener
+            connector.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const equipment = connector.closest('.equipment');
+                if (equipment) {
+                    this.handleConnectorClick(connector, equipment);
+                }
+            });
+
+            // Add hover effects
+            connector.addEventListener('mouseenter', () => {
+                connector.style.transform = 'scale(1.2)';
+            });
+
+            connector.addEventListener('mouseleave', () => {
+                connector.style.transform = 'scale(1)';
+            });
+        });
+    }
+
+    /**
      * Debug connector clickability issues
      */
     debugConnectorClickability(connector) {
         console.log('🔍 Debugging connector clickability...');
-        
+
         const rect = connector.getBoundingClientRect();
         const elementsAtPoint = document.elementsFromPoint(
             rect.left + rect.width / 2,
             rect.top + rect.height / 2
         );
-        
+
         console.log('🔍 Elements at connector center point:');
         elementsAtPoint.forEach((el, index) => {
             console.log(`  ${index + 1}. ${el.tagName}${el.className ? '.' + el.className.split(' ').join('.') : ''} - z-index: ${window.getComputedStyle(el).zIndex}`);
         });
-        
+
         // Check if connector is the top element
         if (elementsAtPoint[0] === connector || elementsAtPoint[0].contains(connector)) {
             console.log('✅ Connector is clickable - it\'s the top element');
@@ -1505,6 +1565,7 @@ export class AVMasterGame {
         // Refresh all connectors to ensure they remain clickable
         console.log('🔄 Refreshing all connectors after connection...');
         this.refreshAllConnectors();
+        this.forceRefreshConnectors();
         console.log('✅ All connectors refreshed');
     }
 
@@ -1658,16 +1719,8 @@ export class AVMasterGame {
     completeLevel() {
         if (!this.currentLevel) return;
 
-        this.gameState.completedLevels.push(this.currentLevel);
-        this.gameState.score += 100;
-
-        if (!this.gameState.unlockedLevels.includes(this.currentLevel)) {
-            this.gameState.unlockedLevels.push(this.currentLevel);
-        }
-
-        this.unlockNextLevel();
-        this.saveGameState();
-        this.showWinnerCelebration();
+        console.log('🎉 Level completed! Showing level complete popup...');
+        this.showLevelComplete();
     }
 
     /**
@@ -1876,6 +1929,12 @@ export class AVMasterGame {
                 break;
             case 'i':
                 this.showDetailedHint();
+                break;
+            case 'r':
+                if (this.currentScreen === 'game') {
+                    console.log('🔧 Force refreshing connectors (R key pressed)');
+                    this.forceRefreshConnectors();
+                }
                 break;
         }
     }
