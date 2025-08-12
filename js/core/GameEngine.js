@@ -1152,6 +1152,11 @@ export class AVMasterGame {
         equipmentElement.className = 'equipment';
         equipmentElement.dataset.type = equipmentType;
         equipmentElement.dataset.name = equipmentName;
+        
+        // Generate unique ID for this equipment instance
+        const uniqueId = generateId();
+        equipmentElement.dataset.uniqueId = uniqueId;
+        
         equipmentElement.style.left = x + 'px';
         equipmentElement.style.top = y + 'px';
 
@@ -1164,7 +1169,7 @@ export class AVMasterGame {
                 <div class="equipment-icon">
                     <i class="${equipmentData.icon}"></i>
                 </div>
-                <div class="equipment-label">${equipmentName}</div>
+                <div class="equipment-label">${equipmentName} (${uniqueId.slice(0, 8)})</div>
                 <div class="equipment-help">?</div>
                 ${this.createConnectorsHTML(equipmentData.connectors)}
             `;
@@ -1182,14 +1187,14 @@ export class AVMasterGame {
             if (helpBtn) {
                 helpBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    this.showEquipmentInfo(equipmentType, equipmentName);
+                    this.showEquipmentInfo(equipmentType, equipmentName, uniqueId);
                 });
             }
 
             // Add double-click handler for equipment settings
             equipmentElement.addEventListener('dblclick', (e) => {
                 e.stopPropagation();
-                this.showEquipmentSettings(equipmentType, equipmentName, equipmentElement);
+                this.showEquipmentSettings(equipmentType, equipmentName, equipmentElement, uniqueId);
             });
 
             // Make equipment draggable
@@ -1200,6 +1205,7 @@ export class AVMasterGame {
                 element: equipmentElement,
                 type: equipmentType,
                 name: equipmentName,
+                uniqueId: uniqueId,
                 data: equipmentData
             });
 
@@ -1292,16 +1298,16 @@ export class AVMasterGame {
  * Update connector visual state based on connection count
  */
     updateConnectorVisualState(connector) {
-        // Count how many connections this connector has using the new structure
+        // Count how many connections this connector has using unique equipment IDs
         const connectionCount = this.connections.filter(conn => {
             const equipment = connector.closest('.equipment');
             if (!equipment) return false;
 
-            const equipmentName = equipment.dataset.name;
+            const equipmentId = equipment.dataset.uniqueId;
             const connectorType = connector.dataset.type;
 
-            return (conn.fromEquipment === equipmentName && conn.fromConnectorType === connectorType) ||
-                (conn.toEquipment === equipmentName && conn.toConnectorType === connectorType);
+            return (conn.fromEquipmentId === equipmentId && conn.fromConnectorType === connectorType) ||
+                (conn.toEquipmentId === equipmentId && conn.toConnectorType === connectorType);
         }).length;
 
         console.log(`🔌 Updating connector visual state: ${connector.dataset.type} has ${connectionCount} connections`);
@@ -1417,7 +1423,7 @@ export class AVMasterGame {
             if (this.handleStageClick) {
                 stageArea.removeEventListener('click', this.handleStageClick);
             }
-            
+
             // Add event delegation listener to stage area
             this.handleStageClick = (e) => {
                 const connector = e.target.closest('.connector');
@@ -1431,7 +1437,7 @@ export class AVMasterGame {
                     }
                 }
             };
-            
+
             stageArea.addEventListener('click', this.handleStageClick);
         }
 
@@ -1443,21 +1449,21 @@ export class AVMasterGame {
             if (this.handleStageMouseLeave) {
                 stageArea.removeEventListener('mouseleave', this.handleStageMouseLeave);
             }
-            
+
             this.handleStageMouseEnter = (e) => {
                 const connector = e.target.closest('.connector');
                 if (connector) {
                     connector.style.transform = 'scale(1.2)';
                 }
             };
-            
+
             this.handleStageMouseLeave = (e) => {
                 const connector = e.target.closest('.connector');
                 if (connector) {
                     connector.style.transform = 'scale(1)';
                 }
             };
-            
+
             stageArea.addEventListener('mouseenter', this.handleStageMouseEnter, true);
             stageArea.addEventListener('mouseleave', this.handleStageMouseLeave, true);
         }
@@ -1605,13 +1611,15 @@ export class AVMasterGame {
      * Create valid connection
      */
     createValidConnection(from, to, validConnection) {
-        // Store connection with equipment-based references instead of DOM element references
+        // Store connection with unique equipment IDs instead of equipment names
         const connectionData = {
             id: generateId(),
-            fromEquipment: from.equipment.dataset.name,
+            fromEquipmentId: from.equipment.dataset.uniqueId,
+            fromEquipmentName: from.equipment.dataset.name,
             fromEquipmentType: from.equipment.dataset.type,
             fromConnectorType: from.connector.dataset.type,
-            toEquipment: to.equipment.dataset.name,
+            toEquipmentId: to.equipment.dataset.uniqueId,
+            toEquipmentName: to.equipment.dataset.name,
             toEquipmentType: to.equipment.dataset.type,
             toConnectorType: to.connector.dataset.type,
             cableType: validConnection.cable,
@@ -1740,13 +1748,13 @@ export class AVMasterGame {
         };
     }
 
-    /**
-     * Find connector element by equipment name and connector type
+        /**
+     * Find connector element by equipment unique ID and connector type
      */
-    findConnectorElement(equipmentName, connectorType) {
-        const equipment = document.querySelector(`[data-name="${equipmentName}"]`);
+    findConnectorElement(equipmentId, connectorType) {
+        const equipment = document.querySelector(`[data-unique-id="${equipmentId}"]`);
         if (!equipment) return null;
-
+        
         return equipment.querySelector(`[data-type="${connectorType}"]`);
     }
 
@@ -1883,7 +1891,7 @@ export class AVMasterGame {
     /**
      * Show equipment information
      */
-    showEquipmentInfo(equipmentType, equipmentName) {
+    showEquipmentInfo(equipmentType, equipmentName, uniqueId = null) {
         console.log('🔍 Showing equipment info for:', equipmentType, equipmentName);
 
         const info = getEquipmentInfo(equipmentType, equipmentName);
@@ -1944,7 +1952,7 @@ export class AVMasterGame {
     /**
      * Show equipment settings popup
      */
-    showEquipmentSettings(equipmentType, equipmentName, equipmentElement) {
+    showEquipmentSettings(equipmentType, equipmentName, equipmentElement, uniqueId = null) {
         console.log('⚙️ Showing equipment settings for:', equipmentType, equipmentName);
 
         const settings = this.getEquipmentSettings(equipmentType, equipmentName);
