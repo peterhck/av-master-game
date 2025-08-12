@@ -878,7 +878,7 @@ export class AVMasterGame {
                 }
             });
         }
-        
+
         // Clear any other elements with connection-line class
         const connectionLines = document.querySelectorAll('.connection-line:not(svg)');
         connectionLines.forEach(line => {
@@ -893,24 +893,22 @@ export class AVMasterGame {
      */
     redrawAllConnectionLines() {
         console.log('🔄 Redrawing all connection lines...');
-        
+
         // Clear existing lines
         this.clearAllConnectionLines();
-        
-        // Redraw all valid connections
+
+        // Redraw all valid connections using stored coordinates
         this.connections.forEach(connection => {
-            if (connection.from && connection.to) {
-                const fromCoords = this.getConnectorCoordinates(connection.from.connector);
-                const toCoords = this.getConnectorCoordinates(connection.to.connector);
-                
-                if (fromCoords && toCoords) {
-                    connection.line = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, getConnectorColor(connection.from.connector.dataset.type));
-                    connection.fromCoords = fromCoords;
-                    connection.toCoords = toCoords;
-                }
+            if (connection.fromCoords && connection.toCoords) {
+                // Use stored coordinates instead of recalculating
+                connection.line = this.drawConnectionLineWithCoordinates(
+                    connection.fromCoords, 
+                    connection.toCoords, 
+                    getConnectorColor(connection.fromConnectorType)
+                );
             }
         });
-        
+
         console.log(`✅ Redrew ${this.connections.length} connection lines`);
     }
 
@@ -1298,14 +1296,21 @@ export class AVMasterGame {
         });
     }
 
-    /**
+        /**
      * Update connector visual state based on connection count
      */
     updateConnectorVisualState(connector) {
-        // Count how many connections this connector has
-        const connectionCount = this.connections.filter(conn =>
-            conn.from.connector === connector || conn.to.connector === connector
-        ).length;
+        // Count how many connections this connector has using the new structure
+        const connectionCount = this.connections.filter(conn => {
+            const equipment = connector.closest('.equipment');
+            if (!equipment) return false;
+            
+            const equipmentName = equipment.dataset.name;
+            const connectorType = connector.dataset.type;
+            
+            return (conn.fromEquipment === equipmentName && conn.fromConnectorType === connectorType) ||
+                   (conn.toEquipment === equipmentName && conn.toConnectorType === connectorType);
+        }).length;
 
         console.log(`🔌 Updating connector visual state: ${connector.dataset.type} has ${connectionCount} connections`);
 
@@ -1325,13 +1330,13 @@ export class AVMasterGame {
 
         // Update connection count display
         let countDisplay = connector.querySelector('.connection-count');
-
+        
         // Remove existing count display if no connections
         if (connectionCount <= 1 && countDisplay) {
             countDisplay.remove();
             countDisplay = null;
         }
-
+        
         // Create count display if multiple connections
         if (connectionCount > 1 && !countDisplay) {
             countDisplay = document.createElement('div');
@@ -1581,26 +1586,35 @@ export class AVMasterGame {
      * Create valid connection
      */
     createValidConnection(from, to, validConnection) {
+        // Store connection with equipment-based references instead of DOM element references
         const connectionData = {
             id: generateId(),
-            from: from,
-            to: to,
+            fromEquipment: from.equipment.dataset.name,
+            fromEquipmentType: from.equipment.dataset.type,
+            fromConnectorType: from.connector.dataset.type,
+            toEquipment: to.equipment.dataset.name,
+            toEquipmentType: to.equipment.dataset.type,
+            toConnectorType: to.connector.dataset.type,
             cableType: validConnection.cable,
             animation: validConnection.animation,
-            line: null
+            line: null,
+            fromCoords: null,
+            toCoords: null
         };
 
-        this.connections.push(connectionData);
-
-        // Create the connection line immediately
+        // Calculate and store coordinates immediately
         const fromCoords = this.getConnectorCoordinates(from.connector);
         const toCoords = this.getConnectorCoordinates(to.connector);
 
         if (fromCoords && toCoords) {
-            connectionData.line = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, getConnectorColor(from.connector.dataset.type));
             connectionData.fromCoords = fromCoords;
             connectionData.toCoords = toCoords;
+            
+            // Create the connection line
+            connectionData.line = this.drawConnectionLineWithCoordinates(fromCoords, toCoords, getConnectorColor(from.connector.dataset.type));
         }
+
+        this.connections.push(connectionData);
 
         // Apply animation
         this.applyConnectionAnimation(from.equipment, validConnection.animation);
@@ -1705,6 +1719,16 @@ export class AVMasterGame {
             x: connectorRect.left - stageRect.left + connectorRect.width / 2,
             y: connectorRect.top - stageRect.top + connectorRect.height / 2
         };
+    }
+
+    /**
+     * Find connector element by equipment name and connector type
+     */
+    findConnectorElement(equipmentName, connectorType) {
+        const equipment = document.querySelector(`[data-name="${equipmentName}"]`);
+        if (!equipment) return null;
+        
+        return equipment.querySelector(`[data-type="${connectorType}"]`);
     }
 
     /**
