@@ -922,6 +922,10 @@ export class AVMasterGame {
         // Stop the game timer
         this.stopGameTimer();
 
+        // Play victory sound and start confetti
+        this.playVictorySound();
+        this.startConfetti();
+
         // Calculate final stats
         const finalScore = this.gameState.score;
         const finalTime = this.gameState.time;
@@ -952,7 +956,7 @@ export class AVMasterGame {
         // Switch to level complete screen
         this.switchScreen('level-complete');
 
-        console.log('🎉 Level complete popup shown');
+        console.log('🎉 Level complete popup shown with confetti and sound');
     }
 
     /**
@@ -2720,5 +2724,82 @@ export class AVMasterGame {
     cleanup() {
         this.audioSystem.cleanup();
         this.stopGameTimer();
+    }
+
+    /**
+     * Start confetti animation
+     */
+    startConfetti() {
+        console.log('🎊 Starting confetti animation');
+        const colors = ['#ff6b35', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'];
+
+        for (let i = 0; i < 150; i++) {
+            setTimeout(() => {
+                this.createConfettiPiece(colors[Math.floor(Math.random() * colors.length)]);
+            }, i * 20);
+        }
+    }
+
+    /**
+     * Create individual confetti piece
+     */
+    createConfettiPiece(color) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti-piece';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = color;
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+
+        document.body.appendChild(confetti);
+
+        // Remove confetti after animation
+        setTimeout(() => {
+            if (confetti.parentNode) {
+                confetti.parentNode.removeChild(confetti);
+            }
+        }, 5000);
+    }
+
+    /**
+     * Play victory sound
+     */
+    playVictorySound() {
+        console.log('🎵 Playing victory sound');
+        // Play a victory melody using the audio system
+        if (this.audioSystem) {
+            this.audioSystem.playVictorySound();
+        } else {
+            // Fallback if audio system is not available
+            this.playSound(523, 0.2, 'sine'); // C
+            setTimeout(() => this.playSound(659, 0.2, 'sine'), 200); // E
+            setTimeout(() => this.playSound(784, 0.2, 'sine'), 400); // G
+            setTimeout(() => this.playSound(1047, 0.4, 'sine'), 600); // C (high)
+        }
+    }
+
+    /**
+     * Play a simple sound (fallback method)
+     */
+    playSound(frequency, duration, type = 'sine') {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        } catch (error) {
+            console.log('🔇 Could not play sound:', error);
+        }
     }
 }
