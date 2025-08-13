@@ -1208,12 +1208,18 @@ export class AVMasterGame {
             ${this.createConnectorsHTML(equipmentData.connectors)}
         `;
 
-            // Ensure connectors are properly initialized (event listeners will be set up globally)
+            // Ensure connectors are properly initialized with unique identifiers
             const connectors = equipmentElement.querySelectorAll('.connector');
-            connectors.forEach(connector => {
+            connectors.forEach((connector, index) => {
                 // Ensure connector is properly initialized
                 connector.style.pointerEvents = 'auto';
                 connector.classList.remove('disabled', 'inactive');
+                
+                // Add unique connector identifier
+                connector.dataset.connectorId = `${uniqueId}-connector-${index}`;
+                connector.dataset.equipmentId = uniqueId;
+                
+                console.log(`🔧 Initialized connector ${index}: ${connector.dataset.type} (${connector.dataset.connectorId})`);
             });
 
             // Add equipment info click handler
@@ -1289,12 +1295,13 @@ export class AVMasterGame {
             }
         });
 
-        return uniqueConnectors.map(connector => {
+        return uniqueConnectors.map((connector, index) => {
             const color = getConnectorColor(connector.type);
             return `
                 <div class="connector ${connector.position}" 
                      data-type="${connector.type}" 
-                     data-position="${connector.position}">
+                     data-position="${connector.position}"
+                     data-connector-index="${index}">
                     <div class="connector-dot" style="background-color: ${color};"></div>
                     <span class="connector-label">${connector.label}</span>
                 </div>
@@ -1480,9 +1487,6 @@ export class AVMasterGame {
 
             // Add event delegation listener to stage area
             this.handleStageClick = (e) => {
-                console.log('🔍 Click event target:', e.target.tagName, e.target.className);
-                console.log('🔍 Click event path:', e.composedPath().map(el => `${el.tagName}${el.className ? '.' + el.className.split(' ').join('.') : ''}`).join(' > '));
-
                 const connector = e.target.closest('.connector');
                 if (connector) {
                     e.preventDefault();
@@ -1494,39 +1498,35 @@ export class AVMasterGame {
                         console.log('🔌 Equipment:', equipment.dataset.name, equipment.dataset.uniqueId);
                         this.handleConnectorClick(connector, equipment);
                     }
-                } else {
-                    console.log('🔍 No connector found in click path');
                 }
             };
 
             stageArea.addEventListener('click', this.handleStageClick);
         }
 
-        // Add hover effects using event delegation as well
+        // Add hover effects using mousemove for better performance
         if (stageArea) {
-            if (this.handleStageMouseEnter) {
-                stageArea.removeEventListener('mouseenter', this.handleStageMouseEnter);
-            }
-            if (this.handleStageMouseLeave) {
-                stageArea.removeEventListener('mouseleave', this.handleStageMouseLeave);
+            if (this.handleStageMouseMove) {
+                stageArea.removeEventListener('mousemove', this.handleStageMouseMove);
             }
 
-            this.handleStageMouseEnter = (e) => {
+            this.handleStageMouseMove = (e) => {
                 const connector = e.target.closest('.connector');
+                
+                // Reset all connectors first
+                document.querySelectorAll('.connector').forEach(conn => {
+                    conn.style.transform = 'scale(1)';
+                    conn.classList.remove('hovered');
+                });
+                
+                // Apply hover effect to current connector
                 if (connector) {
-                    connector.style.transform = 'scale(1.2)';
+                    connector.style.transform = 'scale(1.1)';
+                    connector.classList.add('hovered');
                 }
             };
 
-            this.handleStageMouseLeave = (e) => {
-                const connector = e.target.closest('.connector');
-                if (connector) {
-                    connector.style.transform = 'scale(1)';
-                }
-            };
-
-            stageArea.addEventListener('mouseenter', this.handleStageMouseEnter, true);
-            stageArea.addEventListener('mouseleave', this.handleStageMouseLeave, true);
+            stageArea.addEventListener('mousemove', this.handleStageMouseMove);
         }
     }
 
