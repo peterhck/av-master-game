@@ -88,6 +88,22 @@ export const LEVEL_DATA = {
             { type: 'gain', name: 'Gain Control', icon: 'fas fa-sliders-h' },
             { type: 'eq', name: 'EQ Settings', icon: 'fas fa-wave-square' }
         ],
+        resourceRequirements: {
+            'microphone': ['singer', 'speaker'],
+            'mic-receiver': ['a1-audio-tech', 'a2-audio-tech'],
+            'mixing-console': ['a1-audio-tech'],
+            'speaker': ['a2-audio-tech'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'singer', name: 'Singer', icon: 'fas fa-music', description: 'Vocal performer' },
+            { id: 'speaker', name: 'Speaker', icon: 'fas fa-user-tie', description: 'Public speaker' },
+            { id: 'a1-audio-tech', name: 'A1 Audio Tech', icon: 'fas fa-headphones', description: 'Lead audio technician' },
+            { id: 'a2-audio-tech', name: 'A2 Audio Tech', icon: 'fas fa-microchip', description: 'Assistant audio technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' }
+        ],
         stageSetup: {
             width: '100%',
             height: '100%',

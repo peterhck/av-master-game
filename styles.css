@@ -2307,6 +2307,98 @@ body {
     font-weight: bold;
 }
 
+/* Equipment Resource Button */
+.equipment-resource {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: #27ae60;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.equipment-resource:hover {
+    background: #229954;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.equipment-resource i {
+    color: white;
+    font-size: 10px;
+}
+
+/* Resource Context Menu */
+.resource-context-menu {
+    position: fixed;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    min-width: 250px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.resource-menu-header {
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    color: #333;
+    border-radius: 8px 8px 0 0;
+    font-size: 14px;
+}
+
+.resource-menu-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+}
+
+.resource-menu-item:last-child {
+    border-bottom: none;
+}
+
+.resource-menu-item:hover {
+    background-color: #f8f9fa;
+}
+
+.resource-menu-item i {
+    width: 16px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.resource-menu-item .resource-name {
+    font-weight: 500;
+    color: #333;
+    flex: 1;
+}
+
+.resource-menu-item .resource-description {
+    font-size: 11px;
+    color: #666;
+    text-align: right;
+    max-width: 80px;
+    line-height: 1.2;
+}
+
 /* Equipment Info Popup - Updated to use new class names */
 .equipment-info-popup {
     position: fixed;

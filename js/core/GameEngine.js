@@ -733,16 +733,27 @@ export class AVMasterGame {
         const validationResult = this.validateLevelCompletion(levelData);
 
         if (validationResult.isComplete) {
-            console.log('✅ Setup test passed! All connections are valid.');
-            this.showMessage('✅ Setup test passed! All connections are valid.', 'success');
+            console.log('✅ Setup test passed! All connections and resource assignments are valid.');
+            
+            let successMessage = '✅ Setup test passed! All connections are valid.';
+            if (validationResult.resourceAssignmentComplete !== undefined) {
+                successMessage += ' All resources are correctly assigned.';
+            }
+            
+            this.showMessage(successMessage, 'success');
 
             // Show celebration if level is complete
             if (!this.gameState.completedLevels.includes(this.currentLevel)) {
                 this.showLevelComplete();
             }
         } else {
-            console.log('❌ Setup test failed. Missing connections:', validationResult.missingConnections);
-            this.showMessage(`❌ Setup test failed. Missing: ${validationResult.missingConnections.join(', ')}`, 'error');
+            console.log('❌ Setup test failed. Missing:', validationResult.missingConnections, validationResult.missingResources);
+            
+            let errorMessage = '❌ Setup test failed. Missing: ';
+            const missingItems = [...validationResult.missingConnections, ...validationResult.missingResources];
+            errorMessage += missingItems.join(', ');
+            
+            this.showMessage(errorMessage, 'error');
 
             // Highlight missing connections
             this.highlightMissingConnections(validationResult.missingConnections);
@@ -819,9 +830,24 @@ export class AVMasterGame {
             }
         });
 
+        // Check resource assignments if this level has resource requirements
+        let resourceAssignmentComplete = true;
+        let missingResources = [];
+        
+        if (levelData.resourceRequirements) {
+            resourceAssignmentComplete = this.checkResourceAssignments();
+            
+            if (!resourceAssignmentComplete) {
+                missingResources.push('Resource assignments');
+                isComplete = false;
+            }
+        }
+
         return {
             isComplete,
-            missingConnections
+            missingConnections,
+            missingResources,
+            resourceAssignmentComplete
         };
     }
 
@@ -1170,14 +1196,17 @@ export class AVMasterGame {
         const equipmentData = levelData.equipment.find(eq => eq.name === equipmentName);
 
         if (equipmentData) {
-            equipmentElement.innerHTML = `
-                <div class="equipment-icon">
-                    <i class="${equipmentData.icon}"></i>
-                </div>
-                <div class="equipment-label">${equipmentName} (${uniqueId.slice(0, 8)})</div>
-                <div class="equipment-help">?</div>
-                ${this.createConnectorsHTML(equipmentData.connectors)}
-            `;
+                    equipmentElement.innerHTML = `
+            <div class="equipment-icon">
+                <i class="${equipmentData.icon}"></i>
+            </div>
+            <div class="equipment-label">${equipmentName} (${uniqueId.slice(0, 8)})</div>
+            <div class="equipment-help">?</div>
+            <div class="equipment-resource" title="Right-click to assign resource">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            ${this.createConnectorsHTML(equipmentData.connectors)}
+        `;
 
             // Ensure connectors are properly initialized (event listeners will be set up globally)
             const connectors = equipmentElement.querySelectorAll('.connector');
@@ -1193,6 +1222,16 @@ export class AVMasterGame {
                 helpBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     this.showEquipmentInfo(equipmentType, equipmentName, uniqueId);
+                });
+            }
+
+            // Add right-click handler for resource assignment
+            const resourceBtn = equipmentElement.querySelector('.equipment-resource');
+            if (resourceBtn) {
+                resourceBtn.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.showResourceMenu(e, equipmentType, equipmentElement, uniqueId);
                 });
             }
 
@@ -2801,5 +2840,164 @@ export class AVMasterGame {
         } catch (error) {
             console.log('🔇 Could not play sound:', error);
         }
+    }
+
+    /**
+     * Show resource assignment menu
+     */
+    showResourceMenu(event, equipmentType, equipmentElement, uniqueId) {
+        console.log('👥 Showing resource menu for:', equipmentType);
+
+        // Remove any existing resource menu
+        const existingMenu = document.querySelector('.resource-context-menu');
+        if (existingMenu) {
+            existingMenu.remove();
+        }
+
+        const levelData = this.getLevelData(this.currentLevel);
+        if (!levelData || !levelData.resourceRequirements || !levelData.availableResources) {
+            console.log('❌ No resource requirements defined for this level');
+            return;
+        }
+
+        // Get required resources for this equipment type
+        const requiredResources = levelData.resourceRequirements[equipmentType] || [];
+        const availableResources = levelData.availableResources;
+
+        // Create menu
+        const menu = document.createElement('div');
+        menu.className = 'resource-context-menu';
+        menu.style.left = event.pageX + 'px';
+        menu.style.top = event.pageY + 'px';
+
+        // Add header
+        const header = document.createElement('div');
+        header.className = 'resource-menu-header';
+        header.textContent = `Assign Resource to ${equipmentElement.dataset.name}`;
+        menu.appendChild(header);
+
+        // Add resource options
+        availableResources.forEach(resource => {
+            const menuItem = document.createElement('div');
+            menuItem.className = 'resource-menu-item';
+            menuItem.innerHTML = `
+                <i class="${resource.icon}"></i>
+                <span class="resource-name">${resource.name}</span>
+                <span class="resource-description">${resource.description}</span>
+            `;
+
+            menuItem.addEventListener('click', () => {
+                this.assignResourceToEquipment(resource, equipmentElement, requiredResources);
+                menu.remove();
+            });
+
+            menu.appendChild(menuItem);
+        });
+
+        document.body.appendChild(menu);
+
+        // Close menu when clicking outside
+        const closeMenu = (e) => {
+            if (!menu.contains(e.target)) {
+                menu.remove();
+                document.removeEventListener('click', closeMenu);
+            }
+        };
+
+        // Delay adding the listener to prevent immediate closure
+        setTimeout(() => {
+            document.addEventListener('click', closeMenu);
+        }, 100);
+    }
+
+    /**
+     * Assign resource to equipment
+     */
+    assignResourceToEquipment(resource, equipmentElement, requiredResources) {
+        console.log('👥 Assigning resource:', resource.name, 'to equipment:', equipmentElement.dataset.name);
+
+        // Check if this is a valid resource for this equipment
+        const isValidResource = requiredResources.includes(resource.id);
+
+        if (isValidResource) {
+            // Valid resource - add it to the equipment
+            this.addResourceIconToEquipment(resource, equipmentElement);
+            console.log('✅ Resource assigned successfully');
+            
+            // Play success sound
+            this.playSound(800, 0.2, 'sine');
+            setTimeout(() => this.playSound(1000, 0.3, 'sine'), 200);
+        } else {
+            // Invalid resource - show error
+            console.log('❌ Invalid resource for this equipment');
+            this.showMessage(`❌ ${resource.name} cannot be assigned to ${equipmentElement.dataset.name}`, 'error');
+            
+            // Play error sound
+            this.playSound(200, 0.3, 'sawtooth');
+            setTimeout(() => this.playSound(150, 0.3, 'sawtooth'), 100);
+        }
+    }
+
+    /**
+     * Add resource icon to equipment
+     */
+    addResourceIconToEquipment(resource, equipmentElement) {
+        // Remove any existing resource icon
+        const existingResource = equipmentElement.querySelector('.equipment-resource i');
+        if (existingResource) {
+            existingResource.className = resource.icon;
+            existingResource.title = resource.name;
+        } else {
+            // Create new resource icon
+            const resourceIcon = document.createElement('i');
+            resourceIcon.className = resource.icon;
+            resourceIcon.title = resource.name;
+            resourceIcon.style.fontSize = '12px';
+            
+            const resourceBtn = equipmentElement.querySelector('.equipment-resource');
+            if (resourceBtn) {
+                resourceBtn.innerHTML = '';
+                resourceBtn.appendChild(resourceIcon);
+                resourceBtn.style.background = '#27ae60';
+                resourceBtn.title = `Assigned: ${resource.name}`;
+            }
+        }
+
+        // Store the assigned resource in the equipment data
+        equipmentElement.dataset.assignedResource = resource.id;
+        equipmentElement.dataset.assignedResourceName = resource.name;
+    }
+
+    /**
+     * Check if all equipment has correct resources assigned
+     */
+    checkResourceAssignments() {
+        const levelData = this.getLevelData(this.currentLevel);
+        if (!levelData || !levelData.resourceRequirements) {
+            return true; // No resource requirements for this level
+        }
+
+        let allAssigned = true;
+        let correctAssignments = 0;
+        let totalRequired = 0;
+
+        this.equipment.forEach(equipmentData => {
+            const equipmentType = equipmentData.type;
+            const requiredResources = levelData.resourceRequirements[equipmentType];
+            
+            if (requiredResources && requiredResources.length > 0) {
+                totalRequired++;
+                const assignedResource = equipmentData.element.dataset.assignedResource;
+                
+                if (assignedResource && requiredResources.includes(assignedResource)) {
+                    correctAssignments++;
+                } else {
+                    allAssigned = false;
+                }
+            }
+        });
+
+        console.log(`👥 Resource Assignment Check: ${correctAssignments}/${totalRequired} correct assignments`);
+        return allAssigned && totalRequired > 0;
     }
 }
