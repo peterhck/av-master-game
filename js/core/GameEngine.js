@@ -1200,7 +1200,7 @@ export class AVMasterGame {
             <div class="equipment-icon">
                 <i class="${equipmentData.icon}"></i>
             </div>
-            <div class="equipment-label">${equipmentName} (${uniqueId.slice(0, 8)})</div>
+            <div class="equipment-label">${equipmentName}</div>
             <div class="equipment-help">?</div>
             <div class="equipment-resource" title="Click to assign resource">
                 <i class="fas fa-user-plus"></i>
@@ -2886,7 +2886,7 @@ export class AVMasterGame {
         // Check if resource is already assigned
         const currentResource = equipmentElement.dataset.assignedResource;
         const currentResourceName = equipmentElement.dataset.assignedResourceName;
-        
+
         // Add header
         const header = document.createElement('div');
         header.className = 'resource-menu-header';
@@ -2901,11 +2901,11 @@ export class AVMasterGame {
         availableResources.forEach(resource => {
             const menuItem = document.createElement('div');
             menuItem.className = 'resource-menu-item';
-            
+
             // Add visual indicator if this is the currently assigned resource
             const isCurrentlyAssigned = currentResource === resource.id;
             const assignedIndicator = isCurrentlyAssigned ? ' ✅' : '';
-            
+
             menuItem.innerHTML = `
                 <i class="${resource.icon}"></i>
                 <span class="resource-name">${resource.name}${assignedIndicator}</span>
@@ -3004,10 +3004,10 @@ export class AVMasterGame {
                 resourceIcon.title = resource.name;
             }
 
-                        // Update styling to show it's assigned
+            // Update styling to show it's assigned
             resourceBtn.style.background = '#27ae60';
             resourceBtn.title = `Assigned: ${resource.name} (Click to change)`;
-            
+
             // Keep it clickable so users can change the assignment
             resourceBtn.style.pointerEvents = 'auto';
         }
@@ -3055,7 +3055,7 @@ export class AVMasterGame {
      */
     removeResourceAssignment(equipmentElement) {
         console.log('👥 Removing resource assignment from:', equipmentElement.dataset.name);
-        
+
         const resourceBtn = equipmentElement.querySelector('.equipment-resource');
         if (resourceBtn) {
             // Reset to default state
@@ -3064,11 +3064,11 @@ export class AVMasterGame {
                 resourceIcon.className = 'fas fa-user-plus';
                 resourceIcon.title = '';
             }
-            
+
             // Reset styling
             resourceBtn.style.background = '#27ae60';
             resourceBtn.title = 'Click to assign resource';
-            
+
             // Keep it clickable
             resourceBtn.style.pointerEvents = 'auto';
         }
@@ -3076,7 +3076,7 @@ export class AVMasterGame {
         // Clear the assigned resource data
         delete equipmentElement.dataset.assignedResource;
         delete equipmentElement.dataset.assignedResourceName;
-        
+
         console.log('✅ Resource assignment removed');
         this.showMessage('Resource assignment removed', 'info');
     }
