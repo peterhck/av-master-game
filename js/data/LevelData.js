@@ -108,10 +108,10 @@ export const LEVEL_DATA = {
             width: '100%',
             height: '100%',
             zones: [
-                { name: 'Stage Left', x: '10%', y: '25%', width: '20%', height: '20%' },
-                { name: 'Stage Right', x: '70%', y: '25%', width: '20%', height: '20%' },
-                { name: 'FOH', x: '45%', y: '60%', width: '10%', height: '12%' },
-                { name: 'Power Station', x: '5%', y: '60%', width: '8%', height: '10%' }
+                { name: 'Stage Left', x: '5%', y: '15%', width: '30%', height: '35%' },
+                { name: 'Stage Right', x: '65%', y: '15%', width: '30%', height: '35%' },
+                { name: 'FOH', x: '35%', y: '55%', width: '20%', height: '20%' },
+                { name: 'Power Station', x: '2%', y: '55%', width: '15%', height: '15%' }
             ]
         }
     },
@@ -230,12 +230,12 @@ export const LEVEL_DATA = {
             width: '100%',
             height: '100%',
             zones: [
-                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
-                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
-                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
-                { name: 'Monitor Zone', x: '8%', y: '60%', width: '15%', height: '10%' },
-                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
-                { name: 'Wireless Zone', x: '75%', y: '30%', width: '12%', height: '10%' }
+                { name: 'Stage Front', x: '10%', y: '8%', width: '30%', height: '20%' },
+                { name: 'Stage Back', x: '10%', y: '30%', width: '30%', height: '20%' },
+                { name: 'FOH Position', x: '45%', y: '15%', width: '18%', height: '15%' },
+                { name: 'Monitor Zone', x: '5%', y: '55%', width: '20%', height: '15%' },
+                { name: 'Power Station', x: '2%', y: '45%', width: '12%', height: '12%' },
+                { name: 'Wireless Zone', x: '70%', y: '25%', width: '18%', height: '15%' }
             ]
         }
     },
@@ -398,12 +398,12 @@ export const LEVEL_DATA = {
             width: '100%',
             height: '100%',
             zones: [
-                { name: 'Stage Front', x: '15%', y: '12%', width: '25%', height: '15%' },
-                { name: 'Stage Back', x: '15%', y: '30%', width: '25%', height: '15%' },
-                { name: 'FOH Position', x: '50%', y: '18%', width: '12%', height: '10%' },
-                { name: 'Monitor Zone', x: '8%', y: '60%', width: '15%', height: '10%' },
-                { name: 'Power Station', x: '4%', y: '50%', width: '6%', height: '8%' },
-                { name: 'Wireless Zone', x: '75%', y: '30%', width: '12%', height: '10%' }
+                { name: 'Stage Front', x: '10%', y: '8%', width: '30%', height: '20%' },
+                { name: 'Stage Back', x: '10%', y: '30%', width: '30%', height: '20%' },
+                { name: 'FOH Position', x: '45%', y: '15%', width: '18%', height: '15%' },
+                { name: 'Monitor Zone', x: '5%', y: '55%', width: '20%', height: '15%' },
+                { name: 'Power Station', x: '2%', y: '45%', width: '12%', height: '12%' },
+                { name: 'Wireless Zone', x: '70%', y: '25%', width: '18%', height: '15%' }
             ]
         }
     },
