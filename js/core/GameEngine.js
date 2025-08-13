@@ -734,12 +734,12 @@ export class AVMasterGame {
 
         if (validationResult.isComplete) {
             console.log('✅ Setup test passed! All connections and resource assignments are valid.');
-            
+
             let successMessage = '✅ Setup test passed! All connections are valid.';
             if (validationResult.resourceAssignmentComplete !== undefined) {
                 successMessage += ' All resources are correctly assigned.';
             }
-            
+
             this.showMessage(successMessage, 'success');
 
             // Show celebration if level is complete
@@ -748,11 +748,11 @@ export class AVMasterGame {
             }
         } else {
             console.log('❌ Setup test failed. Missing:', validationResult.missingConnections, validationResult.missingResources);
-            
+
             let errorMessage = '❌ Setup test failed. Missing: ';
             const missingItems = [...validationResult.missingConnections, ...validationResult.missingResources];
             errorMessage += missingItems.join(', ');
-            
+
             this.showMessage(errorMessage, 'error');
 
             // Highlight missing connections
@@ -833,10 +833,10 @@ export class AVMasterGame {
         // Check resource assignments if this level has resource requirements
         let resourceAssignmentComplete = true;
         let missingResources = [];
-        
+
         if (levelData.resourceRequirements) {
             resourceAssignmentComplete = this.checkResourceAssignments();
-            
+
             if (!resourceAssignmentComplete) {
                 missingResources.push('Resource assignments');
                 isComplete = false;
@@ -1196,13 +1196,13 @@ export class AVMasterGame {
         const equipmentData = levelData.equipment.find(eq => eq.name === equipmentName);
 
         if (equipmentData) {
-                    equipmentElement.innerHTML = `
+            equipmentElement.innerHTML = `
             <div class="equipment-icon">
                 <i class="${equipmentData.icon}"></i>
             </div>
             <div class="equipment-label">${equipmentName} (${uniqueId.slice(0, 8)})</div>
             <div class="equipment-help">?</div>
-            <div class="equipment-resource" title="Right-click to assign resource">
+            <div class="equipment-resource" title="Click to assign resource">
                 <i class="fas fa-user-plus"></i>
             </div>
             ${this.createConnectorsHTML(equipmentData.connectors)}
@@ -1228,9 +1228,19 @@ export class AVMasterGame {
             // Add right-click handler for resource assignment
             const resourceBtn = equipmentElement.querySelector('.equipment-resource');
             if (resourceBtn) {
+                // Right-click (context menu) event
                 resourceBtn.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    console.log('👥 Right-click detected on resource button');
+                    this.showResourceMenu(e, equipmentType, equipmentElement, uniqueId);
+                });
+                
+                // Also add regular click as fallback for testing
+                resourceBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('👥 Click detected on resource button (fallback)');
                     this.showResourceMenu(e, equipmentType, equipmentElement, uniqueId);
                 });
             }
@@ -2847,6 +2857,8 @@ export class AVMasterGame {
      */
     showResourceMenu(event, equipmentType, equipmentElement, uniqueId) {
         console.log('👥 Showing resource menu for:', equipmentType);
+        console.log('👥 Event type:', event.type);
+        console.log('👥 Equipment element:', equipmentElement);
 
         // Remove any existing resource menu
         const existingMenu = document.querySelector('.resource-context-menu');
@@ -2857,6 +2869,7 @@ export class AVMasterGame {
         const levelData = this.getLevelData(this.currentLevel);
         if (!levelData || !levelData.resourceRequirements || !levelData.availableResources) {
             console.log('❌ No resource requirements defined for this level');
+            console.log('❌ Level data:', levelData);
             return;
         }
 
@@ -2923,7 +2936,7 @@ export class AVMasterGame {
             // Valid resource - add it to the equipment
             this.addResourceIconToEquipment(resource, equipmentElement);
             console.log('✅ Resource assigned successfully');
-            
+
             // Play success sound
             this.playSound(800, 0.2, 'sine');
             setTimeout(() => this.playSound(1000, 0.3, 'sine'), 200);
@@ -2931,36 +2944,32 @@ export class AVMasterGame {
             // Invalid resource - show error
             console.log('❌ Invalid resource for this equipment');
             this.showMessage(`❌ ${resource.name} cannot be assigned to ${equipmentElement.dataset.name}`, 'error');
-            
+
             // Play error sound
             this.playSound(200, 0.3, 'sawtooth');
             setTimeout(() => this.playSound(150, 0.3, 'sawtooth'), 100);
         }
     }
 
-    /**
+        /**
      * Add resource icon to equipment
      */
     addResourceIconToEquipment(resource, equipmentElement) {
-        // Remove any existing resource icon
-        const existingResource = equipmentElement.querySelector('.equipment-resource i');
-        if (existingResource) {
-            existingResource.className = resource.icon;
-            existingResource.title = resource.name;
-        } else {
-            // Create new resource icon
-            const resourceIcon = document.createElement('i');
-            resourceIcon.className = resource.icon;
-            resourceIcon.title = resource.name;
-            resourceIcon.style.fontSize = '12px';
-            
-            const resourceBtn = equipmentElement.querySelector('.equipment-resource');
-            if (resourceBtn) {
-                resourceBtn.innerHTML = '';
-                resourceBtn.appendChild(resourceIcon);
-                resourceBtn.style.background = '#27ae60';
-                resourceBtn.title = `Assigned: ${resource.name}`;
+        const resourceBtn = equipmentElement.querySelector('.equipment-resource');
+        if (resourceBtn) {
+            // Update the icon
+            const resourceIcon = resourceBtn.querySelector('i');
+            if (resourceIcon) {
+                resourceIcon.className = resource.icon;
+                resourceIcon.title = resource.name;
             }
+            
+            // Update styling to show it's assigned
+            resourceBtn.style.background = '#27ae60';
+            resourceBtn.title = `Assigned: ${resource.name}`;
+            
+            // Disable further clicks since resource is assigned
+            resourceBtn.style.pointerEvents = 'none';
         }
 
         // Store the assigned resource in the equipment data
@@ -2984,11 +2993,11 @@ export class AVMasterGame {
         this.equipment.forEach(equipmentData => {
             const equipmentType = equipmentData.type;
             const requiredResources = levelData.resourceRequirements[equipmentType];
-            
+
             if (requiredResources && requiredResources.length > 0) {
                 totalRequired++;
                 const assignedResource = equipmentData.element.dataset.assignedResource;
-                
+
                 if (assignedResource && requiredResources.includes(assignedResource)) {
                     correctAssignments++;
                 } else {
