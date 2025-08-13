@@ -1235,7 +1235,7 @@ export class AVMasterGame {
                     console.log('👥 Right-click detected on resource button');
                     this.showResourceMenu(e, equipmentType, equipmentElement, uniqueId);
                 });
-                
+
                 // Also add regular click as fallback for testing
                 resourceBtn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -2883,21 +2883,40 @@ export class AVMasterGame {
         menu.style.left = event.pageX + 'px';
         menu.style.top = event.pageY + 'px';
 
+        // Check if resource is already assigned
+        const currentResource = equipmentElement.dataset.assignedResource;
+        const currentResourceName = equipmentElement.dataset.assignedResourceName;
+        
         // Add header
         const header = document.createElement('div');
         header.className = 'resource-menu-header';
-        header.textContent = `Assign Resource to ${equipmentElement.dataset.name}`;
+        if (currentResource) {
+            header.textContent = `Change Resource for ${equipmentElement.dataset.name} (Currently: ${currentResourceName})`;
+        } else {
+            header.textContent = `Assign Resource to ${equipmentElement.dataset.name}`;
+        }
         menu.appendChild(header);
 
         // Add resource options
         availableResources.forEach(resource => {
             const menuItem = document.createElement('div');
             menuItem.className = 'resource-menu-item';
+            
+            // Add visual indicator if this is the currently assigned resource
+            const isCurrentlyAssigned = currentResource === resource.id;
+            const assignedIndicator = isCurrentlyAssigned ? ' ✅' : '';
+            
             menuItem.innerHTML = `
                 <i class="${resource.icon}"></i>
-                <span class="resource-name">${resource.name}</span>
+                <span class="resource-name">${resource.name}${assignedIndicator}</span>
                 <span class="resource-description">${resource.description}</span>
             `;
+
+            // Highlight currently assigned resource
+            if (isCurrentlyAssigned) {
+                menuItem.style.backgroundColor = '#e8f5e8';
+                menuItem.style.fontWeight = 'bold';
+            }
 
             menuItem.addEventListener('click', () => {
                 this.assignResourceToEquipment(resource, equipmentElement, requiredResources);
@@ -2906,6 +2925,27 @@ export class AVMasterGame {
 
             menu.appendChild(menuItem);
         });
+
+        // Add "Remove Assignment" option if a resource is currently assigned
+        if (currentResource) {
+            const removeItem = document.createElement('div');
+            removeItem.className = 'resource-menu-item';
+            removeItem.style.borderTop = '2px solid #ddd';
+            removeItem.style.marginTop = '5px';
+            removeItem.style.paddingTop = '15px';
+            removeItem.innerHTML = `
+                <i class="fas fa-times" style="color: #e74c3c;"></i>
+                <span class="resource-name" style="color: #e74c3c;">Remove Assignment</span>
+                <span class="resource-description" style="color: #e74c3c;">Clear current resource</span>
+            `;
+
+            removeItem.addEventListener('click', () => {
+                this.removeResourceAssignment(equipmentElement);
+                menu.remove();
+            });
+
+            menu.appendChild(removeItem);
+        }
 
         document.body.appendChild(menu);
 
@@ -2951,9 +2991,9 @@ export class AVMasterGame {
         }
     }
 
-        /**
-     * Add resource icon to equipment
-     */
+    /**
+ * Add resource icon to equipment
+ */
     addResourceIconToEquipment(resource, equipmentElement) {
         const resourceBtn = equipmentElement.querySelector('.equipment-resource');
         if (resourceBtn) {
@@ -2963,13 +3003,13 @@ export class AVMasterGame {
                 resourceIcon.className = resource.icon;
                 resourceIcon.title = resource.name;
             }
-            
-            // Update styling to show it's assigned
+
+                        // Update styling to show it's assigned
             resourceBtn.style.background = '#27ae60';
-            resourceBtn.title = `Assigned: ${resource.name}`;
+            resourceBtn.title = `Assigned: ${resource.name} (Click to change)`;
             
-            // Disable further clicks since resource is assigned
-            resourceBtn.style.pointerEvents = 'none';
+            // Keep it clickable so users can change the assignment
+            resourceBtn.style.pointerEvents = 'auto';
         }
 
         // Store the assigned resource in the equipment data
@@ -3008,5 +3048,36 @@ export class AVMasterGame {
 
         console.log(`👥 Resource Assignment Check: ${correctAssignments}/${totalRequired} correct assignments`);
         return allAssigned && totalRequired > 0;
+    }
+
+    /**
+     * Remove resource assignment from equipment
+     */
+    removeResourceAssignment(equipmentElement) {
+        console.log('👥 Removing resource assignment from:', equipmentElement.dataset.name);
+        
+        const resourceBtn = equipmentElement.querySelector('.equipment-resource');
+        if (resourceBtn) {
+            // Reset to default state
+            const resourceIcon = resourceBtn.querySelector('i');
+            if (resourceIcon) {
+                resourceIcon.className = 'fas fa-user-plus';
+                resourceIcon.title = '';
+            }
+            
+            // Reset styling
+            resourceBtn.style.background = '#27ae60';
+            resourceBtn.title = 'Click to assign resource';
+            
+            // Keep it clickable
+            resourceBtn.style.pointerEvents = 'auto';
+        }
+
+        // Clear the assigned resource data
+        delete equipmentElement.dataset.assignedResource;
+        delete equipmentElement.dataset.assignedResourceName;
+        
+        console.log('✅ Resource assignment removed');
+        this.showMessage('Resource assignment removed', 'info');
     }
 }
