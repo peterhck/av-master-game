@@ -1126,9 +1126,8 @@ body {
     border-radius: 50% !important;
 }
 
-/* UNIVERSAL HOVER EFFECTS */
-.connector:hover,
-.connector.hovered {
+/* UNIVERSAL HOVER EFFECTS - CSS-only for stability */
+.connector:hover {
     z-index: 60 !important;
     transform: scale(1.1) !important;
     border: 3px solid #00ff88 !important;
@@ -1138,10 +1137,13 @@ body {
 /* Specific styling for XLR connectors to prevent flickering */
 .connector[data-type="xlr-in"],
 .connector[data-type="xlr-out"] {
-    transition: transform 0.1s ease-out !important;
+    transition: transform 0.15s ease-out !important;
     will-change: transform !important;
     backface-visibility: hidden !important;
     -webkit-backface-visibility: hidden !important;
+    /* Ensure XLR connectors are always clickable */
+    pointer-events: auto !important;
+    cursor: pointer !important;
 }
 
 .connector:hover .connector-dot {
