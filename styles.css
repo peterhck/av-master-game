@@ -1082,7 +1082,6 @@ body {
 /* Special positioning for mixer bottom connectors */
 .equipment[data-type="mixing-console"] .connector.bottom {
     bottom: -12px;
-    z-index: 20;
 }
 
 /* MIXER CONNECTORS USE UNIVERSAL RULES - NO SPECIAL TREATMENT */
@@ -1110,7 +1109,6 @@ body {
     z-index: 70 !important;
     pointer-events: auto !important;
     cursor: pointer !important;
-    background: #00ff88 !important;
     border: 3px solid white !important;
     box-shadow: 0 0 10px rgba(0, 255, 136, 0.6) !important;
     transition: all 0.3s ease !important;

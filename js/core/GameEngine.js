@@ -1290,18 +1290,7 @@ export class AVMasterGame {
     createConnectorsHTML(connectors) {
         if (!connectors || connectors.length === 0) return '';
 
-        // Group connectors by type to ensure unique connector types per equipment
-        const uniqueConnectors = [];
-        const seenTypes = new Set();
-
-        connectors.forEach(connector => {
-            if (!seenTypes.has(connector.type)) {
-                seenTypes.add(connector.type);
-                uniqueConnectors.push(connector);
-            }
-        });
-
-        return uniqueConnectors.map((connector, index) => {
+        return connectors.map((connector, index) => {
             const color = getConnectorColor(connector.type);
             return `
                 <div class="connector ${connector.position}" 
