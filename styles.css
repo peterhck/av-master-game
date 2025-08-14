@@ -1134,17 +1134,7 @@ body {
     box-shadow: 0 0 20px rgba(0, 255, 136, 0.8) !important;
 }
 
-/* Specific styling for XLR connectors to prevent flickering */
-.connector[data-type="xlr-in"],
-.connector[data-type="xlr-out"] {
-    transition: transform 0.15s ease-out !important;
-    will-change: transform !important;
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
-    /* Ensure XLR connectors are always clickable */
-    pointer-events: auto !important;
-    cursor: pointer !important;
-}
+/* XLR connectors use universal rules - no special treatment needed */
 
 .connector:hover .connector-dot {
     transform: scale(1.4) !important;

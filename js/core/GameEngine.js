@@ -1208,24 +1208,24 @@ export class AVMasterGame {
             ${this.createConnectorsHTML(equipmentData.connectors)}
         `;
 
-                        // Ensure connectors are properly initialized with unique identifiers
+            // Ensure connectors are properly initialized with unique identifiers
             const connectors = equipmentElement.querySelectorAll('.connector');
             connectors.forEach((connector, index) => {
                 // Ensure connector is properly initialized
                 connector.style.pointerEvents = 'auto';
                 connector.classList.remove('disabled', 'inactive', 'hovered');
-                
+
                 // Add unique connector identifier
                 connector.dataset.connectorId = `${uniqueId}-connector-${index}`;
                 connector.dataset.equipmentId = uniqueId;
-                
+
                 // Ensure stable positioning - no transform manipulation
                 connector.style.transform = '';
                 connector.classList.remove('selected');
-                
+
                 // Force a reflow to ensure proper rendering
                 connector.offsetHeight;
-                
+
                 console.log(`🔧 Initialized connector ${index}: ${connector.dataset.type} (${connector.dataset.connectorId})`);
             });
 
@@ -1486,7 +1486,7 @@ export class AVMasterGame {
         // Re-setup connector event listeners
         this.setupConnectorEventListeners();
 
-                // Force update all connector visual states and ensure proper initialization
+        // Force update all connector visual states and ensure proper initialization
         this.equipment.forEach(equipmentData => {
             if (equipmentData.element) {
                 const connectors = equipmentData.element.querySelectorAll('.connector');
@@ -1496,7 +1496,7 @@ export class AVMasterGame {
                     connector.classList.remove('disabled', 'inactive', 'hovered');
                     connector.style.transform = '';
                     connector.classList.remove('selected');
-                    
+
                     // Update visual state
                     this.updateConnectorVisualState(connector);
                 });
@@ -1539,7 +1539,7 @@ export class AVMasterGame {
             stageArea.addEventListener('click', this.handleStageClick);
         }
 
-                // Remove JavaScript hover effects - use CSS-only hover for stability
+        // Remove JavaScript hover effects - use CSS-only hover for stability
         // This prevents flickering and ensures click events work properly
     }
 
@@ -1561,26 +1561,11 @@ export class AVMasterGame {
     }
 
         /**
-     * Refresh XLR connectors specifically to fix flickering issues
+     * Refresh XLR connectors - now uses universal connector refresh
      */
     refreshXLRConnectors() {
-        console.log('🔧 Refreshing XLR connectors...');
-        
-        document.querySelectorAll('.connector[data-type="xlr-in"], .connector[data-type="xlr-out"]').forEach(connector => {
-            // Reset transform and classes - no JavaScript transform manipulation
-            connector.style.transform = '';
-            connector.classList.remove('hovered', 'selected');
-            
-            // Ensure pointer events are enabled
-            connector.style.pointerEvents = 'auto';
-            
-            // Force a reflow
-            connector.offsetHeight;
-            
-            console.log(`🔧 Refreshed XLR connector: ${connector.dataset.type} on ${connector.closest('.equipment')?.dataset.name}`);
-        });
-        
-        console.log('✅ XLR connectors refreshed');
+        console.log('🔧 Refreshing XLR connectors using universal method...');
+        this.forceRefreshConnectors();
     }
 
     /**
