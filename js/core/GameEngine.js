@@ -1219,8 +1219,7 @@ export class AVMasterGame {
                 connector.dataset.connectorId = `${uniqueId}-connector-${index}`;
                 connector.dataset.equipmentId = uniqueId;
 
-                // Ensure stable positioning - no transform manipulation
-                connector.style.transform = '';
+                // Ensure stable positioning - let CSS handle transforms
                 connector.classList.remove('selected');
 
                 // Force a reflow to ensure proper rendering
@@ -1494,7 +1493,6 @@ export class AVMasterGame {
                     // Ensure proper initialization
                     connector.style.pointerEvents = 'auto';
                     connector.classList.remove('disabled', 'inactive', 'hovered');
-                    connector.style.transform = '';
                     connector.classList.remove('selected');
 
                     // Update visual state
@@ -1560,9 +1558,9 @@ export class AVMasterGame {
         }
     }
 
-        /**
-     * Refresh XLR connectors - now uses universal connector refresh
-     */
+    /**
+ * Refresh XLR connectors - now uses universal connector refresh
+ */
     refreshXLRConnectors() {
         console.log('🔧 Refreshing XLR connectors using universal method...');
         this.forceRefreshConnectors();

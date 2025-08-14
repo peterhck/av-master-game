@@ -1,0 +1,336 @@
+[
+  {
+    "id": "TC001",
+    "title": "Equipment Drag and Drop Placement",
+    "description": "Verify that equipment can be dragged from the toolbar onto the stage canvas and positioned as desired.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the game level with toolbar and stage canvas."
+      },
+      {
+        "type": "action",
+        "description": "Drag an equipment item from the toolbar onto the stage canvas."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the equipment is placed on the stage canvas at dropped location."
+      },
+      {
+        "type": "action",
+        "description": "Drag the placed equipment to a new position on the stage."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the equipment moves smoothly and updates its position accordingly."
+      },
+      {
+        "type": "action",
+        "description": "Attempt dragging equipment rapidly or to the edges and corners of the canvas."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that the equipment does not go outside visible canvas boundaries and remains draggable."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Cable Connection Creation and Validation",
+    "description": "Test the ability to create cable connections between equipment connectors and validate correctness in real-time.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Place two compatible equipment items on the stage."
+      },
+      {
+        "type": "action",
+        "description": "Click a connector point on the first equipment."
+      },
+      {
+        "type": "action",
+        "description": "Select appropriate cable type and connect to a compatible connector on the second equipment."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that the connection line appears with correct cable color coding."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm real-time validation feedback indicates the connection is valid and correct."
+      },
+      {
+        "type": "action",
+        "description": "Attempt making an invalid connection between incompatible connectors."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that visual feedback indicates the connection error clearly (color and animation)."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Equipment Information Popups",
+    "description": "Ensure users can access detailed equipment information popups via question mark icons.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Place equipment on the stage."
+      },
+      {
+        "type": "action",
+        "description": "Click the question mark icon associated with an equipment item."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a popup appears displaying accurate detailed information about the equipment."
+      },
+      {
+        "type": "action",
+        "description": "Close the popup."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the popup closes cleanly without impacting other UI elements."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Hints and Help System Accessibility and Accuracy",
+    "description": "Validate the hints and help system can be accessed via keyboard shortcuts and provides correct guidance.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Start a level with incomplete connections."
+      },
+      {
+        "type": "action",
+        "description": "Use the designated keyboard shortcut to request a general hint."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that a general hint appears relevant to the current level progress."
+      },
+      {
+        "type": "action",
+        "description": "Use the keyboard shortcut to request detailed step-by-step guidance."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify detailed hints match level objectives and connection requirements."
+      },
+      {
+        "type": "action",
+        "description": "Confirm hint requests affect scoring as expected."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Level Completion Detection and Victory Celebration",
+    "description": "Verify the system detects correct completion of all required connections and triggers celebration animations and sounds.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Complete all required connections correctly in a level."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the system detects level completion accurately."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify victory celebrations including confetti animations appear promptly."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure victory sound effects play on level completion."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to trigger the victory celebration with incomplete or improper connections."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that victory animations and sounds do NOT trigger erroneously."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Game State Persistence in Local Storage",
+    "description": "Ensure game state (progress, scores, completed levels) is saved and loaded correctly across user sessions.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Start a level and make partial progress including equipment placement and connections."
+      },
+      {
+        "type": "action",
+        "description": "Close or reload the browser tab/window."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that upon reload, the game restores the saved state accurately to the last progress point."
+      },
+      {
+        "type": "action",
+        "description": "Complete a level and ensure completion is recorded."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that completed level status and scores persist and are reflected in the level selection menu."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Keyboard Shortcuts Functionality",
+    "description": "Validate that all keyboard shortcuts correctly trigger their respective actions such as hints, validation, debugging, and game controls.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Press keyboard shortcut for hint."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm hint system activates and shows appropriate hints."
+      },
+      {
+        "type": "action",
+        "description": "Press keyboard shortcut to trigger validation."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify real-time connection validation feedback updates."
+      },
+      {
+        "type": "action",
+        "description": "Press keyboard shortcut for debug tools."
+      },
+      {
+        "type": "assertion",
+        "description": "Check debug output appears in console and highlight overlays show connection issues."
+      },
+      {
+        "type": "action",
+        "description": "Press game control shortcuts (pause, reset, etc.)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify game controls work correctly and UI updates accordingly."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Audio Equipment Real-time Testing and Analysis",
+    "description": "Test audio equipment functionality including real-time sound effects and frequency analysis on supported browsers.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Place audio equipment on stage and open audio testing interface."
+      },
+      {
+        "type": "action",
+        "description": "Use microphone input to test real-time audio frequency analysis."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that audio frequency analysis is displayed correctly in real-time."
+      },
+      {
+        "type": "action",
+        "description": "Play sound effects using the audio system controls."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm audio playback occurs with expected sound quality and timing."
+      },
+      {
+        "type": "action",
+        "description": "Test audio features on unsupported browsers or with microphone access denied."
+      },
+      {
+        "type": "assertion",
+        "description": "Check appropriate fallback behavior or error messaging without crashing."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Responsive Canvas Adaptation",
+    "description": "Ensure the game stage canvas adapts fluidly to different screen sizes and resolutions without clipping or overflow.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the game on various screen sizes including desktop, tablet, and mobile resolutions."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the stage canvas resizes appropriately filling available space."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that no equipment or UI elements are clipped or cause overflow outside the visible area."
+      },
+      {
+        "type": "action",
+        "description": "Resize the browser window dynamically."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm canvas and equipment positions adjust responsively without losing functionality."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Debug Tools Output and Visual Highlights",
+    "description": "Verify that debug tools triggered by keyboard shortcuts provide correct console output and visual highlights for connection issues.",
+    "category": "debugging",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Press debug tool keyboard shortcut during incomplete or incorrect connection setup."
+      },
+      {
+        "type": "assertion",
+        "description": "Check console logs for detailed messages describing connection problems."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify problematic connections are visually highlighted on the stage with color coding or animations."
+      },
+      {
+        "type": "action",
+        "description": "Attempt debug tools with all connections correct."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm debug tool output indicates no errors and no unnecessary highlights."
+      }
+    ]
+  }
+]

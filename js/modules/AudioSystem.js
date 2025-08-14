@@ -20,7 +20,7 @@ export class AudioSystem {
      */
     initAudio() {
         if (this.isInitialized) return;
-        
+
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.audioAnalyser = this.audioContext.createAnalyser();
