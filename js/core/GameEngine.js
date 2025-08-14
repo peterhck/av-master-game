@@ -1208,24 +1208,24 @@ export class AVMasterGame {
             ${this.createConnectorsHTML(equipmentData.connectors)}
         `;
 
-                        // Ensure connectors are properly initialized with unique identifiers
+            // Ensure connectors are properly initialized with unique identifiers
             const connectors = equipmentElement.querySelectorAll('.connector');
             connectors.forEach((connector, index) => {
                 // Ensure connector is properly initialized
                 connector.style.pointerEvents = 'auto';
                 connector.classList.remove('disabled', 'inactive');
-                
+
                 // Add unique connector identifier
                 connector.dataset.connectorId = `${uniqueId}-connector-${index}`;
                 connector.dataset.equipmentId = uniqueId;
-                
+
                 // Ensure stable positioning
                 connector.style.transform = 'scale(1)';
                 connector.classList.remove('hovered', 'selected');
-                
+
                 // Force a reflow to ensure proper rendering
                 connector.offsetHeight;
-                
+
                 console.log(`🔧 Initialized connector ${index}: ${connector.dataset.type} (${connector.dataset.connectorId})`);
             });
 
@@ -1323,12 +1323,12 @@ export class AVMasterGame {
         // Verify we have the correct equipment and connector with unique IDs
         const equipmentId = equipment.dataset.uniqueId;
         const connectorId = connector.dataset.connectorId;
-        
+
         if (!equipmentId || !connectorId) {
             console.error('❌ Missing unique identifiers:', { equipmentId, connectorId });
             return;
         }
-        
+
         console.log(`🔌 Connector clicked: ${connector.dataset.type} (${connectorId})`);
         console.log(`🔌 Equipment: ${equipment.dataset.name} (${equipmentId})`);
         console.log(`🔌 Connection mode: ${this.connectionMode}`);
@@ -1348,11 +1348,11 @@ export class AVMasterGame {
             }
 
             // Create connection using unique identifiers
-            this.createConnection(this.selectedConnector, { 
-                connector, 
-                equipment, 
-                connectorId, 
-                equipmentId 
+            this.createConnection(this.selectedConnector, {
+                connector,
+                equipment,
+                connectorId,
+                equipmentId
             });
             this.connectionMode = false;
             this.selectedConnector = null;
@@ -1360,11 +1360,11 @@ export class AVMasterGame {
         } else {
             // Start connection mode with unique identifiers
             this.connectionMode = true;
-            this.selectedConnector = { 
-                connector, 
-                equipment, 
-                connectorId, 
-                equipmentId 
+            this.selectedConnector = {
+                connector,
+                equipment,
+                connectorId,
+                equipmentId
             };
             connector.classList.add('selected');
             console.log('🔌 Started connection mode with:', connector.dataset.type, connectorId);
@@ -1496,7 +1496,7 @@ export class AVMasterGame {
                     connector.classList.remove('disabled', 'inactive');
                     connector.style.transform = 'scale(1)';
                     connector.classList.remove('hovered', 'selected');
-                    
+
                     // Update visual state
                     this.updateConnectorVisualState(connector);
                 });
@@ -1512,7 +1512,7 @@ export class AVMasterGame {
     setupConnectorEventListeners() {
         // Clean up any existing event listeners
         this.cleanupConnectorEventListeners();
-        
+
         // Remove any existing event delegation listener
         const stageArea = document.getElementById('stage-area');
         if (stageArea) {
@@ -1539,38 +1539,40 @@ export class AVMasterGame {
             stageArea.addEventListener('click', this.handleStageClick);
         }
 
-        // Add hover effects using mousemove for better performance
+        // Add hover effects using mouseenter/mouseleave for stability
         if (stageArea) {
-            if (this.handleStageMouseMove) {
-                stageArea.removeEventListener('mousemove', this.handleStageMouseMove);
+            if (this.handleStageMouseEnter) {
+                stageArea.removeEventListener('mouseenter', this.handleStageMouseEnter, true);
+            }
+            if (this.handleStageMouseLeave) {
+                stageArea.removeEventListener('mouseleave', this.handleStageMouseLeave, true);
             }
 
-            this.handleStageMouseMove = (e) => {
+            this.handleStageMouseEnter = (e) => {
                 const connector = e.target.closest('.connector');
-                
-                // Use requestAnimationFrame to throttle the mousemove events
-                if (this.mouseMoveThrottle) {
-                    return;
-                }
-                
-                this.mouseMoveThrottle = requestAnimationFrame(() => {
+                if (connector) {
                     // Reset all connectors first
                     document.querySelectorAll('.connector').forEach(conn => {
                         conn.style.transform = 'scale(1)';
                         conn.classList.remove('hovered');
                     });
-
-                    // Apply hover effect to current connector
-                    if (connector) {
-                        connector.style.transform = 'scale(1.1)';
-                        connector.classList.add('hovered');
-                    }
                     
-                    this.mouseMoveThrottle = null;
-                });
+                    // Apply hover effect to current connector
+                    connector.style.transform = 'scale(1.1)';
+                    connector.classList.add('hovered');
+                }
             };
 
-            stageArea.addEventListener('mousemove', this.handleStageMouseMove);
+            this.handleStageMouseLeave = (e) => {
+                const connector = e.target.closest('.connector');
+                if (connector) {
+                    connector.style.transform = 'scale(1)';
+                    connector.classList.remove('hovered');
+                }
+            };
+
+            stageArea.addEventListener('mouseenter', this.handleStageMouseEnter, true);
+            stageArea.addEventListener('mouseleave', this.handleStageMouseLeave, true);
         }
     }
 
@@ -1584,15 +1586,42 @@ export class AVMasterGame {
                 stageArea.removeEventListener('click', this.handleStageClick);
                 this.handleStageClick = null;
             }
-            if (this.handleStageMouseMove) {
-                stageArea.removeEventListener('mousemove', this.handleStageMouseMove);
-                this.handleStageMouseMove = null;
+            if (this.handleStageMouseEnter) {
+                stageArea.removeEventListener('mouseenter', this.handleStageMouseEnter, true);
+                this.handleStageMouseEnter = null;
+            }
+            if (this.handleStageMouseLeave) {
+                stageArea.removeEventListener('mouseleave', this.handleStageMouseLeave, true);
+                this.handleStageMouseLeave = null;
             }
             if (this.mouseMoveThrottle) {
                 cancelAnimationFrame(this.mouseMoveThrottle);
                 this.mouseMoveThrottle = null;
             }
         }
+    }
+
+    /**
+     * Refresh XLR connectors specifically to fix flickering issues
+     */
+    refreshXLRConnectors() {
+        console.log('🔧 Refreshing XLR connectors...');
+        
+        document.querySelectorAll('.connector[data-type="xlr-in"], .connector[data-type="xlr-out"]').forEach(connector => {
+            // Reset transform and classes
+            connector.style.transform = 'scale(1)';
+            connector.classList.remove('hovered', 'selected');
+            
+            // Ensure pointer events are enabled
+            connector.style.pointerEvents = 'auto';
+            
+            // Force a reflow
+            connector.offsetHeight;
+            
+            console.log(`🔧 Refreshed XLR connector: ${connector.dataset.type} on ${connector.closest('.equipment')?.dataset.name}`);
+        });
+        
+        console.log('✅ XLR connectors refreshed');
     }
 
     /**
@@ -2188,6 +2217,12 @@ export class AVMasterGame {
                 if (this.currentScreen === 'game') {
                     console.log('🔧 Force refreshing connectors (R key pressed)');
                     this.forceRefreshConnectors();
+                }
+                break;
+            case 'x':
+                if (this.currentScreen === 'game') {
+                    console.log('🔧 Refreshing XLR connectors (X key pressed)');
+                    this.refreshXLRConnectors();
                 }
                 break;
             case 'e':
