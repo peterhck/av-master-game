@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLR Connector Debug Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 10000;
+        }
+        .debug-info {
+            margin: 5px 0;
+        }
+        .test-button {
+            background: #00ff88;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            margin: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #00cc6a;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-panel">
+        <h4>XLR Connector Debug</h4>
+        <div class="debug-info" id="connector-count">Connectors: 0</div>
+        <div class="debug-info" id="hover-status">Hover: None</div>
+        <div class="debug-info" id="click-status">Click: None</div>
+        <div class="debug-info" id="css-info">CSS: Loading...</div>
+        <button class="test-button" onclick="testHoverEffects()">Test Hover</button>
+        <button class="test-button" onclick="testClickEvents()">Test Clicks</button>
+        <button class="test-button" onclick="checkCSSProperties()">Check CSS</button>
+        <button class="test-button" onclick="testFlickering()">Test Flickering</button>
+    </div>
+
+    <script type="module">
+        import { AVMasterGame } from './js/core/GameEngine.js';
+        
+        // Initialize the game
+        const game = new AVMasterGame();
+        
+        // Load the first audio level for testing
+        game.loadLevel('audio-1');
+        
+        // Debug functions
+        window.testHoverEffects = function() {
+            const connectors = document.querySelectorAll('.connector[data-type="xlr-in"]');
+            console.log(`🔍 Testing hover effects on ${connectors.length} XLR connectors`);
+            
+            connectors.forEach((connector, index) => {
+                console.log(`🔍 Connector ${index + 1}:`);
+                console.log(`  Position: ${connector.dataset.position}`);
+                console.log(`  Initial transform: ${window.getComputedStyle(connector).transform}`);
+                
+                // Simulate hover
+                connector.dispatchEvent(new MouseEvent('mouseenter'));
+                
+                setTimeout(() => {
+                    console.log(`  Hover transform: ${window.getComputedStyle(connector).transform}`);
+                    console.log(`  Z-index: ${window.getComputedStyle(connector).zIndex}`);
+                    console.log(`  Pointer-events: ${window.getComputedStyle(connector).pointerEvents}`);
+                    
+                    // Remove hover
+                    connector.dispatchEvent(new MouseEvent('mouseleave'));
+                    
+                    setTimeout(() => {
+                        console.log(`  After hover transform: ${window.getComputedStyle(connector).transform}`);
+                    }, 100);
+                }, 100);
+            });
+        };
+        
+        window.testClickEvents = function() {
+            const connectors = document.querySelectorAll('.connector[data-type="xlr-in"]');
+            console.log(`🔍 Testing click events on ${connectors.length} XLR connectors`);
+            
+            connectors.forEach((connector, index) => {
+                console.log(`🔍 Clicking connector ${index + 1}`);
+                
+                // Simulate click
+                connector.dispatchEvent(new MouseEvent('click'));
+                
+                setTimeout(() => {
+                    console.log(`  Has selected class: ${connector.classList.contains('selected')}`);
+                    console.log(`  Current transform: ${window.getComputedStyle(connector).transform}`);
+                }, 100);
+            });
+        };
+        
+        window.checkCSSProperties = function() {
+            const connectors = document.querySelectorAll('.connector[data-type="xlr-in"]');
+            console.log(`🔍 Checking CSS properties for ${connectors.length} XLR connectors`);
+            
+            connectors.forEach((connector, index) => {
+                const style = window.getComputedStyle(connector);
+                console.log(`🔍 Connector ${index + 1} CSS Properties:`);
+                console.log(`  Position: ${connector.dataset.position}`);
+                console.log(`  Transform: ${style.transform}`);
+                console.log(`  Z-index: ${style.zIndex}`);
+                console.log(`  Pointer-events: ${style.pointerEvents}`);
+                console.log(`  Display: ${style.display}`);
+                console.log(`  Visibility: ${style.visibility}`);
+                
+                if (connector.dataset.position === 'top') {
+                    console.log(`  Top connector specific:`);
+                    console.log(`    Margin-left: ${style.marginLeft}`);
+                    console.log(`    Top: ${style.top}`);
+                    console.log(`    Left: ${style.left}`);
+                }
+            });
+        };
+        
+        window.testFlickering = function() {
+            const connectors = document.querySelectorAll('.connector[data-type="xlr-in"]');
+            console.log(`🔍 Testing for flickering on ${connectors.length} XLR connectors`);
+            
+            if (connectors.length === 0) {
+                console.log('❌ No XLR connectors found!');
+                return;
+            }
+            
+            const connector = connectors[0];
+            let flickerCount = 0;
+            const maxTests = 10;
+            
+            function rapidHover() {
+                if (flickerCount >= maxTests) {
+                    console.log(`✅ Flickering test completed. No issues detected.`);
+                    return;
+                }
+                
+                connector.dispatchEvent(new MouseEvent('mouseenter'));
+                
+                setTimeout(() => {
+                    connector.dispatchEvent(new MouseEvent('mouseleave'));
+                    flickerCount++;
+                    
+                    setTimeout(() => {
+                        rapidHover();
+                    }, 100);
+                }, 100);
+            }
+            
+            rapidHover();
+        };
+        
+        // Update debug panel
+        function updateDebugPanel() {
+            const connectors = document.querySelectorAll('.connector[data-type="xlr-in"]');
+            document.getElementById('connector-count').textContent = `Connectors: ${connectors.length}`;
+            
+            if (connectors.length > 0) {
+                const firstConnector = connectors[0];
+                const style = window.getComputedStyle(firstConnector);
+                document.getElementById('css-info').textContent = 
+                    `CSS: ${firstConnector.dataset.position} | z-index: ${style.zIndex} | transform: ${style.transform}`;
+            }
+        }
+        
+        // Monitor for changes
+        setInterval(updateDebugPanel, 1000);
+        
+        // Initial update
+        setTimeout(updateDebugPanel, 2000);
+    </script>
+</body>
+</html>
