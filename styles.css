@@ -1102,11 +1102,14 @@ body {
     cursor: pointer !important;
     border: 2px solid transparent !important;
     border-radius: 50% !important;
-    transition: transform 0.2s ease !important;
+    transition: transform 0.15s ease-out !important;
     transform-origin: center !important;
     will-change: transform !important;
     /* Ensure connectors are always interactive */
     display: block !important;
+    /* Prevent layout shifts */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
 }
 
 .connector-dot {
