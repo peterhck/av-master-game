@@ -1035,6 +1035,11 @@ body {
 .equipment:hover {
     transform: scale(1.05);
     z-index: 10;
+    /* Ensure connectors maintain their z-index during equipment hover */
+}
+
+.equipment:hover .connector {
+    z-index: 75 !important;
 }
 
 .equipment.selected {
@@ -1068,9 +1073,11 @@ body {
 /* Connector positioning - no conflicting styles */
 
 .connector.top {
-    top: -10px;
+    top: -8px;
     left: 50%;
-    transform: translateX(-50%);
+    margin-left: -8px;
+    /* Ensure top connectors are always clickable */
+    pointer-events: auto !important;
 }
 
 .connector.bottom {
