@@ -396,7 +396,7 @@ export const LEVEL_DATA = {
         connections: [
             { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 9, color: '#ff4757' },
             { type: 'xlr-cable', name: 'XLR Cable', icon: 'fas fa-plug', quantity: 11, color: '#00ff88' },
-            { type: 'wireless-cable', name: 'Wireless Signal', icon: 'fas fa-wifi', quantity: 3, color: '#a29bfe' }
+            { type: 'wireless-cable', name: 'Wireless Signal', icon: 'fas fa-wifi', quantity: 2, color: '#a29bfe' }
         ],
         validConnections: [
             { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
