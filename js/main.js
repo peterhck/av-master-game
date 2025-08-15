@@ -174,6 +174,149 @@ function setupGlobalEventListeners() {
 
     // Connector click events are handled by the game engine via event delegation
     console.log('✓ Connector click events will be set up by game engine');
+
+    // Setup keyboard shortcuts for testing
+    setupKeyboardShortcuts();
+}
+
+/**
+ * Setup keyboard shortcuts for testing and debugging
+ */
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Ctrl+Shift+U (or Cmd+Shift+U on Mac) - Unlock all levels
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'u') {
+            e.preventDefault();
+            unlockAllLevels();
+        }
+        
+        // Ctrl+Shift+R (or Cmd+Shift+R on Mac) - Reset game state
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'r') {
+            e.preventDefault();
+            resetGameState();
+        }
+    });
+    
+    console.log('✓ Keyboard shortcuts set up (Ctrl+Shift+U: Unlock All, Ctrl+Shift+R: Reset)');
+}
+
+/**
+ * Unlock all levels for testing purposes
+ */
+function unlockAllLevels() {
+    if (!game) {
+        console.warn('⚠️ Game not initialized yet');
+        return;
+    }
+
+    // Import LEVEL_ORDER to get all available levels
+    import('./data/LevelData.js').then(({ LEVEL_ORDER }) => {
+        // Unlock all levels
+        game.gameState.unlockedLevels = [...LEVEL_ORDER];
+        
+        // Save to localStorage
+        game.saveGameState();
+        
+        // Update the level selection UI if it's currently visible
+        if (game.currentScreen === 'level-select') {
+            game.updateLevelSelectionUI();
+        }
+        
+        console.log('🎉 All levels unlocked for testing!');
+        console.log('📋 Unlocked levels:', game.gameState.unlockedLevels);
+        
+        // Show a brief notification
+        showNotification('All levels unlocked for testing!', 'success');
+    }).catch(error => {
+        console.error('❌ Failed to unlock levels:', error);
+        showNotification('Failed to unlock levels', 'error');
+    });
+}
+
+/**
+ * Reset game state to initial state
+ */
+function resetGameState() {
+    if (!game) {
+        console.warn('⚠️ Game not initialized yet');
+        return;
+    }
+
+    // Reset to initial state
+    game.gameState = {
+        unlockedLevels: ['audio-1'],
+        completedLevels: [],
+        currentLevel: null,
+        score: 0,
+        lives: 3,
+        totalTime: 0,
+        settings: {
+            soundEnabled: true,
+            musicEnabled: true,
+            difficulty: 'normal'
+        }
+    };
+    
+    // Save to localStorage
+    game.saveGameState();
+    
+    // Update UI if on level selection screen
+    if (game.currentScreen === 'level-select') {
+        game.updateLevelSelectionUI();
+    }
+    
+    console.log('🔄 Game state reset to initial state');
+    showNotification('Game state reset', 'info');
+}
+
+/**
+ * Show a brief notification to the user
+ */
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#00ff88' : type === 'error' ? '#ff4757' : '#00ccff'};
+        color: #1a1a2e;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 /**

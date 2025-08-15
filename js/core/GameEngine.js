@@ -626,6 +626,14 @@ export class AVMasterGame {
     }
 
     /**
+     * Update the level selection UI (public method for external calls)
+     */
+    updateLevelSelectionUI() {
+        console.log('🔄 Updating level selection UI...');
+        this.updateLevelStatus();
+    }
+
+    /**
      * Select a level to play
      */
     selectLevel(levelId) {
