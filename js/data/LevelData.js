@@ -1472,6 +1472,1293 @@ export const LEVEL_DATA = {
                 { name: 'Set Control', x: '70%', y: '10%', width: '25%', height: '25%' }
             ]
         }
+    },
+    'streaming-1': {
+        title: 'Social Media Live Stream',
+        category: 'streaming',
+        difficulty: 'beginner',
+        description: 'Set up multi-platform social media live streaming with chat integration',
+        objectives: [
+            'Position streaming cameras and mobile devices',
+            'Connect multi-platform streaming encoder',
+            'Set up chat overlay and engagement tools',
+            'Power all streaming equipment',
+            'Create interactive streaming zones'
+        ],
+        equipment: [
+            {
+                type: 'camera',
+                name: 'Streaming Camera',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'usb-out', position: 'back', label: 'USB Out' }
+                ]
+            },
+            {
+                type: 'mobile-device',
+                name: 'Mobile Phone',
+                icon: 'fas fa-mobile-alt',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'bottom', label: 'Power In' },
+                    { type: 'usb-out', position: 'bottom', label: 'USB Out' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Multi-Platform Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'usb-in', position: 'back', label: 'USB In 1' },
+                    { type: 'usb-in', position: 'back', label: 'USB In 2' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'chat-computer',
+                name: 'Chat Management PC',
+                icon: 'fas fa-desktop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'light-fixture',
+                name: 'Ring Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-in', position: 'back', label: 'DMX In' }
+                ]
+            },
+            {
+                type: 'power-distro',
+                name: 'Power Distribution',
+                icon: 'fas fa-plug',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 3' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 4' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 4, color: '#ff4757' },
+            { type: 'usb-cable', name: 'USB Cable', icon: 'fas fa-plug', quantity: 3, color: '#00ccff' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 2, color: '#ffa502' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'usb-out', to: 'usb-in', cable: 'usb-cable', animation: 'data-pulse' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
+        ],
+        settings: [
+            { type: 'platforms', name: 'Streaming Platforms', icon: 'fas fa-globe' },
+            { type: 'chat', name: 'Chat Integration', icon: 'fas fa-comments' },
+            { type: 'overlay', name: 'Graphics Overlay', icon: 'fas fa-palette' }
+        ],
+        resourceRequirements: {
+            'camera': ['streamer'],
+            'mobile-device': ['streamer'],
+            'streaming-encoder': ['streaming-tech'],
+            'chat-computer': ['chat-moderator'],
+            'light-fixture': ['lighting-tech'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'streamer', name: 'Content Creator', icon: 'fas fa-user', description: 'Social media streamer' },
+            { id: 'streaming-tech', name: 'Streaming Tech', icon: 'fas fa-broadcast-tower', description: 'Streaming technician' },
+            { id: 'chat-moderator', name: 'Chat Moderator', icon: 'fas fa-shield-alt', description: 'Chat moderation specialist' },
+            { id: 'lighting-tech', name: 'Lighting Tech', icon: 'fas fa-lightbulb', description: 'Lighting technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Streaming Area', x: '5%', y: '5%', width: '30%', height: '25%' },
+                { name: 'Equipment Zone', x: '40%', y: '10%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '5%', y: '35%', width: '20%', height: '15%' },
+                { name: 'Control Area', x: '70%', y: '10%', width: '25%', height: '25%' }
+            ]
+        }
+    },
+    'streaming-2': {
+        title: 'Gaming Tournament Stream',
+        category: 'streaming',
+        difficulty: 'intermediate',
+        description: 'Set up professional gaming tournament streaming with multiple players and commentators',
+        objectives: [
+            'Position multiple gaming stations and cameras',
+            'Connect tournament streaming system',
+            'Set up commentator audio and video',
+            'Power all gaming and streaming equipment',
+            'Create tournament streaming zones'
+        ],
+        equipment: [
+            {
+                type: 'gaming-pc',
+                name: 'Gaming PC 1',
+                icon: 'fas fa-desktop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'usb-out', position: 'back', label: 'USB Out' }
+                ]
+            },
+            {
+                type: 'gaming-pc',
+                name: 'Gaming PC 2',
+                icon: 'fas fa-desktop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'usb-out', position: 'back', label: 'USB Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Player Camera 1',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'usb-out', position: 'back', label: 'USB Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Player Camera 2',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'usb-out', position: 'back', label: 'USB Out' }
+                ]
+            },
+            {
+                type: 'microphone',
+                name: 'Commentator Mic',
+                icon: 'fas fa-microphone',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Tournament Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In 2' },
+                    { type: 'usb-in', position: 'back', label: 'USB In 1' },
+                    { type: 'usb-in', position: 'back', label: 'USB In 2' },
+                    { type: 'xlr-in', position: 'back', label: 'XLR In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Tournament Monitor',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'power-distro',
+                name: 'Power Distribution',
+                icon: 'fas fa-plug',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 2' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 3' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 4' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 5' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 6' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 6, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 4, color: '#00ccff' },
+            { type: 'usb-cable', name: 'USB Cable', icon: 'fas fa-plug', quantity: 4, color: '#a29bfe' },
+            { type: 'xlr-cable', name: 'XLR Cable', icon: 'fas fa-plug', quantity: 1, color: '#00ff88' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 1, color: '#ffa502' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' },
+            { from: 'usb-out', to: 'usb-in', cable: 'usb-cable', animation: 'data-pulse' },
+            { from: 'xlr-out', to: 'xlr-in', cable: 'xlr-cable', animation: 'audio-pulse' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
+        ],
+        settings: [
+            { type: 'tournament', name: 'Tournament Mode', icon: 'fas fa-trophy' },
+            { type: 'commentary', name: 'Commentary Audio', icon: 'fas fa-microphone' },
+            { type: 'overlay', name: 'Score Overlay', icon: 'fas fa-chart-bar' }
+        ],
+        resourceRequirements: {
+            'gaming-pc': ['gamer'],
+            'camera': ['camera-operator'],
+            'microphone': ['commentator'],
+            'streaming-encoder': ['streaming-tech'],
+            'screen': ['tournament-director'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'gamer', name: 'Gamer', icon: 'fas fa-gamepad', description: 'Tournament player' },
+            { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Video camera operator' },
+            { id: 'commentator', name: 'Commentator', icon: 'fas fa-microphone', description: 'Tournament commentator' },
+            { id: 'streaming-tech', name: 'Streaming Tech', icon: 'fas fa-broadcast-tower', description: 'Streaming technician' },
+            { id: 'tournament-director', name: 'Tournament Director', icon: 'fas fa-trophy', description: 'Tournament coordinator' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Player Station 1', x: '5%', y: '5%', width: '20%', height: '20%' },
+                { name: 'Player Station 2', x: '30%', y: '5%', width: '20%', height: '20%' },
+                { name: 'Commentary Area', x: '55%', y: '5%', width: '20%', height: '20%' },
+                { name: 'Equipment Zone', x: '5%', y: '30%', width: '30%', height: '20%' },
+                { name: 'Power Station', x: '40%', y: '30%', width: '20%', height: '15%' },
+                { name: 'Control Area', x: '70%', y: '10%', width: '25%', height: '25%' }
+            ]
+        }
+    },
+    'streaming-3': {
+        title: 'Professional Esports Arena',
+        category: 'streaming',
+        difficulty: 'advanced',
+        description: 'Set up complete professional esports arena with multi-camera production, live audience, and global streaming',
+        objectives: [
+            'Position professional esports gaming stations',
+            'Connect multi-camera production system',
+            'Set up live audience audio and video',
+            'Power all arena equipment with redundancy',
+            'Create professional esports production zones'
+        ],
+        equipment: [
+            {
+                type: 'gaming-pc',
+                name: 'Pro Gaming PC 1',
+                icon: 'fas fa-desktop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'usb-out', position: 'back', label: 'USB Out' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'gaming-pc',
+                name: 'Pro Gaming PC 2',
+                icon: 'fas fa-desktop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'usb-out', position: 'back', label: 'USB Out' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Player Camera 1',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Player Camera 2',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Audience Camera',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'microphone',
+                name: 'Commentator Mic 1',
+                icon: 'fas fa-microphone',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'microphone',
+                name: 'Commentator Mic 2',
+                icon: 'fas fa-microphone',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'video-switcher',
+                name: 'Production Switcher',
+                icon: 'fas fa-random',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 2' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 3' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 4' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 5' },
+                    { type: 'hdmi-out', position: 'front', label: 'Program Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Preview Out' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Multi-Platform Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Arena Display',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'speaker',
+                name: 'Arena Speaker',
+                icon: 'fas fa-volume-up',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'Speaker In' }
+                ]
+            },
+            {
+                type: 'ups',
+                name: 'Uninterruptible Power Supply',
+                icon: 'fas fa-battery-full',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'UPS Out 1' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 2' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 3' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 4' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 5' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 6' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 7' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 8' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 10, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 8, color: '#00ccff' },
+            { type: 'usb-cable', name: 'USB Cable', icon: 'fas fa-plug', quantity: 2, color: '#a29bfe' },
+            { type: 'xlr-cable', name: 'XLR Cable', icon: 'fas fa-plug', quantity: 3, color: '#00ff88' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 3, color: '#ffa502' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' },
+            { from: 'usb-out', to: 'usb-in', cable: 'usb-cable', animation: 'data-pulse' },
+            { from: 'xlr-out', to: 'xlr-in', cable: 'xlr-cable', animation: 'audio-pulse' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
+        ],
+        settings: [
+            { type: 'esports', name: 'Esports Mode', icon: 'fas fa-trophy' },
+            { type: 'production', name: 'Production Control', icon: 'fas fa-sliders-h' },
+            { type: 'streaming', name: 'Multi-Platform', icon: 'fas fa-globe' },
+            { type: 'audience', name: 'Audience Audio', icon: 'fas fa-users' }
+        ],
+        resourceRequirements: {
+            'gaming-pc': ['pro-gamer'],
+            'camera': ['camera-operator'],
+            'microphone': ['commentator'],
+            'video-switcher': ['production-director'],
+            'streaming-encoder': ['streaming-tech'],
+            'screen': ['arena-manager'],
+            'speaker': ['audio-tech'],
+            'ups': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'pro-gamer', name: 'Pro Gamer', icon: 'fas fa-gamepad', description: 'Professional esports player' },
+            { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Video camera operator' },
+            { id: 'commentator', name: 'Commentator', icon: 'fas fa-microphone', description: 'Esports commentator' },
+            { id: 'production-director', name: 'Production Director', icon: 'fas fa-video', description: 'Production coordinator' },
+            { id: 'streaming-tech', name: 'Streaming Tech', icon: 'fas fa-broadcast-tower', description: 'Streaming technician' },
+            { id: 'arena-manager', name: 'Arena Manager', icon: 'fas fa-trophy', description: 'Arena operations manager' },
+            { id: 'audio-tech', name: 'Audio Tech', icon: 'fas fa-volume-up', description: 'Audio technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Pro Player 1', x: '5%', y: '5%', width: '18%', height: '18%' },
+                { name: 'Pro Player 2', x: '25%', y: '5%', width: '18%', height: '18%' },
+                { name: 'Commentary Area', x: '45%', y: '5%', width: '20%', height: '18%' },
+                { name: 'Production Area', x: '5%', y: '25%', width: '30%', height: '20%' },
+                { name: 'Audience Area', x: '40%', y: '25%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '70%', y: '10%', width: '25%', height: '15%' },
+                { name: 'Control Room', x: '70%', y: '30%', width: '25%', height: '25%' }
+            ]
+        }
+    },
+    'advanced-1': {
+        title: 'Concert Hall Production',
+        category: 'advanced',
+        difficulty: 'expert',
+        description: 'Set up complete concert hall production with professional audio, lighting, video, and streaming',
+        objectives: [
+            'Position professional concert audio system',
+            'Connect advanced lighting and video systems',
+            'Set up multi-camera live streaming',
+            'Power all production equipment with redundancy',
+            'Create professional concert production zones'
+        ],
+        equipment: [
+            {
+                type: 'microphone',
+                name: 'Vocal Mic',
+                icon: 'fas fa-microphone',
+                quantity: 4,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'microphone',
+                name: 'Instrument Mic',
+                icon: 'fas fa-microphone',
+                quantity: 6,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'mixing-console',
+                name: 'Professional Mixer',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 1' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 2' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 3' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 4' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 5' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 6' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 7' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 8' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 9' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 10' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Main Out L' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Main Out R' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Monitor Out' }
+                ]
+            },
+            {
+                type: 'speaker',
+                name: 'Main Speaker',
+                icon: 'fas fa-volume-up',
+                quantity: 4,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'Speaker In' }
+                ]
+            },
+            {
+                type: 'speaker',
+                name: 'Monitor Speaker',
+                icon: 'fas fa-volume-up',
+                quantity: 6,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'Speaker In' }
+                ]
+            },
+            {
+                type: 'moving-head',
+                name: 'Moving Head Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 8,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-in', position: 'back', label: 'DMX In' }
+                ]
+            },
+            {
+                type: 'dmx-controller',
+                name: 'DMX Controller',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-out', position: 'back', label: 'DMX Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Stage Camera',
+                icon: 'fas fa-video',
+                quantity: 3,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'video-switcher',
+                name: 'Live Video Switcher',
+                icon: 'fas fa-random',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 2' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 3' },
+                    { type: 'hdmi-out', position: 'front', label: 'Program Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Preview Out' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Live Stream Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Video Wall',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'ups',
+                name: 'Uninterruptible Power Supply',
+                icon: 'fas fa-battery-full',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'UPS Out 1' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 2' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 3' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 4' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 5' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 6' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 7' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 8' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 9' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 10' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 20, color: '#ff4757' },
+            { type: 'xlr-cable', name: 'XLR Cable', icon: 'fas fa-plug', quantity: 25, color: '#00ff88' },
+            { type: 'dmx-cable', name: 'DMX Cable', icon: 'fas fa-plug', quantity: 8, color: '#ffa502' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 6, color: '#00ccff' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 1, color: '#a29bfe' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'xlr-out', to: 'xlr-in', cable: 'xlr-cable', animation: 'audio-pulse' },
+            { from: 'dmx-out', to: 'dmx-in', cable: 'dmx-cable', animation: 'dmx-circle' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
+        ],
+        settings: [
+            { type: 'audio', name: 'Audio Mixing', icon: 'fas fa-sliders-h' },
+            { type: 'lighting', name: 'Lighting Control', icon: 'fas fa-lightbulb' },
+            { type: 'video', name: 'Video Production', icon: 'fas fa-video' },
+            { type: 'streaming', name: 'Live Streaming', icon: 'fas fa-broadcast-tower' }
+        ],
+        resourceRequirements: {
+            'microphone': ['musician'],
+            'mixing-console': ['a1-audio-tech'],
+            'speaker': ['a2-audio-tech'],
+            'moving-head': ['lighting-tech'],
+            'dmx-controller': ['lighting-tech'],
+            'camera': ['camera-operator'],
+            'video-switcher': ['video-tech'],
+            'streaming-encoder': ['streaming-tech'],
+            'screen': ['video-tech'],
+            'ups': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'musician', name: 'Musician', icon: 'fas fa-music', description: 'Band member or performer' },
+            { id: 'a1-audio-tech', name: 'A1 Audio Tech', icon: 'fas fa-sliders-h', description: 'Lead audio technician' },
+            { id: 'a2-audio-tech', name: 'A2 Audio Tech', icon: 'fas fa-volume-up', description: 'Assistant audio technician' },
+            { id: 'lighting-tech', name: 'Lighting Tech', icon: 'fas fa-lightbulb', description: 'Lighting technician' },
+            { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Video camera operator' },
+            { id: 'video-tech', name: 'Video Tech', icon: 'fas fa-video', description: 'Video technician' },
+            { id: 'streaming-tech', name: 'Streaming Tech', icon: 'fas fa-broadcast-tower', description: 'Streaming technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Stage Front', x: '5%', y: '5%', width: '30%', height: '25%' },
+                { name: 'Stage Back', x: '5%', y: '35%', width: '30%', height: '20%' },
+                { name: 'FOH Position', x: '40%', y: '10%', width: '25%', height: '20%' },
+                { name: 'Lighting Grid', x: '40%', y: '35%', width: '25%', height: '15%' },
+                { name: 'Power Station', x: '70%', y: '10%', width: '25%', height: '15%' },
+                { name: 'Control Room', x: '70%', y: '30%', width: '25%', height: '25%' }
+            ]
+        }
+    },
+    'advanced-2': {
+        title: 'Broadcast Studio Complex',
+        category: 'advanced',
+        difficulty: 'expert',
+        description: 'Set up complete broadcast studio complex with multiple studios, control rooms, and production facilities',
+        objectives: [
+            'Position multiple broadcast studios and control rooms',
+            'Connect advanced broadcast equipment and routing',
+            'Set up multi-studio production and switching',
+            'Power all broadcast equipment with redundancy',
+            'Create professional broadcast complex zones'
+        ],
+        equipment: [
+            {
+                type: 'camera',
+                name: 'Studio Camera A',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' },
+                    { type: 'tally-in', position: 'back', label: 'Tally In' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Studio Camera B',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' },
+                    { type: 'tally-in', position: 'back', label: 'Tally In' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Studio Camera C',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' },
+                    { type: 'tally-in', position: 'back', label: 'Tally In' }
+                ]
+            },
+            {
+                type: 'microphone',
+                name: 'Anchor Mic',
+                icon: 'fas fa-microphone',
+                quantity: 2,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'microphone',
+                name: 'Guest Mic',
+                icon: 'fas fa-microphone',
+                quantity: 4,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'mixing-console',
+                name: 'Broadcast Mixer',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 1' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 2' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 3' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 4' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 5' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 6' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Main Out' }
+                ]
+            },
+            {
+                type: 'video-switcher',
+                name: 'Master Control Switcher',
+                icon: 'fas fa-random',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 2' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 3' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 4' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 5' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 6' },
+                    { type: 'hdmi-out', position: 'front', label: 'Program Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Preview Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Clean Out' }
+                ]
+            },
+            {
+                type: 'graphics-computer',
+                name: 'Graphics Workstation',
+                icon: 'fas fa-desktop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'vtr',
+                name: 'Video Tape Recorder',
+                icon: 'fas fa-video',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Broadcast Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Program Monitor',
+                icon: 'fas fa-tv',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Preview Monitor',
+                icon: 'fas fa-tv',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'light-fixture',
+                name: 'Studio Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 12,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-in', position: 'back', label: 'DMX In' }
+                ]
+            },
+            {
+                type: 'dmx-controller',
+                name: 'Lighting Controller',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-out', position: 'back', label: 'DMX Out' }
+                ]
+            },
+            {
+                type: 'ups',
+                name: 'Uninterruptible Power Supply',
+                icon: 'fas fa-battery-full',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'UPS Out 1' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 2' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 3' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 4' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 5' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 6' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 7' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 8' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 9' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 10' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 11' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 12' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 25, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 15, color: '#00ccff' },
+            { type: 'xlr-cable', name: 'XLR Cable', icon: 'fas fa-plug', quantity: 8, color: '#00ff88' },
+            { type: 'dmx-cable', name: 'DMX Cable', icon: 'fas fa-plug', quantity: 12, color: '#ffa502' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 2, color: '#a29bfe' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' },
+            { from: 'xlr-out', to: 'xlr-in', cable: 'xlr-cable', animation: 'audio-pulse' },
+            { from: 'dmx-out', to: 'dmx-in', cable: 'dmx-cable', animation: 'dmx-circle' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
+        ],
+        settings: [
+            { type: 'broadcast', name: 'Broadcast Control', icon: 'fas fa-broadcast-tower' },
+            { type: 'studio', name: 'Studio Management', icon: 'fas fa-tv' },
+            { type: 'lighting', name: 'Studio Lighting', icon: 'fas fa-lightbulb' },
+            { type: 'audio', name: 'Audio Production', icon: 'fas fa-sliders-h' }
+        ],
+        resourceRequirements: {
+            'camera': ['camera-operator'],
+            'microphone': ['anchor'],
+            'mixing-console': ['audio-tech'],
+            'video-switcher': ['technical-director'],
+            'graphics-computer': ['graphics-operator'],
+            'vtr': ['vtr-operator'],
+            'streaming-encoder': ['broadcast-tech'],
+            'screen': ['technical-director'],
+            'light-fixture': ['lighting-tech'],
+            'dmx-controller': ['lighting-tech'],
+            'ups': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'anchor', name: 'News Anchor', icon: 'fas fa-user-tie', description: 'Broadcast news anchor' },
+            { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Studio camera operator' },
+            { id: 'audio-tech', name: 'Audio Tech', icon: 'fas fa-sliders-h', description: 'Broadcast audio technician' },
+            { id: 'technical-director', name: 'Technical Director', icon: 'fas fa-video', description: 'Technical director' },
+            { id: 'graphics-operator', name: 'Graphics Operator', icon: 'fas fa-palette', description: 'Graphics and overlay operator' },
+            { id: 'vtr-operator', name: 'VTR Operator', icon: 'fas fa-video', description: 'Video tape recorder operator' },
+            { id: 'broadcast-tech', name: 'Broadcast Tech', icon: 'fas fa-broadcast-tower', description: 'Broadcast technician' },
+            { id: 'lighting-tech', name: 'Lighting Tech', icon: 'fas fa-lightbulb', description: 'Studio lighting technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Studio A', x: '5%', y: '5%', width: '25%', height: '25%' },
+                { name: 'Studio B', x: '35%', y: '5%', width: '25%', height: '25%' },
+                { name: 'Studio C', x: '65%', y: '5%', width: '25%', height: '25%' },
+                { name: 'Master Control', x: '5%', y: '35%', width: '30%', height: '25%' },
+                { name: 'Graphics Room', x: '40%', y: '35%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '70%', y: '35%', width: '25%', height: '15%' },
+                { name: 'Control Room', x: '70%', y: '55%', width: '25%', height: '25%' }
+            ]
+        }
+    },
+    'advanced-3': {
+        title: 'Major Event Production',
+        category: 'advanced',
+        difficulty: 'expert',
+        description: 'Set up complete major event production with multiple stages, live streaming, and global broadcast',
+        objectives: [
+            'Position multiple stages and production areas',
+            'Connect comprehensive audio, lighting, and video systems',
+            'Set up multi-platform live streaming and broadcast',
+            'Power all production equipment with full redundancy',
+            'Create professional major event production zones'
+        ],
+        equipment: [
+            {
+                type: 'microphone',
+                name: 'Vocal Mic',
+                icon: 'fas fa-microphone',
+                quantity: 8,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'microphone',
+                name: 'Instrument Mic',
+                icon: 'fas fa-microphone',
+                quantity: 12,
+                requiresPower: false,
+                connectors: [
+                    { type: 'xlr-out', position: 'bottom', label: 'XLR Out' }
+                ]
+            },
+            {
+                type: 'mixing-console',
+                name: 'Main Stage Mixer',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 1' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 2' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 3' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 4' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 5' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 6' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 7' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 8' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 9' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 10' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 11' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 12' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 13' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 14' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 15' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 16' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 17' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 18' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 19' },
+                    { type: 'xlr-in', position: 'top', label: 'XLR In 20' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Main Out L' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Main Out R' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Monitor Out 1' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Monitor Out 2' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Monitor Out 3' },
+                    { type: 'xlr-out', position: 'bottom', label: 'Monitor Out 4' }
+                ]
+            },
+            {
+                type: 'speaker',
+                name: 'Main Speaker',
+                icon: 'fas fa-volume-up',
+                quantity: 8,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'Speaker In' }
+                ]
+            },
+            {
+                type: 'speaker',
+                name: 'Monitor Speaker',
+                icon: 'fas fa-volume-up',
+                quantity: 12,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'xlr-in', position: 'top', label: 'Speaker In' }
+                ]
+            },
+            {
+                type: 'moving-head',
+                name: 'Moving Head Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 16,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-in', position: 'back', label: 'DMX In' }
+                ]
+            },
+            {
+                type: 'par-light',
+                name: 'PAR Light',
+                icon: 'fas fa-lightbulb',
+                quantity: 24,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-in', position: 'back', label: 'DMX In' }
+                ]
+            },
+            {
+                type: 'dmx-controller',
+                name: 'Professional DMX Controller',
+                icon: 'fas fa-sliders-h',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'dmx-out', position: 'back', label: 'DMX Out 1' },
+                    { type: 'dmx-out', position: 'back', label: 'DMX Out 2' },
+                    { type: 'dmx-out', position: 'back', label: 'DMX Out 3' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Stage Camera',
+                icon: 'fas fa-video',
+                quantity: 6,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Audience Camera',
+                icon: 'fas fa-video',
+                quantity: 4,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'video-switcher',
+                name: 'Production Switcher',
+                icon: 'fas fa-random',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 2' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 3' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 4' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 5' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 6' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 7' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 8' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 9' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 10' },
+                    { type: 'hdmi-out', position: 'front', label: 'Program Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Preview Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Clean Out' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Multi-Platform Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Video Wall',
+                icon: 'fas fa-tv',
+                quantity: 2,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Jumbotron',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'ups',
+                name: 'Uninterruptible Power Supply',
+                icon: 'fas fa-battery-full',
+                quantity: 2,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'UPS Out 1' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 2' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 3' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 4' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 5' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 6' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 7' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 8' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 9' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 10' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 11' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 12' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 13' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 14' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 15' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 16' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 40, color: '#ff4757' },
+            { type: 'xlr-cable', name: 'XLR Cable', icon: 'fas fa-plug', quantity: 50, color: '#00ff88' },
+            { type: 'dmx-cable', name: 'DMX Cable', icon: 'fas fa-plug', quantity: 40, color: '#ffa502' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 20, color: '#00ccff' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 4, color: '#a29bfe' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'xlr-out', to: 'xlr-in', cable: 'xlr-cable', animation: 'audio-pulse' },
+            { from: 'dmx-out', to: 'dmx-in', cable: 'dmx-cable', animation: 'dmx-circle' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
+        ],
+        settings: [
+            { type: 'audio', name: 'Audio Production', icon: 'fas fa-sliders-h' },
+            { type: 'lighting', name: 'Lighting Design', icon: 'fas fa-lightbulb' },
+            { type: 'video', name: 'Video Production', icon: 'fas fa-video' },
+            { type: 'streaming', name: 'Multi-Platform Streaming', icon: 'fas fa-broadcast-tower' }
+        ],
+        resourceRequirements: {
+            'microphone': ['musician'],
+            'mixing-console': ['a1-audio-tech'],
+            'speaker': ['a2-audio-tech'],
+            'moving-head': ['lighting-tech'],
+            'par-light': ['lighting-tech'],
+            'dmx-controller': ['lighting-tech'],
+            'camera': ['camera-operator'],
+            'video-switcher': ['technical-director'],
+            'streaming-encoder': ['streaming-tech'],
+            'screen': ['video-tech'],
+            'ups': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'musician', name: 'Musician', icon: 'fas fa-music', description: 'Band member or performer' },
+            { id: 'a1-audio-tech', name: 'A1 Audio Tech', icon: 'fas fa-sliders-h', description: 'Lead audio technician' },
+            { id: 'a2-audio-tech', name: 'A2 Audio Tech', icon: 'fas fa-volume-up', description: 'Assistant audio technician' },
+            { id: 'lighting-tech', name: 'Lighting Tech', icon: 'fas fa-lightbulb', description: 'Lighting technician' },
+            { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Video camera operator' },
+            { id: 'technical-director', name: 'Technical Director', icon: 'fas fa-video', description: 'Technical director' },
+            { id: 'streaming-tech', name: 'Streaming Tech', icon: 'fas fa-broadcast-tower', description: 'Streaming technician' },
+            { id: 'video-tech', name: 'Video Tech', icon: 'fas fa-video', description: 'Video technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Main Stage', x: '5%', y: '5%', width: '35%', height: '30%' },
+                { name: 'Side Stage', x: '45%', y: '5%', width: '25%', height: '25%' },
+                { name: 'FOH Position', x: '5%', y: '40%', width: '30%', height: '20%' },
+                { name: 'Lighting Grid', x: '40%', y: '35%', width: '30%', height: '20%' },
+                { name: 'Video Control', x: '75%', y: '10%', width: '20%', height: '25%' },
+                { name: 'Power Station', x: '75%', y: '40%', width: '20%', height: '15%' },
+                { name: 'Production Office', x: '75%', y: '60%', width: '20%', height: '25%' }
+            ]
+        }
     }
 };
 
@@ -1485,7 +2772,9 @@ export const LEVEL_ORDER = [
     'audio-1', 'audio-2', 'audio-3',
     'lighting-1', 'lighting-2', 'lighting-3',
     'video-1', 'video-2', 'video-3',
-    'set-1', 'set-2', 'set-3'
+    'set-1', 'set-2', 'set-3',
+    'streaming-1', 'streaming-2', 'streaming-3',
+    'advanced-1', 'advanced-2', 'advanced-3'
 ];
 
 // Export level categories
@@ -1493,5 +2782,7 @@ export const LEVEL_CATEGORIES = {
     'audio': ['audio-1', 'audio-2', 'audio-3'],
     'lighting': ['lighting-1', 'lighting-2', 'lighting-3'],
     'video': ['video-1', 'video-2', 'video-3'],
-    'set': ['set-1', 'set-2', 'set-3']
+    'set': ['set-1', 'set-2', 'set-3'],
+    'streaming': ['streaming-1', 'streaming-2', 'streaming-3'],
+    'advanced': ['advanced-1', 'advanced-2', 'advanced-3']
 };

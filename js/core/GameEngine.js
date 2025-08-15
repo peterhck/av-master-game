@@ -3026,6 +3026,46 @@ export class AVMasterGame {
                     load: { type: 'display', value: '65%', label: 'Load' },
                     runtime: { type: 'display', value: '45 min', label: 'Runtime' }
                 }
+            },
+            'mobile-device': {
+                'Mobile Phone': {
+                    battery: { type: 'display', value: '85%', label: 'Battery' },
+                    streaming: { type: 'toggle', value: false, label: 'Streaming' },
+                    camera: { type: 'toggle', value: true, label: 'Camera' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'chat-computer': {
+                'Chat Management PC': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    chat: { type: 'toggle', value: false, label: 'Chat Management' },
+                    moderation: { type: 'toggle', value: false, label: 'Moderation' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'gaming-pc': {
+                'Gaming PC 1': {
+                    performance: { type: 'select', options: ['Low', 'Medium', 'High', 'Ultra'], value: 'High', label: 'Performance' },
+                    streaming: { type: 'toggle', value: false, label: 'Streaming' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Gaming PC 2': {
+                    performance: { type: 'select', options: ['Low', 'Medium', 'High', 'Ultra'], value: 'High', label: 'Performance' },
+                    streaming: { type: 'toggle', value: false, label: 'Streaming' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Pro Gaming PC 1': {
+                    performance: { type: 'select', options: ['Low', 'Medium', 'High', 'Ultra'], value: 'Ultra', label: 'Performance' },
+                    streaming: { type: 'toggle', value: false, label: 'Streaming' },
+                    tournament: { type: 'toggle', value: false, label: 'Tournament Mode' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Pro Gaming PC 2': {
+                    performance: { type: 'select', options: ['Low', 'Medium', 'High', 'Ultra'], value: 'Ultra', label: 'Performance' },
+                    streaming: { type: 'toggle', value: false, label: 'Streaming' },
+                    tournament: { type: 'toggle', value: false, label: 'Tournament Mode' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
             }
         };
 
