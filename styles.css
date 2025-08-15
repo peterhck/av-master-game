@@ -598,6 +598,7 @@ body {
     text-align: center;
     padding: 0.5rem;
     z-index: 2;
+    pointer-events: none; /* Prevent zones from interfering with connector clicks */
 }
 
 /* Toolbar */
