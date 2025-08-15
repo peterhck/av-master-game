@@ -172,19 +172,8 @@ function setupGlobalEventListeners() {
         console.log('✓ Stage area drag/drop events set up');
     }
 
-    // Setup connector click events
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('connector')) {
-            const equipment = e.target.closest('.equipment');
-            if (equipment) {
-                const equipmentData = game.equipment.find(eq => eq.element === equipment);
-                if (equipmentData) {
-                    game.handleConnectorClick(e.target, equipmentData);
-                }
-            }
-        }
-    });
-    console.log('✓ Connector click events set up');
+    // Connector click events are handled by the game engine via event delegation
+    console.log('✓ Connector click events will be set up by game engine');
 }
 
 /**

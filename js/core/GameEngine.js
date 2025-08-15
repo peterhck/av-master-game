@@ -1215,8 +1215,9 @@ export class AVMasterGame {
                 connector.style.pointerEvents = 'auto';
                 connector.classList.remove('disabled', 'inactive', 'hovered');
 
-                // Add unique connector identifier
-                connector.dataset.connectorId = `${uniqueId}-connector-${index}`;
+                // Add unique connector identifier using the connector key
+                const connectorKey = connector.dataset.connectorKey;
+                connector.dataset.connectorId = `${uniqueId}-${connectorKey}`;
                 connector.dataset.equipmentId = uniqueId;
 
                 // Ensure stable positioning - let CSS handle transforms
@@ -1292,11 +1293,14 @@ export class AVMasterGame {
 
         return connectors.map((connector, index) => {
             const color = getConnectorColor(connector.type);
+            // Create a unique connector identifier based on type, label, and index
+            const connectorKey = `${connector.type}-${connector.label.replace(/\s+/g, '-')}-${index}`;
             return `
                 <div class="connector ${connector.position}" 
                      data-type="${connector.type}" 
                      data-position="${connector.position}"
-                     data-connector-index="${index}">
+                     data-connector-index="${index}"
+                     data-connector-key="${connectorKey}">
                     <div class="connector-dot" style="background-color: ${color};"></div>
                     <span class="connector-label">${connector.label}</span>
                 </div>
@@ -1311,6 +1315,15 @@ export class AVMasterGame {
         // Verify we have the correct equipment and connector with unique IDs
         const equipmentId = equipment.dataset.uniqueId;
         const connectorId = connector.dataset.connectorId;
+
+        console.log('🔌 Connector click debug info:');
+        console.log('  - Connector element:', connector);
+        console.log('  - Equipment element:', equipment);
+        console.log('  - Connector type:', connector.dataset.type);
+        console.log('  - Connector position:', connector.dataset.position);
+        console.log('  - Connector key:', connector.dataset.connectorKey);
+        console.log('  - Equipment ID:', equipmentId);
+        console.log('  - Connector ID:', connectorId);
 
         if (!equipmentId || !connectorId) {
             console.error('❌ Missing unique identifiers:', { equipmentId, connectorId });
