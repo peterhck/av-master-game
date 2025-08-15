@@ -1385,19 +1385,14 @@ export class AVMasterGame {
  * Update connector visual state based on connection count
  */
     updateConnectorVisualState(connector) {
-        // Count how many connections this connector has using unique equipment IDs
+        // Count how many connections this connector has using unique connector IDs
         const connectionCount = this.connections.filter(conn => {
-            const equipment = connector.closest('.equipment');
-            if (!equipment) return false;
+            const connectorId = connector.dataset.connectorId;
 
-            const equipmentId = equipment.dataset.uniqueId;
-            const connectorType = connector.dataset.type;
-
-            return (conn.fromEquipmentId === equipmentId && conn.fromConnectorType === connectorType) ||
-                (conn.toEquipmentId === equipmentId && conn.toConnectorType === connectorType);
+            return (conn.fromConnectorId === connectorId) || (conn.toConnectorId === connectorId);
         }).length;
 
-        console.log(`🔌 Updating connector visual state: ${connector.dataset.type} has ${connectionCount} connections`);
+        console.log(`🔌 Updating connector visual state: ${connector.dataset.type} (${connector.dataset.connectorId}) has ${connectionCount} connections`);
 
         // Remove existing connection count classes
         connector.classList.remove('connected-1', 'connected-2', 'connected-3', 'connected-many');
@@ -1478,30 +1473,42 @@ export class AVMasterGame {
     forceRefreshConnectors() {
         console.log('🔧 Force refreshing all connectors...');
 
-        // Remove all existing connector event listeners
-        document.querySelectorAll('.connector').forEach(connector => {
-            const newConnector = connector.cloneNode(true);
-            connector.parentNode.replaceChild(newConnector, connector);
-        });
-
-        // Re-setup connector event listeners
-        this.setupConnectorEventListeners();
-
-        // Force update all connector visual states and ensure proper initialization
+        // Instead of cloning and replacing, just refresh the existing connectors
         this.equipment.forEach(equipmentData => {
             if (equipmentData.element) {
                 const connectors = equipmentData.element.querySelectorAll('.connector');
                 connectors.forEach((connector, index) => {
-                    // Ensure proper initialization
+                    // Preserve unique identifiers and just refresh the state
+                    const connectorId = connector.dataset.connectorId;
+                    const equipmentId = connector.dataset.equipmentId;
+                    const connectorKey = connector.dataset.connectorKey;
+                    
+                    // Ensure proper initialization without destroying unique IDs
                     connector.style.pointerEvents = 'auto';
                     connector.classList.remove('disabled', 'inactive', 'hovered');
                     connector.classList.remove('selected');
 
+                    // Re-apply unique identifiers if they were lost
+                    if (!connector.dataset.connectorId && connectorId) {
+                        connector.dataset.connectorId = connectorId;
+                    }
+                    if (!connector.dataset.equipmentId && equipmentId) {
+                        connector.dataset.equipmentId = equipmentId;
+                    }
+                    if (!connector.dataset.connectorKey && connectorKey) {
+                        connector.dataset.connectorKey = connectorKey;
+                    }
+
                     // Update visual state
                     this.updateConnectorVisualState(connector);
+                    
+                    console.log(`🔧 Refreshed connector ${index + 1}: ${connector.dataset.type} (${connector.dataset.connectorId})`);
                 });
             }
         });
+
+        // Re-setup connector event listeners
+        this.setupConnectorEventListeners();
 
         console.log('✅ Force refresh complete');
     }
@@ -1530,7 +1537,9 @@ export class AVMasterGame {
                     if (equipment) {
                         console.log('🔌 Connector clicked via delegation:', connector.dataset.type);
                         console.log('🔌 Connector position:', connector.dataset.position);
+                        console.log('🔌 Connector ID:', connector.dataset.connectorId);
                         console.log('🔌 Equipment:', equipment.dataset.name, equipment.dataset.uniqueId);
+                        console.log('🔌 Click target:', e.target.tagName, e.target.className);
                         this.handleConnectorClick(connector, equipment);
                     }
                 }
@@ -1610,6 +1619,15 @@ export class AVMasterGame {
         } else {
             console.log('❌ Connector is blocked by:', elementsAtPoint[0]);
         }
+
+        // Additional debugging for connector state
+        console.log('🔍 Connector state:');
+        console.log('  - Pointer events:', window.getComputedStyle(connector).pointerEvents);
+        console.log('  - Z-index:', window.getComputedStyle(connector).zIndex);
+        console.log('  - Display:', window.getComputedStyle(connector).display);
+        console.log('  - Visibility:', window.getComputedStyle(connector).visibility);
+        console.log('  - Connector ID:', connector.dataset.connectorId);
+        console.log('  - Equipment ID:', connector.dataset.equipmentId);
     }
 
     /**
@@ -1729,16 +1747,18 @@ export class AVMasterGame {
      * Create valid connection
      */
     createValidConnection(from, to, validConnection) {
-        // Store connection with unique equipment IDs instead of equipment names
+        // Store connection with unique equipment IDs and connector IDs
         const connectionData = {
             id: generateId(),
             fromEquipmentId: from.equipment.dataset.uniqueId,
             fromEquipmentName: from.equipment.dataset.name,
             fromEquipmentType: from.equipment.dataset.type,
+            fromConnectorId: from.connector.dataset.connectorId,
             fromConnectorType: from.connector.dataset.type,
             toEquipmentId: to.equipment.dataset.uniqueId,
             toEquipmentName: to.equipment.dataset.name,
             toEquipmentType: to.equipment.dataset.type,
+            toConnectorId: to.connector.dataset.connectorId,
             toConnectorType: to.connector.dataset.type,
             cableType: validConnection.cable,
             animation: validConnection.animation,
