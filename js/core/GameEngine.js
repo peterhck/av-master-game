@@ -1482,7 +1482,7 @@ export class AVMasterGame {
                     const connectorId = connector.dataset.connectorId;
                     const equipmentId = connector.dataset.equipmentId;
                     const connectorKey = connector.dataset.connectorKey;
-                    
+
                     // Ensure proper initialization without destroying unique IDs
                     connector.style.pointerEvents = 'auto';
                     connector.classList.remove('disabled', 'inactive', 'hovered');
@@ -1501,7 +1501,7 @@ export class AVMasterGame {
 
                     // Update visual state
                     this.updateConnectorVisualState(connector);
-                    
+
                     console.log(`🔧 Refreshed connector ${index + 1}: ${connector.dataset.type} (${connector.dataset.connectorId})`);
                 });
             }
@@ -2760,6 +2760,19 @@ export class AVMasterGame {
                     contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
                     resolution: { type: 'select', options: ['720p', '1080p', '4K'], value: '1080p', label: 'Resolution' },
                     power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Main Projector': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 85, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 75, label: 'Contrast' },
+                    resolution: { type: 'select', options: ['720p', '1080p', '4K'], value: '1080p', label: 'Resolution' },
+                    keystone: { type: 'slider', min: -20, max: 20, value: 0, label: 'Keystone' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Backup Projector': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
+                    resolution: { type: 'select', options: ['720p', '1080p', '4K'], value: '1080p', label: 'Resolution' },
+                    power: { type: 'toggle', value: false, label: 'Power' }
                 }
             },
             'screen': {
@@ -2776,6 +2789,26 @@ export class AVMasterGame {
                     brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
                     contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
                     colorTemp: { type: 'slider', min: 3000, max: 7000, value: 5500, label: 'Color Temp (K)' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Main Screen': {
+                    position: { type: 'slider', min: 0, max: 100, value: 50, label: 'Position' },
+                    angle: { type: 'slider', min: -45, max: 45, value: 0, label: 'Angle' },
+                    tension: { type: 'slider', min: 0, max: 100, value: 75, label: 'Tension' }
+                },
+                'Monitor Screen': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Program Monitor': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 85, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 75, label: 'Contrast' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Preview Monitor': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
                     power: { type: 'toggle', value: true, label: 'Power' }
                 }
             },
@@ -2794,6 +2827,25 @@ export class AVMasterGame {
                     output: { type: 'toggle', value: true, label: 'Output' },
                     transition: { type: 'select', options: ['Cut', 'Fade', 'Dissolve', 'Wipe'], value: 'Cut', label: 'Transition' },
                     effects: { type: 'toggle', value: false, label: 'Effects' }
+                },
+                'HDMI Switcher': {
+                    input1: { type: 'toggle', value: true, label: 'Input 1' },
+                    input2: { type: 'toggle', value: false, label: 'Input 2' },
+                    output1: { type: 'toggle', value: true, label: 'Output 1' },
+                    output2: { type: 'toggle', value: false, label: 'Output 2' },
+                    transition: { type: 'select', options: ['Cut', 'Fade'], value: 'Cut', label: 'Transition' }
+                },
+                'Professional Video Switcher': {
+                    input1: { type: 'toggle', value: true, label: 'Input 1' },
+                    input2: { type: 'toggle', value: false, label: 'Input 2' },
+                    input3: { type: 'toggle', value: false, label: 'Input 3' },
+                    graphics: { type: 'toggle', value: false, label: 'Graphics' },
+                    vtr: { type: 'toggle', value: false, label: 'VTR' },
+                    program: { type: 'toggle', value: true, label: 'Program' },
+                    preview: { type: 'toggle', value: false, label: 'Preview' },
+                    clean: { type: 'toggle', value: false, label: 'Clean' },
+                    transition: { type: 'select', options: ['Cut', 'Fade', 'Dissolve', 'Wipe', 'DVE'], value: 'Cut', label: 'Transition' },
+                    effects: { type: 'toggle', value: false, label: 'Effects' }
                 }
             },
             'camera': {
@@ -2801,6 +2853,51 @@ export class AVMasterGame {
                     focus: { type: 'slider', min: 0, max: 100, value: 50, label: 'Focus' },
                     zoom: { type: 'slider', min: 1, max: 10, value: 1, label: 'Zoom' },
                     iris: { type: 'slider', min: 1, max: 16, value: 8, label: 'Iris' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Main Camera': {
+                    focus: { type: 'slider', min: 0, max: 100, value: 60, label: 'Focus' },
+                    zoom: { type: 'slider', min: 1, max: 20, value: 1, label: 'Zoom' },
+                    iris: { type: 'slider', min: 1, max: 16, value: 8, label: 'Iris' },
+                    whiteBalance: { type: 'select', options: ['Auto', '3200K', '5600K', 'Manual'], value: 'Auto', label: 'White Balance' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Wide Shot Camera': {
+                    focus: { type: 'slider', min: 0, max: 100, value: 40, label: 'Focus' },
+                    zoom: { type: 'slider', min: 1, max: 15, value: 1, label: 'Zoom' },
+                    iris: { type: 'slider', min: 1, max: 16, value: 11, label: 'Iris' },
+                    whiteBalance: { type: 'select', options: ['Auto', '3200K', '5600K', 'Manual'], value: 'Auto', label: 'White Balance' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Close-up Camera': {
+                    focus: { type: 'slider', min: 0, max: 100, value: 80, label: 'Focus' },
+                    zoom: { type: 'slider', min: 1, max: 25, value: 5, label: 'Zoom' },
+                    iris: { type: 'slider', min: 1, max: 16, value: 5, label: 'Iris' },
+                    whiteBalance: { type: 'select', options: ['Auto', '3200K', '5600K', 'Manual'], value: 'Auto', label: 'White Balance' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Studio Camera A': {
+                    focus: { type: 'slider', min: 0, max: 100, value: 70, label: 'Focus' },
+                    zoom: { type: 'slider', min: 1, max: 30, value: 1, label: 'Zoom' },
+                    iris: { type: 'slider', min: 1, max: 16, value: 8, label: 'Iris' },
+                    whiteBalance: { type: 'select', options: ['Auto', '3200K', '5600K', 'Manual'], value: 'Auto', label: 'White Balance' },
+                    tally: { type: 'toggle', value: false, label: 'Tally Light' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Studio Camera B': {
+                    focus: { type: 'slider', min: 0, max: 100, value: 65, label: 'Focus' },
+                    zoom: { type: 'slider', min: 1, max: 30, value: 1, label: 'Zoom' },
+                    iris: { type: 'slider', min: 1, max: 16, value: 8, label: 'Iris' },
+                    whiteBalance: { type: 'select', options: ['Auto', '3200K', '5600K', 'Manual'], value: 'Auto', label: 'White Balance' },
+                    tally: { type: 'toggle', value: false, label: 'Tally Light' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Robotic Camera': {
+                    focus: { type: 'slider', min: 0, max: 100, value: 60, label: 'Focus' },
+                    zoom: { type: 'slider', min: 1, max: 25, value: 1, label: 'Zoom' },
+                    pan: { type: 'slider', min: -180, max: 180, value: 0, label: 'Pan' },
+                    tilt: { type: 'slider', min: -45, max: 45, value: 0, label: 'Tilt' },
+                    whiteBalance: { type: 'select', options: ['Auto', '3200K', '5600K', 'Manual'], value: 'Auto', label: 'White Balance' },
                     power: { type: 'toggle', value: true, label: 'Power' }
                 }
             },
@@ -2816,6 +2913,12 @@ export class AVMasterGame {
                     play: { type: 'toggle', value: false, label: 'Play' },
                     loop: { type: 'toggle', value: false, label: 'Loop' },
                     playlist: { type: 'select', options: ['Playlist 1', 'Playlist 2', 'Playlist 3'], value: 'Playlist 1', label: 'Playlist' }
+                },
+                'Backup Media Player': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 75, label: 'Volume' },
+                    play: { type: 'toggle', value: false, label: 'Play' },
+                    loop: { type: 'toggle', value: false, label: 'Loop' },
+                    source: { type: 'select', options: ['USB', 'Network', 'Blu-ray'], value: 'USB', label: 'Source' }
                 }
             },
             'playback-device': {
@@ -2853,6 +2956,75 @@ export class AVMasterGame {
                     frequency: { type: 'slider', min: 500, max: 600, value: 550, label: 'Frequency (MHz)' },
                     squelch: { type: 'slider', min: 0, max: 100, value: 50, label: 'Squelch' },
                     power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'laptop': {
+                'Presenter Laptop': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    volume: { type: 'slider', min: 0, max: 100, value: 75, label: 'Volume' },
+                    presentation: { type: 'toggle', value: false, label: 'Presentation Mode' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'graphics-computer': {
+                'Graphics Computer': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 85, label: 'Brightness' },
+                    graphics: { type: 'toggle', value: false, label: 'Graphics Overlay' },
+                    templates: { type: 'select', options: ['Lower Third', 'Full Screen', 'Logo', 'Custom'], value: 'Lower Third', label: 'Template' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Graphics Workstation': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 90, label: 'Brightness' },
+                    graphics: { type: 'toggle', value: false, label: 'Graphics Overlay' },
+                    templates: { type: 'select', options: ['Lower Third', 'Full Screen', 'Logo', 'Custom', 'Chyron'], value: 'Lower Third', label: 'Template' },
+                    effects: { type: 'toggle', value: false, label: 'Effects' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'streaming-encoder': {
+                'Streaming Encoder': {
+                    bitrate: { type: 'slider', min: 1000, max: 10000, value: 5000, label: 'Bitrate (kbps)' },
+                    resolution: { type: 'select', options: ['720p', '1080p', '4K'], value: '1080p', label: 'Resolution' },
+                    streaming: { type: 'toggle', value: false, label: 'Streaming' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Multi-Stream Encoder': {
+                    bitrate: { type: 'slider', min: 1000, max: 15000, value: 8000, label: 'Bitrate (kbps)' },
+                    resolution: { type: 'select', options: ['720p', '1080p', '4K'], value: '1080p', label: 'Resolution' },
+                    stream1: { type: 'toggle', value: false, label: 'Stream 1' },
+                    stream2: { type: 'toggle', value: false, label: 'Stream 2' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'recorder': {
+                'Backup Recorder': {
+                    recording: { type: 'toggle', value: false, label: 'Recording' },
+                    format: { type: 'select', options: ['MP4', 'MOV', 'AVI'], value: 'MP4', label: 'Format' },
+                    quality: { type: 'select', options: ['Low', 'Medium', 'High'], value: 'Medium', label: 'Quality' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Multi-Format Recorder': {
+                    recording: { type: 'toggle', value: false, label: 'Recording' },
+                    format: { type: 'select', options: ['MP4', 'MOV', 'AVI', 'ProRes'], value: 'MP4', label: 'Format' },
+                    quality: { type: 'select', options: ['Low', 'Medium', 'High', 'Professional'], value: 'High', label: 'Quality' },
+                    backup: { type: 'toggle', value: true, label: 'Backup Recording' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'vtr': {
+                'Video Tape Recorder': {
+                    play: { type: 'toggle', value: false, label: 'Play' },
+                    record: { type: 'toggle', value: false, label: 'Record' },
+                    format: { type: 'select', options: ['HDCAM', 'Digital Betacam', 'DVCAM'], value: 'HDCAM', label: 'Format' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'ups': {
+                'Uninterruptible Power Supply': {
+                    mainPower: { type: 'toggle', value: true, label: 'Main Power' },
+                    battery: { type: 'display', value: '95%', label: 'Battery' },
+                    load: { type: 'display', value: '65%', label: 'Load' },
+                    runtime: { type: 'display', value: '45 min', label: 'Runtime' }
                 }
             }
         };

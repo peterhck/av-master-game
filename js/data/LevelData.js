@@ -748,20 +748,33 @@ export const LEVEL_DATA = {
         }
     },
     'video-1': {
-        title: 'Basic Video System',
+        title: 'Corporate Presentation Setup',
         category: 'video',
         difficulty: 'beginner',
-        description: 'Set up basic video projection system',
+        description: 'Set up professional corporate presentation system with multiple inputs and backup',
         objectives: [
-            'Position projector and screen',
-            'Connect video sources',
-            'Power all video equipment',
-            'Create basic video zones'
+            'Position main and backup projectors',
+            'Connect laptop and backup media sources',
+            'Set up video switcher for seamless transitions',
+            'Power all video equipment with redundancy',
+            'Create presentation zones with proper sightlines'
         ],
         equipment: [
             {
                 type: 'projector',
-                name: 'Video Projector',
+                name: 'Main Projector',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In 2' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'projector',
+                name: 'Backup Projector',
                 icon: 'fas fa-tv',
                 quantity: 1,
                 requiresPower: true,
@@ -772,99 +785,15 @@ export const LEVEL_DATA = {
             },
             {
                 type: 'screen',
-                name: 'Projection Screen',
+                name: 'Main Screen',
                 icon: 'fas fa-square',
                 quantity: 1,
                 requiresPower: false,
                 connectors: []
             },
             {
-                type: 'media-player',
-                name: 'Media Player',
-                icon: 'fas fa-play',
-                quantity: 1,
-                requiresPower: true,
-                connectors: [
-                    { type: 'power-in', position: 'left', label: 'Power In' },
-                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
-                ]
-            },
-            {
-                type: 'power-distro',
-                name: 'Power Distribution',
-                icon: 'fas fa-plug',
-                quantity: 1,
-                requiresPower: false,
-                connectors: [
-                    { type: 'power-out', position: 'right', label: 'Power Out 1' },
-                    { type: 'power-out', position: 'right', label: 'Power Out 2' }
-                ]
-            }
-        ],
-        connections: [
-            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 2, color: '#ff4757' },
-            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 1, color: '#00ccff' }
-        ],
-        validConnections: [
-            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
-            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' }
-        ],
-        settings: [
-            { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
-            { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' }
-        ],
-        resourceRequirements: {
-            'projector': ['v1-video-tech'],
-            'screen': ['stage-hand'],
-            'media-player': ['media-operator'],
-            'power-distro': ['stage-hand']
-        },
-        availableResources: [
-            { id: 'v1-video-tech', name: 'V1 Video Tech', icon: 'fas fa-video', description: 'Lead video technician' },
-            { id: 'media-operator', name: 'Media Operator', icon: 'fas fa-play-circle', description: 'Media playback operator' },
-            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
-            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
-            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
-            { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
-        ],
-        stageSetup: {
-            width: '100%',
-            height: '100%',
-            zones: [
-                { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
-                { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
-                { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' }
-            ]
-        }
-    },
-    'video-2': {
-        title: 'Multi-Screen Video System',
-        category: 'video',
-        difficulty: 'intermediate',
-        description: 'Set up multi-screen video system with switching',
-        objectives: [
-            'Position multiple screens',
-            'Connect video switcher',
-            'Power all video equipment',
-            'Create multi-screen zones'
-        ],
-        equipment: [
-            {
-                type: 'screen',
-                name: 'Video Screen',
-                icon: 'fas fa-tv',
-                quantity: 2,
-                requiresPower: true,
-                connectors: [
-                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
-                    { type: 'power-in', position: 'left', label: 'Power In' }
-                ]
-            },
-            {
                 type: 'video-switcher',
-                name: 'Video Switcher',
+                name: 'HDMI Switcher',
                 icon: 'fas fa-random',
                 quantity: 1,
                 requiresPower: true,
@@ -877,10 +806,21 @@ export const LEVEL_DATA = {
                 ]
             },
             {
+                type: 'laptop',
+                name: 'Presenter Laptop',
+                icon: 'fas fa-laptop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'right', label: 'HDMI Out' }
+                ]
+            },
+            {
                 type: 'media-player',
-                name: 'Media Player',
+                name: 'Backup Media Player',
                 icon: 'fas fa-play',
-                quantity: 2,
+                quantity: 1,
                 requiresPower: true,
                 connectors: [
                     { type: 'power-in', position: 'left', label: 'Power In' },
@@ -902,8 +842,8 @@ export const LEVEL_DATA = {
             }
         ],
         connections: [
-            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 4, color: '#ff4757' },
-            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 4, color: '#00ccff' }
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 5, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 6, color: '#00ccff' }
         ],
         validConnections: [
             { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
@@ -912,17 +852,20 @@ export const LEVEL_DATA = {
         settings: [
             { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
             { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' },
-            { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
+            { type: 'switching', name: 'Switching', icon: 'fas fa-random' },
+            { type: 'backup', name: 'Backup Mode', icon: 'fas fa-shield-alt' }
         ],
         resourceRequirements: {
-            'screen': ['v1-video-tech'],
+            'projector': ['v1-video-tech'],
+            'screen': ['stage-hand'],
             'video-switcher': ['v1-video-tech'],
+            'laptop': ['presenter'],
             'media-player': ['media-operator'],
             'power-distro': ['stage-hand']
         },
         availableResources: [
             { id: 'v1-video-tech', name: 'V1 Video Tech', icon: 'fas fa-video', description: 'Lead video technician' },
-            { id: 'v2-video-tech', name: 'V2 Video Tech', icon: 'fas fa-video', description: 'Assistant video technician' },
+            { id: 'presenter', name: 'Presenter', icon: 'fas fa-user-tie', description: 'Corporate presenter' },
             { id: 'media-operator', name: 'Media Operator', icon: 'fas fa-play-circle', description: 'Media playback operator' },
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
@@ -937,31 +880,58 @@ export const LEVEL_DATA = {
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
                 { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
                 { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' },
+                { name: 'Presenter Area', x: '40%', y: '30%', width: '20%', height: '15%' }
             ]
         }
     },
-    'video-3': {
-        title: 'Professional Video System',
+    'video-2': {
+        title: 'Live Streaming Multi-Camera Setup',
         category: 'video',
-        difficulty: 'advanced',
-        description: 'Set up professional video system with live switching and effects',
+        difficulty: 'intermediate',
+        description: 'Set up professional live streaming system with multiple cameras and graphics',
         objectives: [
-            'Position professional video equipment',
-            'Connect live video switcher',
-            'Power all video equipment',
-            'Create professional video zones'
+            'Position multiple cameras for different angles',
+            'Connect live video switcher with graphics overlay',
+            'Set up streaming encoder and backup recording',
+            'Power all video equipment with redundancy',
+            'Create live streaming zones with proper coverage'
         ],
         equipment: [
             {
-                type: 'screen',
-                name: 'Professional LED Wall',
-                icon: 'fas fa-tv',
+                type: 'camera',
+                name: 'Main Camera',
+                icon: 'fas fa-video',
                 quantity: 1,
                 requiresPower: true,
                 connectors: [
-                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
-                    { type: 'power-in', position: 'left', label: 'Power In' }
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Wide Shot Camera',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Close-up Camera',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' }
                 ]
             },
             {
@@ -975,29 +945,54 @@ export const LEVEL_DATA = {
                     { type: 'hdmi-in', position: 'back', label: 'Input 1' },
                     { type: 'hdmi-in', position: 'back', label: 'Input 2' },
                     { type: 'hdmi-in', position: 'back', label: 'Input 3' },
-                    { type: 'hdmi-out', position: 'front', label: 'Output' }
+                    { type: 'hdmi-in', position: 'back', label: 'Graphics Input' },
+                    { type: 'hdmi-out', position: 'front', label: 'Program Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Preview Out' }
                 ]
             },
             {
-                type: 'camera',
-                name: 'Video Camera',
-                icon: 'fas fa-video',
-                quantity: 2,
-                requiresPower: true,
-                connectors: [
-                    { type: 'power-in', position: 'left', label: 'Power In' },
-                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
-                ]
-            },
-            {
-                type: 'media-player',
-                name: 'Media Player',
-                icon: 'fas fa-play',
+                type: 'graphics-computer',
+                name: 'Graphics Computer',
+                icon: 'fas fa-desktop',
                 quantity: 1,
                 requiresPower: true,
                 connectors: [
                     { type: 'power-in', position: 'left', label: 'Power In' },
                     { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Streaming Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'recorder',
+                name: 'Backup Recorder',
+                icon: 'fas fa-hdd',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Monitor Screen',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
                 ]
             },
             {
@@ -1010,35 +1005,43 @@ export const LEVEL_DATA = {
                     { type: 'power-out', position: 'right', label: 'Power Out 1' },
                     { type: 'power-out', position: 'right', label: 'Power Out 2' },
                     { type: 'power-out', position: 'right', label: 'Power Out 3' },
-                    { type: 'power-out', position: 'right', label: 'Power Out 4' }
+                    { type: 'power-out', position: 'right', label: 'Power Out 4' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 5' },
+                    { type: 'power-out', position: 'right', label: 'Power Out 6' }
                 ]
             }
         ],
         connections: [
-            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 4, color: '#ff4757' },
-            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 5, color: '#00ccff' }
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 8, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 10, color: '#00ccff' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 1, color: '#ffa502' }
         ],
         validConnections: [
             { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
-            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' }
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
         ],
         settings: [
             { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
             { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' },
-            { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
+            { type: 'switching', name: 'Switching', icon: 'fas fa-random' },
+            { type: 'streaming', name: 'Streaming', icon: 'fas fa-broadcast-tower' },
+            { type: 'graphics', name: 'Graphics', icon: 'fas fa-palette' }
         ],
         resourceRequirements: {
-            'screen': ['v1-video-tech'],
-            'video-switcher': ['v1-video-tech'],
             'camera': ['camera-operator'],
-            'media-player': ['media-operator'],
+            'video-switcher': ['v1-video-tech'],
+            'graphics-computer': ['graphics-operator'],
+            'streaming-encoder': ['v1-video-tech'],
+            'recorder': ['v2-video-tech'],
+            'screen': ['v2-video-tech'],
             'power-distro': ['stage-hand']
         },
         availableResources: [
             { id: 'v1-video-tech', name: 'V1 Video Tech', icon: 'fas fa-video', description: 'Lead video technician' },
             { id: 'v2-video-tech', name: 'V2 Video Tech', icon: 'fas fa-video', description: 'Assistant video technician' },
             { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Video camera operator' },
-            { id: 'media-operator', name: 'Media Operator', icon: 'fas fa-play-circle', description: 'Media playback operator' },
+            { id: 'graphics-operator', name: 'Graphics Operator', icon: 'fas fa-palette', description: 'Graphics and overlay operator' },
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
@@ -1052,7 +1055,223 @@ export const LEVEL_DATA = {
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
                 { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
                 { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' },
+                { name: 'Camera Position 1', x: '35%', y: '5%', width: '15%', height: '15%' },
+                { name: 'Camera Position 2', x: '50%', y: '5%', width: '15%', height: '15%' },
+                { name: 'Camera Position 3', x: '65%', y: '5%', width: '15%', height: '15%' }
+            ]
+        }
+    },
+    'video-3': {
+        title: 'Professional Broadcast Studio',
+        category: 'video',
+        difficulty: 'advanced',
+        description: 'Set up complete professional broadcast studio with multi-camera production, graphics, and live streaming',
+        objectives: [
+            'Position professional broadcast cameras and robotic systems',
+            'Connect advanced video switcher with effects and graphics',
+            'Set up multi-format recording and streaming systems',
+            'Power all broadcast equipment with UPS backup',
+            'Create professional broadcast zones with proper workflow'
+        ],
+        equipment: [
+            {
+                type: 'camera',
+                name: 'Studio Camera A',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' },
+                    { type: 'tally-in', position: 'back', label: 'Tally In' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Studio Camera B',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' },
+                    { type: 'tally-in', position: 'back', label: 'Tally In' }
+                ]
+            },
+            {
+                type: 'camera',
+                name: 'Robotic Camera',
+                icon: 'fas fa-robot',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'sdi-out', position: 'back', label: 'SDI Out' },
+                    { type: 'control-in', position: 'back', label: 'Control In' }
+                ]
+            },
+            {
+                type: 'video-switcher',
+                name: 'Professional Video Switcher',
+                icon: 'fas fa-random',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 1' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 2' },
+                    { type: 'hdmi-in', position: 'back', label: 'Input 3' },
+                    { type: 'hdmi-in', position: 'back', label: 'Graphics Input' },
+                    { type: 'hdmi-in', position: 'back', label: 'VTR Input' },
+                    { type: 'hdmi-out', position: 'front', label: 'Program Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Preview Out' },
+                    { type: 'hdmi-out', position: 'front', label: 'Clean Out' }
+                ]
+            },
+            {
+                type: 'graphics-computer',
+                name: 'Graphics Workstation',
+                icon: 'fas fa-desktop',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'vtr',
+                name: 'Video Tape Recorder',
+                icon: 'fas fa-video',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' }
+                ]
+            },
+            {
+                type: 'streaming-encoder',
+                name: 'Multi-Stream Encoder',
+                icon: 'fas fa-broadcast-tower',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'ethernet-out', position: 'back', label: 'Network Out' }
+                ]
+            },
+            {
+                type: 'recorder',
+                name: 'Multi-Format Recorder',
+                icon: 'fas fa-hdd',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'power-in', position: 'left', label: 'Power In' },
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'hdmi-out', position: 'back', label: 'HDMI Out' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Program Monitor',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'screen',
+                name: 'Preview Monitor',
+                icon: 'fas fa-tv',
+                quantity: 1,
+                requiresPower: true,
+                connectors: [
+                    { type: 'hdmi-in', position: 'back', label: 'HDMI In' },
+                    { type: 'power-in', position: 'left', label: 'Power In' }
+                ]
+            },
+            {
+                type: 'ups',
+                name: 'Uninterruptible Power Supply',
+                icon: 'fas fa-battery-full',
+                quantity: 1,
+                requiresPower: false,
+                connectors: [
+                    { type: 'power-out', position: 'right', label: 'UPS Out 1' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 2' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 3' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 4' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 5' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 6' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 7' },
+                    { type: 'power-out', position: 'right', label: 'UPS Out 8' }
+                ]
+            }
+        ],
+        connections: [
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 10, color: '#ff4757' },
+            { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 15, color: '#00ccff' },
+            { type: 'ethernet-cable', name: 'Ethernet Cable', icon: 'fas fa-plug', quantity: 2, color: '#ffa502' }
+        ],
+        validConnections: [
+            { from: 'power-out', to: 'power-in', cable: 'power-cable', animation: 'power-glow' },
+            { from: 'hdmi-out', to: 'hdmi-in', cable: 'hdmi-cable', animation: 'video-pulse' },
+            { from: 'ethernet-out', to: 'ethernet-in', cable: 'ethernet-cable', animation: 'network-pulse' }
+        ],
+        settings: [
+            { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
+            { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' },
+            { type: 'switching', name: 'Switching', icon: 'fas fa-random' },
+            { type: 'streaming', name: 'Streaming', icon: 'fas fa-broadcast-tower' },
+            { type: 'graphics', name: 'Graphics', icon: 'fas fa-palette' },
+            { type: 'recording', name: 'Recording', icon: 'fas fa-hdd' },
+            { type: 'robotic', name: 'Robotic Control', icon: 'fas fa-robot' }
+        ],
+        resourceRequirements: {
+            'camera': ['camera-operator'],
+            'video-switcher': ['v1-video-tech'],
+            'graphics-computer': ['graphics-operator'],
+            'vtr': ['v2-video-tech'],
+            'streaming-encoder': ['v1-video-tech'],
+            'recorder': ['v2-video-tech'],
+            'screen': ['v2-video-tech'],
+            'ups': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'v1-video-tech', name: 'V1 Video Tech', icon: 'fas fa-video', description: 'Lead video technician' },
+            { id: 'v2-video-tech', name: 'V2 Video Tech', icon: 'fas fa-video', description: 'Assistant video technician' },
+            { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Video camera operator' },
+            { id: 'graphics-operator', name: 'Graphics Operator', icon: 'fas fa-palette', description: 'Graphics and overlay operator' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
+        ],
+        stageSetup: {
+            width: '100%',
+            height: '100%',
+            zones: [
+                { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
+                { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
+                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
+                { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
+                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' },
+                { name: 'Camera Position A', x: '30%', y: '5%', width: '12%', height: '12%' },
+                { name: 'Camera Position B', x: '45%', y: '5%', width: '12%', height: '12%' },
+                { name: 'Robotic Camera', x: '60%', y: '5%', width: '12%', height: '12%' },
+                { name: 'Graphics Station', x: '75%', y: '40%', width: '20%', height: '15%' }
             ]
         }
     },
