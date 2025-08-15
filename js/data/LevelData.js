@@ -802,7 +802,7 @@ export const LEVEL_DATA = {
             }
         ],
         connections: [
-            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 3, color: '#ff4757' },
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 2, color: '#ff4757' },
             { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 1, color: '#00ccff' }
         ],
         validConnections: [
@@ -902,7 +902,7 @@ export const LEVEL_DATA = {
             }
         ],
         connections: [
-            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 5, color: '#ff4757' },
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 4, color: '#ff4757' },
             { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 4, color: '#00ccff' }
         ],
         validConnections: [
@@ -1015,7 +1015,7 @@ export const LEVEL_DATA = {
             }
         ],
         connections: [
-            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 5, color: '#ff4757' },
+            { type: 'power-cable', name: 'Power Cable', icon: 'fas fa-plug', quantity: 4, color: '#ff4757' },
             { type: 'hdmi-cable', name: 'HDMI Cable', icon: 'fas fa-plug', quantity: 5, color: '#00ccff' }
         ],
         validConnections: [
