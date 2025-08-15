@@ -226,6 +226,23 @@ export const LEVEL_DATA = {
             { type: 'pan', name: 'Pan Control', icon: 'fas fa-arrows-alt-h' },
             { type: 'effects', name: 'Effects', icon: 'fas fa-magic' }
         ],
+        resourceRequirements: {
+            'microphone': ['singer', 'speaker', 'instrumentalist'],
+            'mixing-console': ['a1-audio-tech'],
+            'effects-processor': ['a2-audio-tech'],
+            'speaker': ['a2-audio-tech'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'singer', name: 'Singer', icon: 'fas fa-music', description: 'Vocal performer' },
+            { id: 'speaker', name: 'Speaker', icon: 'fas fa-user-tie', description: 'Public speaker' },
+            { id: 'instrumentalist', name: 'Instrumentalist', icon: 'fas fa-guitar', description: 'Musical instrument player' },
+            { id: 'a1-audio-tech', name: 'A1 Audio Tech', icon: 'fas fa-headphones', description: 'Lead audio technician' },
+            { id: 'a2-audio-tech', name: 'A2 Audio Tech', icon: 'fas fa-microchip', description: 'Assistant audio technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' }
+        ],
         stageSetup: {
             width: '100%',
             height: '100%',
@@ -394,6 +411,27 @@ export const LEVEL_DATA = {
             { type: 'monitor-mix', name: 'Monitor Mix', icon: 'fas fa-headphones' },
             { type: 'wireless-freq', name: 'Wireless Frequency', icon: 'fas fa-wifi' }
         ],
+        resourceRequirements: {
+            'microphone': ['singer', 'speaker', 'instrumentalist'],
+            'playback-device': ['dj', 'media-operator'],
+            'mixing-console': ['a1-audio-tech'],
+            'wireless-transmitter': ['a2-audio-tech'],
+            'wireless-receiver': ['a2-audio-tech'],
+            'speaker': ['a2-audio-tech'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'singer', name: 'Singer', icon: 'fas fa-music', description: 'Vocal performer' },
+            { id: 'speaker', name: 'Speaker', icon: 'fas fa-user-tie', description: 'Public speaker' },
+            { id: 'instrumentalist', name: 'Instrumentalist', icon: 'fas fa-guitar', description: 'Musical instrument player' },
+            { id: 'dj', name: 'DJ', icon: 'fas fa-compact-disc', description: 'Disc jockey' },
+            { id: 'media-operator', name: 'Media Operator', icon: 'fas fa-play-circle', description: 'Media playback operator' },
+            { id: 'a1-audio-tech', name: 'A1 Audio Tech', icon: 'fas fa-headphones', description: 'Lead audio technician' },
+            { id: 'a2-audio-tech', name: 'A2 Audio Tech', icon: 'fas fa-microchip', description: 'Assistant audio technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' }
+        ],
         stageSetup: {
             width: '100%',
             height: '100%',
@@ -488,6 +526,21 @@ export const LEVEL_DATA = {
             { type: 'intensity', name: 'Intensity', icon: 'fas fa-sliders-h' },
             { type: 'color', name: 'Color Temperature', icon: 'fas fa-palette' }
         ],
+        resourceRequirements: {
+            'stage-light': ['performer', 'actor'],
+            'lighting-stand': ['stage-hand', 'grip'],
+            'dimmer': ['l1-lighting-tech'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'performer', name: 'Performer', icon: 'fas fa-star', description: 'Stage performer' },
+            { id: 'actor', name: 'Actor', icon: 'fas fa-theater-masks', description: 'Theatrical actor' },
+            { id: 'l1-lighting-tech', name: 'L1 Lighting Tech', icon: 'fas fa-lightbulb', description: 'Lead lighting technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'lighting-designer', name: 'Lighting Designer', icon: 'fas fa-palette', description: 'Lighting design specialist' }
+        ],
         stageSetup: {
             width: '100%',
             height: '100%',
@@ -562,6 +615,22 @@ export const LEVEL_DATA = {
             { type: 'intensity', name: 'Intensity', icon: 'fas fa-sliders-h' },
             { type: 'color', name: 'Color Temperature', icon: 'fas fa-palette' },
             { type: 'movement', name: 'Movement', icon: 'fas fa-arrows-alt' }
+        ],
+        resourceRequirements: {
+            'moving-head': ['performer', 'actor', 'dancer'],
+            'dimmer': ['l1-lighting-tech'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'performer', name: 'Performer', icon: 'fas fa-star', description: 'Stage performer' },
+            { id: 'actor', name: 'Actor', icon: 'fas fa-theater-masks', description: 'Theatrical actor' },
+            { id: 'dancer', name: 'Dancer', icon: 'fas fa-running', description: 'Dance performer' },
+            { id: 'l1-lighting-tech', name: 'L1 Lighting Tech', icon: 'fas fa-lightbulb', description: 'Lead lighting technician' },
+            { id: 'l2-lighting-tech', name: 'L2 Lighting Tech', icon: 'fas fa-lightbulb', description: 'Assistant lighting technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'lighting-designer', name: 'Lighting Designer', icon: 'fas fa-palette', description: 'Lighting design specialist' }
         ],
         stageSetup: {
             width: '100%',
@@ -649,6 +718,23 @@ export const LEVEL_DATA = {
             { type: 'color', name: 'Color Temperature', icon: 'fas fa-palette' },
             { type: 'movement', name: 'Movement', icon: 'fas fa-arrows-alt' }
         ],
+        resourceRequirements: {
+            'moving-head': ['performer', 'actor', 'dancer'],
+            'par-light': ['performer', 'actor', 'dancer'],
+            'dimmer': ['l1-lighting-tech'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'performer', name: 'Performer', icon: 'fas fa-star', description: 'Stage performer' },
+            { id: 'actor', name: 'Actor', icon: 'fas fa-theater-masks', description: 'Theatrical actor' },
+            { id: 'dancer', name: 'Dancer', icon: 'fas fa-running', description: 'Dance performer' },
+            { id: 'l1-lighting-tech', name: 'L1 Lighting Tech', icon: 'fas fa-lightbulb', description: 'Lead lighting technician' },
+            { id: 'l2-lighting-tech', name: 'L2 Lighting Tech', icon: 'fas fa-lightbulb', description: 'Assistant lighting technician' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'lighting-designer', name: 'Lighting Designer', icon: 'fas fa-palette', description: 'Lighting design specialist' }
+        ],
         stageSetup: {
             width: '100%',
             height: '100%',
@@ -726,6 +812,20 @@ export const LEVEL_DATA = {
         settings: [
             { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
             { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' }
+        ],
+        resourceRequirements: {
+            'projector': ['v1-video-tech'],
+            'screen': ['stage-hand'],
+            'media-player': ['media-operator'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'v1-video-tech', name: 'V1 Video Tech', icon: 'fas fa-video', description: 'Lead video technician' },
+            { id: 'media-operator', name: 'Media Operator', icon: 'fas fa-play-circle', description: 'Media playback operator' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
         ],
         stageSetup: {
             width: '100%',
@@ -813,6 +913,21 @@ export const LEVEL_DATA = {
             { type: 'brightness', name: 'Brightness', icon: 'fas fa-sliders-h' },
             { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' },
             { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
+        ],
+        resourceRequirements: {
+            'screen': ['v1-video-tech'],
+            'video-switcher': ['v1-video-tech'],
+            'media-player': ['media-operator'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'v1-video-tech', name: 'V1 Video Tech', icon: 'fas fa-video', description: 'Lead video technician' },
+            { id: 'v2-video-tech', name: 'V2 Video Tech', icon: 'fas fa-video', description: 'Assistant video technician' },
+            { id: 'media-operator', name: 'Media Operator', icon: 'fas fa-play-circle', description: 'Media playback operator' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
         ],
         stageSetup: {
             width: '100%',
@@ -912,6 +1027,23 @@ export const LEVEL_DATA = {
             { type: 'resolution', name: 'Resolution', icon: 'fas fa-expand' },
             { type: 'switching', name: 'Switching', icon: 'fas fa-random' }
         ],
+        resourceRequirements: {
+            'screen': ['v1-video-tech'],
+            'video-switcher': ['v1-video-tech'],
+            'camera': ['camera-operator'],
+            'media-player': ['media-operator'],
+            'power-distro': ['stage-hand']
+        },
+        availableResources: [
+            { id: 'v1-video-tech', name: 'V1 Video Tech', icon: 'fas fa-video', description: 'Lead video technician' },
+            { id: 'v2-video-tech', name: 'V2 Video Tech', icon: 'fas fa-video', description: 'Assistant video technician' },
+            { id: 'camera-operator', name: 'Camera Operator', icon: 'fas fa-camera', description: 'Video camera operator' },
+            { id: 'media-operator', name: 'Media Operator', icon: 'fas fa-play-circle', description: 'Media playback operator' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
+        ],
         stageSetup: {
             width: '100%',
             height: '100%',
@@ -966,6 +1098,40 @@ export const LEVEL_DATA = {
         settings: [
             { type: 'position', name: 'Position', icon: 'fas fa-arrows-alt' },
             { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
+        ],
+        resourceRequirements: {
+            'stage-prop': ['performer', 'actor', 'dancer'],
+            'stage-curtain': ['stage-hand'],
+            'stage-platform': ['stage-hand', 'grip'],
+            'stage-ladder': ['stage-hand', 'grip'],
+            'stage-rigging': ['rigger']
+        },
+        availableResources: [
+            { id: 'performer', name: 'Performer', icon: 'fas fa-star', description: 'Stage performer' },
+            { id: 'actor', name: 'Actor', icon: 'fas fa-theater-masks', description: 'Theatrical actor' },
+            { id: 'dancer', name: 'Dancer', icon: 'fas fa-running', description: 'Dance performer' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'rigger', name: 'Rigger', icon: 'fas fa-link', description: 'Stage rigging specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'set-designer', name: 'Set Designer', icon: 'fas fa-palette', description: 'Set design specialist' }
+        ],
+        availableResources: [
+            { id: 'performer', name: 'Performer', icon: 'fas fa-star', description: 'Stage performer' },
+            { id: 'actor', name: 'Actor', icon: 'fas fa-theater-masks', description: 'Theatrical actor' },
+            { id: 'dancer', name: 'Dancer', icon: 'fas fa-running', description: 'Dance performer' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'set-designer', name: 'Set Designer', icon: 'fas fa-palette', description: 'Set design specialist' }
+        ],
+        availableResources: [
+            { id: 'performer', name: 'Performer', icon: 'fas fa-star', description: 'Stage performer' },
+            { id: 'actor', name: 'Actor', icon: 'fas fa-theater-masks', description: 'Theatrical actor' },
+            { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
+            { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
+            { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
+            { id: 'set-designer', name: 'Set Designer', icon: 'fas fa-palette', description: 'Set design specialist' }
         ],
         stageSetup: {
             width: '100%',

@@ -2665,6 +2665,162 @@ export class AVMasterGame {
                     scene3: { type: 'toggle', value: false, label: 'Scene 3' },
                     auto: { type: 'toggle', value: false, label: 'Auto Mode' }
                 }
+            },
+            'stage-light': {
+                'Front Light': {
+                    intensity: { type: 'slider', min: 0, max: 100, value: 80, label: 'Intensity' },
+                    color: { type: 'select', options: ['White', 'Warm', 'Cool'], value: 'White', label: 'Color Temperature' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Side Light': {
+                    intensity: { type: 'slider', min: 0, max: 100, value: 75, label: 'Intensity' },
+                    color: { type: 'select', options: ['White', 'Warm', 'Cool'], value: 'White', label: 'Color Temperature' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'moving-head': {
+                'Moving Head Light': {
+                    intensity: { type: 'slider', min: 0, max: 100, value: 80, label: 'Intensity' },
+                    pan: { type: 'slider', min: 0, max: 360, value: 180, label: 'Pan' },
+                    tilt: { type: 'slider', min: -90, max: 90, value: 0, label: 'Tilt' },
+                    color: { type: 'select', options: ['White', 'Red', 'Blue', 'Green', 'Yellow'], value: 'White', label: 'Color' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'par-light': {
+                'PAR Light': {
+                    intensity: { type: 'slider', min: 0, max: 100, value: 75, label: 'Intensity' },
+                    color: { type: 'select', options: ['White', 'Red', 'Blue', 'Green', 'Yellow', 'Purple'], value: 'White', label: 'Color' },
+                    strobe: { type: 'toggle', value: false, label: 'Strobe' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'dimmer': {
+                'Dimmer Pack': {
+                    masterFader: { type: 'slider', min: 0, max: 100, value: 80, label: 'Master Fader' },
+                    channel1: { type: 'slider', min: 0, max: 100, value: 75, label: 'Channel 1' },
+                    channel2: { type: 'slider', min: 0, max: 100, value: 70, label: 'Channel 2' },
+                    channel3: { type: 'slider', min: 0, max: 100, value: 65, label: 'Channel 3' },
+                    channel4: { type: 'slider', min: 0, max: 100, value: 60, label: 'Channel 4' }
+                },
+                'Advanced Dimmer': {
+                    masterFader: { type: 'slider', min: 0, max: 100, value: 80, label: 'Master Fader' },
+                    channel1: { type: 'slider', min: 0, max: 100, value: 75, label: 'Channel 1' },
+                    channel2: { type: 'slider', min: 0, max: 100, value: 70, label: 'Channel 2' },
+                    channel3: { type: 'slider', min: 0, max: 100, value: 65, label: 'Channel 3' },
+                    channel4: { type: 'slider', min: 0, max: 100, value: 60, label: 'Channel 4' },
+                    auto: { type: 'toggle', value: false, label: 'Auto Mode' }
+                },
+                'Professional Dimmer': {
+                    masterFader: { type: 'slider', min: 0, max: 100, value: 80, label: 'Master Fader' },
+                    channel1: { type: 'slider', min: 0, max: 100, value: 75, label: 'Channel 1' },
+                    channel2: { type: 'slider', min: 0, max: 100, value: 70, label: 'Channel 2' },
+                    channel3: { type: 'slider', min: 0, max: 100, value: 65, label: 'Channel 3' },
+                    channel4: { type: 'slider', min: 0, max: 100, value: 60, label: 'Channel 4' },
+                    auto: { type: 'toggle', value: false, label: 'Auto Mode' },
+                    dmx: { type: 'toggle', value: true, label: 'DMX Control' }
+                }
+            },
+            'projector': {
+                'Video Projector': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
+                    resolution: { type: 'select', options: ['720p', '1080p', '4K'], value: '1080p', label: 'Resolution' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'screen': {
+                'Projection Screen': {
+                    position: { type: 'slider', min: 0, max: 100, value: 50, label: 'Position' },
+                    angle: { type: 'slider', min: -45, max: 45, value: 0, label: 'Angle' }
+                },
+                'Video Screen': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                },
+                'Professional LED Wall': {
+                    brightness: { type: 'slider', min: 0, max: 100, value: 80, label: 'Brightness' },
+                    contrast: { type: 'slider', min: 0, max: 100, value: 70, label: 'Contrast' },
+                    colorTemp: { type: 'slider', min: 3000, max: 7000, value: 5500, label: 'Color Temp (K)' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'video-switcher': {
+                'Video Switcher': {
+                    input1: { type: 'toggle', value: true, label: 'Input 1' },
+                    input2: { type: 'toggle', value: false, label: 'Input 2' },
+                    output1: { type: 'toggle', value: true, label: 'Output 1' },
+                    output2: { type: 'toggle', value: false, label: 'Output 2' },
+                    transition: { type: 'select', options: ['Cut', 'Fade', 'Dissolve'], value: 'Cut', label: 'Transition' }
+                },
+                'Live Video Switcher': {
+                    input1: { type: 'toggle', value: true, label: 'Input 1' },
+                    input2: { type: 'toggle', value: false, label: 'Input 2' },
+                    input3: { type: 'toggle', value: false, label: 'Input 3' },
+                    output: { type: 'toggle', value: true, label: 'Output' },
+                    transition: { type: 'select', options: ['Cut', 'Fade', 'Dissolve', 'Wipe'], value: 'Cut', label: 'Transition' },
+                    effects: { type: 'toggle', value: false, label: 'Effects' }
+                }
+            },
+            'camera': {
+                'Video Camera': {
+                    focus: { type: 'slider', min: 0, max: 100, value: 50, label: 'Focus' },
+                    zoom: { type: 'slider', min: 1, max: 10, value: 1, label: 'Zoom' },
+                    iris: { type: 'slider', min: 1, max: 16, value: 8, label: 'Iris' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'media-player': {
+                'Media Player': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 75, label: 'Volume' },
+                    play: { type: 'toggle', value: false, label: 'Play' },
+                    loop: { type: 'toggle', value: false, label: 'Loop' },
+                    shuffle: { type: 'toggle', value: false, label: 'Shuffle' }
+                },
+                'Music Playback': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 75, label: 'Volume' },
+                    play: { type: 'toggle', value: false, label: 'Play' },
+                    loop: { type: 'toggle', value: false, label: 'Loop' },
+                    playlist: { type: 'select', options: ['Playlist 1', 'Playlist 2', 'Playlist 3'], value: 'Playlist 1', label: 'Playlist' }
+                }
+            },
+            'playback-device': {
+                'Music Playback': {
+                    volume: { type: 'slider', min: 0, max: 100, value: 75, label: 'Volume' },
+                    play: { type: 'toggle', value: false, label: 'Play' },
+                    loop: { type: 'toggle', value: false, label: 'Loop' },
+                    playlist: { type: 'select', options: ['Playlist 1', 'Playlist 2', 'Playlist 3'], value: 'Playlist 1', label: 'Playlist' }
+                }
+            },
+            'wireless-transmitter': {
+                'Wireless Transmitter': {
+                    frequency: { type: 'slider', min: 500, max: 600, value: 550, label: 'Frequency (MHz)' },
+                    power: { type: 'slider', min: 0, max: 100, value: 80, label: 'Power' },
+                    battery: { type: 'display', value: '90%', label: 'Battery' }
+                }
+            },
+            'wireless-receiver': {
+                'Wireless Receiver': {
+                    frequency: { type: 'slider', min: 500, max: 600, value: 550, label: 'Frequency (MHz)' },
+                    squelch: { type: 'slider', min: 0, max: 100, value: 50, label: 'Squelch' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'effects-processor': {
+                'Effects Processor': {
+                    reverb: { type: 'slider', min: 0, max: 100, value: 30, label: 'Reverb' },
+                    delay: { type: 'slider', min: 0, max: 100, value: 20, label: 'Delay' },
+                    chorus: { type: 'slider', min: 0, max: 100, value: 15, label: 'Chorus' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
+            },
+            'mic-receiver': {
+                'Mic Receiver': {
+                    frequency: { type: 'slider', min: 500, max: 600, value: 550, label: 'Frequency (MHz)' },
+                    squelch: { type: 'slider', min: 0, max: 100, value: 50, label: 'Squelch' },
+                    power: { type: 'toggle', value: true, label: 'Power' }
+                }
             }
         };
 
