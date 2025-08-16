@@ -874,10 +874,10 @@ export const LEVEL_DATA = {
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
                 { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
-                { name: 'Video Control', x: '65%', y: '5%', width: '30%', height: '30%' },
+                { name: 'Video Control', x: '80%', y: '5%', width: '15%', height: '30%' },
                 { name: 'Camera Position 1', x: '35%', y: '30%', width: '20%', height: '20%' },
-                { name: 'Camera Position 2', x: '60%', y: '30%', width: '20%', height: '20%' },
-                { name: 'Camera Position 3', x: '60%', y: '55%', width: '20%', height: '20%' }
+                { name: 'Camera Position 2', x: '60%', y: '30%', width: '15%', height: '20%' },
+                { name: 'Camera Position 3', x: '35%', y: '55%', width: '20%', height: '20%' }
             ]
         }
     },
@@ -1050,10 +1050,10 @@ export const LEVEL_DATA = {
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
                 { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
-                { name: 'Video Control', x: '65%', y: '5%', width: '30%', height: '30%' },
+                { name: 'Video Control', x: '80%', y: '5%', width: '15%', height: '30%' },
                 { name: 'Camera Position 1', x: '35%', y: '30%', width: '20%', height: '20%' },
-                { name: 'Camera Position 2', x: '60%', y: '30%', width: '20%', height: '20%' },
-                { name: 'Camera Position 3', x: '60%', y: '55%', width: '20%', height: '20%' }
+                { name: 'Camera Position 2', x: '60%', y: '30%', width: '15%', height: '20%' },
+                { name: 'Camera Position 3', x: '35%', y: '55%', width: '20%', height: '20%' }
             ]
         }
     },
@@ -1261,10 +1261,10 @@ export const LEVEL_DATA = {
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
                 { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
-                { name: 'Video Control', x: '65%', y: '5%', width: '30%', height: '30%' },
+                { name: 'Video Control', x: '80%', y: '5%', width: '15%', height: '30%' },
                 { name: 'Camera Position 1', x: '35%', y: '30%', width: '20%', height: '20%' },
-                { name: 'Camera Position 2', x: '60%', y: '30%', width: '20%', height: '20%' },
-                { name: 'Camera Position 3', x: '60%', y: '55%', width: '20%', height: '20%' }
+                { name: 'Camera Position 2', x: '60%', y: '30%', width: '15%', height: '20%' },
+                { name: 'Camera Position 3', x: '35%', y: '55%', width: '20%', height: '20%' }
             ]
         }
     },
