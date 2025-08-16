@@ -987,12 +987,20 @@ export class AVMasterGame {
         // Unlock next level
         this.unlockNextLevel();
 
-        // Check if this level has testing challenges
-        if (this.hasTestingChallenges()) {
-            this.showTestingChallengePrompt();
-        } else {
-            // Switch to level complete screen
-            this.switchScreen('level-complete');
+        // Always show the level complete screen first
+        this.switchScreen('level-complete');
+
+        // Show testing challenge button if available
+        const testingBtn = document.getElementById('testing-challenge-btn');
+        if (testingBtn) {
+            if (this.hasTestingChallenges()) {
+                testingBtn.style.display = 'block';
+                testingBtn.addEventListener('click', () => {
+                    this.startTestingChallenges();
+                });
+            } else {
+                testingBtn.style.display = 'none';
+            }
         }
 
         console.log('🎉 Level complete popup shown with confetti and sound');
@@ -1006,49 +1014,7 @@ export class AVMasterGame {
         return levelData && levelData.testingChallenges && levelData.testingChallenges.length > 0;
     }
 
-    /**
-     * Show testing challenge prompt
-     */
-    showTestingChallengePrompt() {
-        const challengePrompt = document.createElement('div');
-        challengePrompt.className = 'testing-challenge-prompt';
-        challengePrompt.innerHTML = `
-            <div class="challenge-prompt-content">
-                <h2>🎯 Testing Challenge Available!</h2>
-                <p>Great job completing the level! Now test your setup with interactive challenges.</p>
-                <div class="challenge-preview">
-                    <h3>Available Tests:</h3>
-                    <ul id="challenge-list"></ul>
-                </div>
-                <div class="challenge-buttons">
-                    <button id="start-testing-btn" class="primary-btn">Start Testing</button>
-                    <button id="skip-testing-btn" class="secondary-btn">Skip Testing</button>
-                </div>
-            </div>
-        `;
 
-        // Add challenges to the list
-        const levelData = this.getLevelData(this.currentLevel);
-        const challengeList = challengePrompt.querySelector('#challenge-list');
-        levelData.testingChallenges.forEach(challenge => {
-            const li = document.createElement('li');
-            li.innerHTML = `<i class="fas ${challenge.icon}"></i> ${challenge.title}`;
-            challengeList.appendChild(li);
-        });
-
-        document.body.appendChild(challengePrompt);
-
-        // Add event listeners
-        challengePrompt.querySelector('#start-testing-btn').addEventListener('click', () => {
-            document.body.removeChild(challengePrompt);
-            this.startTestingChallenges();
-        });
-
-        challengePrompt.querySelector('#skip-testing-btn').addEventListener('click', () => {
-            document.body.removeChild(challengePrompt);
-            this.switchScreen('level-complete');
-        });
-    }
 
     /**
      * Start testing challenges
@@ -1348,7 +1314,7 @@ export class AVMasterGame {
 
             routedChannels = selectedChannels;
             this.simulateChannelRouting(selectedChannels);
-            
+
             channelStatus.innerHTML = `
                 <div class="channel-status-success">
                     <i class="fas fa-check-circle"></i>
@@ -1379,7 +1345,7 @@ export class AVMasterGame {
     showNextChallengeButton(passed) {
         const nextBtn = document.querySelector('#next-challenge-btn');
         const testBtn = document.querySelector('#test-challenge-btn');
-        
+
         if (passed) {
             this.testingResults.push({
                 challenge: this.currentChallenge,
@@ -1426,7 +1392,11 @@ export class AVMasterGame {
 
         completionModal.querySelector('#continue-btn').addEventListener('click', () => {
             document.body.removeChild(completionModal);
-            this.switchScreen('level-complete');
+            // Return to level complete screen and hide the testing button since it's been completed
+            const testingBtn = document.getElementById('testing-challenge-btn');
+            if (testingBtn) {
+                testingBtn.style.display = 'none';
+            }
         });
     }
 
