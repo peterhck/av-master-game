@@ -987,10 +987,514 @@ export class AVMasterGame {
         // Unlock next level
         this.unlockNextLevel();
 
-        // Switch to level complete screen
-        this.switchScreen('level-complete');
+        // Check if this level has testing challenges
+        if (this.hasTestingChallenges()) {
+            this.showTestingChallengePrompt();
+        } else {
+            // Switch to level complete screen
+            this.switchScreen('level-complete');
+        }
 
         console.log('🎉 Level complete popup shown with confetti and sound');
+    }
+
+    /**
+     * Check if current level has testing challenges
+     */
+    hasTestingChallenges() {
+        const levelData = this.getLevelData(this.currentLevel);
+        return levelData && levelData.testingChallenges && levelData.testingChallenges.length > 0;
+    }
+
+    /**
+     * Show testing challenge prompt
+     */
+    showTestingChallengePrompt() {
+        const challengePrompt = document.createElement('div');
+        challengePrompt.className = 'testing-challenge-prompt';
+        challengePrompt.innerHTML = `
+            <div class="challenge-prompt-content">
+                <h2>🎯 Testing Challenge Available!</h2>
+                <p>Great job completing the level! Now test your setup with interactive challenges.</p>
+                <div class="challenge-preview">
+                    <h3>Available Tests:</h3>
+                    <ul id="challenge-list"></ul>
+                </div>
+                <div class="challenge-buttons">
+                    <button id="start-testing-btn" class="primary-btn">Start Testing</button>
+                    <button id="skip-testing-btn" class="secondary-btn">Skip Testing</button>
+                </div>
+            </div>
+        `;
+
+        // Add challenges to the list
+        const levelData = this.getLevelData(this.currentLevel);
+        const challengeList = challengePrompt.querySelector('#challenge-list');
+        levelData.testingChallenges.forEach(challenge => {
+            const li = document.createElement('li');
+            li.innerHTML = `<i class="fas ${challenge.icon}"></i> ${challenge.title}`;
+            challengeList.appendChild(li);
+        });
+
+        document.body.appendChild(challengePrompt);
+
+        // Add event listeners
+        challengePrompt.querySelector('#start-testing-btn').addEventListener('click', () => {
+            document.body.removeChild(challengePrompt);
+            this.startTestingChallenges();
+        });
+
+        challengePrompt.querySelector('#skip-testing-btn').addEventListener('click', () => {
+            document.body.removeChild(challengePrompt);
+            this.switchScreen('level-complete');
+        });
+    }
+
+    /**
+     * Start testing challenges
+     */
+    startTestingChallenges() {
+        const levelData = this.getLevelData(this.currentLevel);
+        this.currentTestingChallenges = [...levelData.testingChallenges];
+        this.currentChallengeIndex = 0;
+        this.testingResults = [];
+
+        this.showCurrentChallenge();
+    }
+
+    /**
+     * Show current testing challenge
+     */
+    showCurrentChallenge() {
+        if (this.currentChallengeIndex >= this.currentTestingChallenges.length) {
+            this.completeTestingChallenges();
+            return;
+        }
+
+        const challenge = this.currentTestingChallenges[this.currentChallengeIndex];
+        this.currentChallenge = challenge;
+
+        const challengeModal = document.createElement('div');
+        challengeModal.className = 'testing-challenge-modal';
+        challengeModal.innerHTML = `
+            <div class="challenge-modal-content">
+                <div class="challenge-header">
+                    <h2><i class="fas ${challenge.icon}"></i> ${challenge.title}</h2>
+                    <p>${challenge.description}</p>
+                </div>
+                <div class="challenge-instructions">
+                    <h3>Instructions:</h3>
+                    <ol>
+                        ${challenge.instructions.map(instruction => `<li>${instruction}</li>`).join('')}
+                    </ol>
+                </div>
+                <div class="challenge-controls">
+                    ${this.generateChallengeControls(challenge)}
+                </div>
+                <div class="challenge-feedback" id="challenge-feedback"></div>
+                <div class="challenge-buttons">
+                    <button id="test-challenge-btn" class="primary-btn">Test Setup</button>
+                    <button id="next-challenge-btn" class="secondary-btn" style="display: none;">Next Challenge</button>
+                    <button id="skip-challenge-btn" class="secondary-btn">Skip Challenge</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(challengeModal);
+
+        // Add event listeners
+        challengeModal.querySelector('#test-challenge-btn').addEventListener('click', () => {
+            this.testCurrentChallenge();
+        });
+
+        challengeModal.querySelector('#next-challenge-btn').addEventListener('click', () => {
+            document.body.removeChild(challengeModal);
+            this.currentChallengeIndex++;
+            this.showCurrentChallenge();
+        });
+
+        challengeModal.querySelector('#skip-challenge-btn').addEventListener('click', () => {
+            document.body.removeChild(challengeModal);
+            this.currentChallengeIndex++;
+            this.showCurrentChallenge();
+        });
+    }
+
+    /**
+     * Generate challenge-specific controls
+     */
+    generateChallengeControls(challenge) {
+        switch (challenge.type) {
+            case 'microphone-test':
+                return `
+                    <div class="mic-test-controls">
+                        <div class="mic-status">
+                            <span>Microphone Status: </span>
+                            <span id="mic-status" class="status-indicator">Ready</span>
+                        </div>
+                        <div class="mic-controls">
+                            <button id="mute-mic-btn" class="control-btn">Mute Microphone</button>
+                            <button id="unmute-mic-btn" class="control-btn">Unmute Microphone</button>
+                        </div>
+                        <div class="audio-visualizer" id="audio-visualizer">
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                        </div>
+                    </div>
+                `;
+            case 'speaker-test':
+                return `
+                    <div class="speaker-test-controls">
+                        <div class="speaker-selection">
+                            <h4>Select Speakers to Test:</h4>
+                            <div id="speaker-list" class="speaker-list"></div>
+                        </div>
+                        <div class="audio-controls">
+                            <button id="play-test-audio-btn" class="control-btn">Play Test Audio</button>
+                            <button id="stop-test-audio-btn" class="control-btn">Stop Audio</button>
+                        </div>
+                        <div class="volume-control">
+                            <label>Volume: <span id="volume-display">50%</span></label>
+                            <input type="range" id="volume-slider" min="0" max="100" value="50">
+                        </div>
+                    </div>
+                `;
+            case 'channel-test':
+                return `
+                    <div class="channel-test-controls">
+                        <div class="channel-selection">
+                            <h4>Select Audio Channels:</h4>
+                            <div id="channel-list" class="channel-list"></div>
+                        </div>
+                        <div class="channel-controls">
+                            <button id="route-audio-btn" class="control-btn">Route Audio</button>
+                            <button id="clear-routing-btn" class="control-btn">Clear Routing</button>
+                        </div>
+                        <div class="channel-status" id="channel-status"></div>
+                    </div>
+                `;
+            default:
+                return '<p>Challenge controls will be generated here.</p>';
+        }
+    }
+
+    /**
+     * Test current challenge
+     */
+    testCurrentChallenge() {
+        const challenge = this.currentChallenge;
+        const feedback = document.getElementById('challenge-feedback');
+
+        switch (challenge.type) {
+            case 'microphone-test':
+                this.testMicrophoneChallenge(feedback);
+                break;
+            case 'speaker-test':
+                this.testSpeakerChallenge(feedback);
+                break;
+            case 'channel-test':
+                this.testChannelChallenge(feedback);
+                break;
+            default:
+                feedback.innerHTML = '<p class="feedback-info">Testing challenge...</p>';
+        }
+    }
+
+    /**
+     * Test microphone challenge
+     */
+    testMicrophoneChallenge(feedback) {
+        const muteBtn = document.getElementById('mute-mic-btn');
+        const unmuteBtn = document.getElementById('unmute-mic-btn');
+        const micStatus = document.getElementById('mic-status');
+        const visualizer = document.getElementById('audio-visualizer');
+
+        let isMuted = false;
+        let testPassed = false;
+
+        // Simulate microphone testing
+        muteBtn.addEventListener('click', () => {
+            isMuted = true;
+            micStatus.textContent = 'Muted';
+            micStatus.className = 'status-indicator muted';
+            visualizer.style.display = 'none';
+        });
+
+        unmuteBtn.addEventListener('click', () => {
+            isMuted = false;
+            micStatus.textContent = 'Active';
+            micStatus.className = 'status-indicator active';
+            visualizer.style.display = 'flex';
+        });
+
+        // Simulate audio input detection
+        setTimeout(() => {
+            if (isMuted) {
+                feedback.innerHTML = `
+                    <div class="feedback-success">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Perfect! Microphone is muted and no audio is detected.</p>
+                    </div>
+                `;
+                testPassed = true;
+            } else {
+                feedback.innerHTML = `
+                    <div class="feedback-error">
+                        <i class="fas fa-times-circle"></i>
+                        <p>Audio detected! Try muting the microphone first.</p>
+                    </div>
+                `;
+            }
+            this.showNextChallengeButton(testPassed);
+        }, 2000);
+    }
+
+    /**
+     * Test speaker challenge
+     */
+    testSpeakerChallenge(feedback) {
+        const speakerList = document.getElementById('speaker-list');
+        const playBtn = document.getElementById('play-test-audio-btn');
+        const stopBtn = document.getElementById('stop-test-audio-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeDisplay = document.getElementById('volume-display');
+
+        let isPlaying = false;
+        let selectedSpeakers = [];
+
+        // Generate speaker list
+        const speakers = this.getEquipmentByType('speaker');
+        speakerList.innerHTML = speakers.map(speaker => `
+            <div class="speaker-item">
+                <input type="checkbox" id="speaker-${speaker.id}" data-speaker-id="${speaker.id}">
+                <label for="speaker-${speaker.id}">${speaker.name}</label>
+            </div>
+        `).join('');
+
+        // Handle speaker selection
+        speakerList.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox') {
+                const speakerId = e.target.dataset.speakerId;
+                if (e.target.checked) {
+                    selectedSpeakers.push(speakerId);
+                } else {
+                    selectedSpeakers = selectedSpeakers.filter(id => id !== speakerId);
+                }
+            }
+        });
+
+        // Handle volume control
+        volumeSlider.addEventListener('input', (e) => {
+            volumeDisplay.textContent = `${e.target.value}%`;
+        });
+
+        // Handle play/stop
+        playBtn.addEventListener('click', () => {
+            if (selectedSpeakers.length === 0) {
+                feedback.innerHTML = '<p class="feedback-error">Please select at least one speaker.</p>';
+                return;
+            }
+
+            isPlaying = true;
+            this.simulateSpeakerAudio(selectedSpeakers, volumeSlider.value);
+            feedback.innerHTML = `
+                <div class="feedback-success">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Audio playing through selected speakers! Check the speaker colors.</p>
+                </div>
+            `;
+            this.showNextChallengeButton(true);
+        });
+
+        stopBtn.addEventListener('click', () => {
+            isPlaying = false;
+            this.stopSpeakerAudio();
+            feedback.innerHTML = '<p class="feedback-info">Audio stopped.</p>';
+        });
+    }
+
+    /**
+     * Test channel challenge
+     */
+    testChannelChallenge(feedback) {
+        const channelList = document.getElementById('channel-list');
+        const routeBtn = document.getElementById('route-audio-btn');
+        const clearBtn = document.getElementById('clear-routing-btn');
+        const channelStatus = document.getElementById('channel-status');
+
+        let routedChannels = [];
+
+        // Generate channel list
+        const channels = this.getAudioChannels();
+        channelList.innerHTML = channels.map(channel => `
+            <div class="channel-item">
+                <input type="checkbox" id="channel-${channel.id}" data-channel-id="${channel.id}">
+                <label for="channel-${channel.id}">${channel.name}</label>
+            </div>
+        `).join('');
+
+        // Handle channel routing
+        routeBtn.addEventListener('click', () => {
+            const selectedChannels = Array.from(channelList.querySelectorAll('input:checked'))
+                .map(input => input.dataset.channelId);
+
+            if (selectedChannels.length === 0) {
+                feedback.innerHTML = '<p class="feedback-error">Please select at least one channel.</p>';
+                return;
+            }
+
+            routedChannels = selectedChannels;
+            this.simulateChannelRouting(selectedChannels);
+            
+            channelStatus.innerHTML = `
+                <div class="channel-status-success">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Audio routed to: ${selectedChannels.join(', ')}</p>
+                </div>
+            `;
+
+            feedback.innerHTML = `
+                <div class="feedback-success">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Channel routing successful! Audio is now controlled.</p>
+                </div>
+            `;
+            this.showNextChallengeButton(true);
+        });
+
+        clearBtn.addEventListener('click', () => {
+            routedChannels = [];
+            this.clearChannelRouting();
+            channelStatus.innerHTML = '<p>Routing cleared.</p>';
+            feedback.innerHTML = '<p class="feedback-info">Channel routing cleared.</p>';
+        });
+    }
+
+    /**
+     * Show next challenge button
+     */
+    showNextChallengeButton(passed) {
+        const nextBtn = document.querySelector('#next-challenge-btn');
+        const testBtn = document.querySelector('#test-challenge-btn');
+        
+        if (passed) {
+            this.testingResults.push({
+                challenge: this.currentChallenge,
+                passed: true,
+                timestamp: Date.now()
+            });
+        }
+
+        testBtn.style.display = 'none';
+        nextBtn.style.display = 'block';
+    }
+
+    /**
+     * Complete testing challenges
+     */
+    completeTestingChallenges() {
+        const passedCount = this.testingResults.filter(result => result.passed).length;
+        const totalCount = this.currentTestingChallenges.length;
+
+        const completionModal = document.createElement('div');
+        completionModal.className = 'testing-completion-modal';
+        completionModal.innerHTML = `
+            <div class="completion-content">
+                <h2>🎯 Testing Complete!</h2>
+                <div class="completion-stats">
+                    <p>Challenges Passed: ${passedCount}/${totalCount}</p>
+                    <p>Success Rate: ${Math.round((passedCount / totalCount) * 100)}%</p>
+                </div>
+                <div class="completion-results">
+                    ${this.testingResults.map(result => `
+                        <div class="result-item ${result.passed ? 'passed' : 'failed'}">
+                            <i class="fas ${result.passed ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                            <span>${result.challenge.title}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="completion-buttons">
+                    <button id="continue-btn" class="primary-btn">Continue</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(completionModal);
+
+        completionModal.querySelector('#continue-btn').addEventListener('click', () => {
+            document.body.removeChild(completionModal);
+            this.switchScreen('level-complete');
+        });
+    }
+
+    /**
+     * Get equipment by type
+     */
+    getEquipmentByType(type) {
+        return this.equipment.filter(item => item.type === type);
+    }
+
+    /**
+     * Get audio channels
+     */
+    getAudioChannels() {
+        return [
+            { id: 'main', name: 'Main Output' },
+            { id: 'aux1', name: 'Auxiliary 1' },
+            { id: 'aux2', name: 'Auxiliary 2' },
+            { id: 'monitor', name: 'Monitor Mix' },
+            { id: 'sub', name: 'Subwoofer' }
+        ];
+    }
+
+    /**
+     * Simulate speaker audio
+     */
+    simulateSpeakerAudio(speakerIds, volume) {
+        speakerIds.forEach(speakerId => {
+            const speakerElement = document.querySelector(`[data-equipment-id="${speakerId}"]`);
+            if (speakerElement) {
+                speakerElement.style.animation = 'speaker-pulse 0.5s infinite';
+                speakerElement.style.filter = `brightness(${1 + (volume / 100) * 0.5})`;
+            }
+        });
+    }
+
+    /**
+     * Stop speaker audio
+     */
+    stopSpeakerAudio() {
+        const speakers = document.querySelectorAll('[data-equipment-id]');
+        speakers.forEach(speaker => {
+            speaker.style.animation = '';
+            speaker.style.filter = '';
+        });
+    }
+
+    /**
+     * Simulate channel routing
+     */
+    simulateChannelRouting(channelIds) {
+        // Visual feedback for channel routing
+        channelIds.forEach(channelId => {
+            const channelElement = document.querySelector(`[data-channel="${channelId}"]`);
+            if (channelElement) {
+                channelElement.classList.add('channel-active');
+            }
+        });
+    }
+
+    /**
+     * Clear channel routing
+     */
+    clearChannelRouting() {
+        const channels = document.querySelectorAll('[data-channel]');
+        channels.forEach(channel => {
+            channel.classList.remove('channel-active');
+        });
     }
 
     /**

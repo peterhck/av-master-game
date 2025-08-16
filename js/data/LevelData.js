@@ -103,7 +103,35 @@ export const LEVEL_DATA = {
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' }
-        ],        stageSetup: {
+        ],
+        testingChallenges: [
+            {
+                type: 'microphone-test',
+                title: 'Microphone Muting Test',
+                icon: 'fa-microphone-slash',
+                description: 'Test microphone muting functionality to ensure proper control',
+                instructions: [
+                    'Click "Mute Microphone" to mute the wireless microphone',
+                    'Verify that no audio signal is detected in the visualizer',
+                    'Click "Unmute Microphone" to restore audio functionality',
+                    'Confirm that audio levels are visible in the visualizer'
+                ]
+            },
+            {
+                type: 'speaker-test',
+                title: 'Speaker Audio Routing Test',
+                icon: 'fa-volume-up',
+                description: 'Test audio routing to specific speakers and verify output',
+                instructions: [
+                    'Select one or more speakers from the list',
+                    'Adjust the volume slider to your preferred level',
+                    'Click "Play Test Audio" to send audio to selected speakers',
+                    'Observe the speaker color changes indicating audio output',
+                    'Click "Stop Audio" to end the test'
+                ]
+            }
+        ],
+        stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -242,7 +270,36 @@ export const LEVEL_DATA = {
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' }
-        ],        stageSetup: {
+        ],
+        testingChallenges: [
+            {
+                type: 'channel-test',
+                title: 'Multi-Channel Audio Routing',
+                icon: 'fa-random',
+                description: 'Test routing audio to different channels and monitor mixes',
+                instructions: [
+                    'Select specific audio channels from the list',
+                    'Route audio to main output and auxiliary channels',
+                    'Verify that audio is properly distributed',
+                    'Test monitor mix routing for performers',
+                    'Clear routing to reset the system'
+                ]
+            },
+            {
+                type: 'speaker-test',
+                title: 'Multi-Zone Speaker Testing',
+                icon: 'fa-volume-up',
+                description: 'Test audio distribution across multiple speaker zones',
+                instructions: [
+                    'Select different speaker combinations',
+                    'Test main speakers and monitor speakers separately',
+                    'Adjust volume levels for each zone',
+                    'Verify audio output through visual feedback',
+                    'Test stereo separation and balance'
+                ]
+            }
+        ],
+        stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -430,7 +487,49 @@ export const LEVEL_DATA = {
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' }
-        ],        stageSetup: {
+        ],
+        testingChallenges: [
+            {
+                type: 'microphone-test',
+                title: 'Wireless Microphone Testing',
+                icon: 'fa-microphone',
+                description: 'Test wireless microphone system and frequency coordination',
+                instructions: [
+                    'Test wireless microphone signal strength',
+                    'Verify frequency coordination between transmitters',
+                    'Check for interference and signal dropouts',
+                    'Test microphone muting and unmuting',
+                    'Verify audio quality through the system'
+                ]
+            },
+            {
+                type: 'channel-test',
+                title: 'Advanced Channel Routing',
+                icon: 'fa-random',
+                description: 'Test complex audio routing for live performance',
+                instructions: [
+                    'Route vocal microphones to main mix',
+                    'Route instrument microphones to separate channels',
+                    'Set up monitor mixes for performers',
+                    'Test playback device routing',
+                    'Verify all channels are properly isolated'
+                ]
+            },
+            {
+                type: 'speaker-test',
+                title: 'Multi-Zone Audio System',
+                icon: 'fa-volume-up',
+                description: 'Test complete multi-zone audio system',
+                instructions: [
+                    'Test main speaker system output',
+                    'Test monitor speaker system',
+                    'Verify stereo imaging and balance',
+                    'Test subwoofer integration',
+                    'Check overall system coherence'
+                ]
+            }
+        ],
+        stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
