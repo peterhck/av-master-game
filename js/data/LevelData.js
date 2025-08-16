@@ -1053,12 +1053,12 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
-                { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' },
-                { name: 'Camera Position 1', x: '35%', y: '5%', width: '15%', height: '15%' },
-                { name: 'Camera Position 2', x: '50%', y: '5%', width: '15%', height: '15%' },
-                { name: 'Camera Position 3', x: '65%', y: '5%', width: '15%', height: '15%' }
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Video Control', x: '65%', y: '5%', width: '30%', height: '30%' },
+                { name: 'Camera Position 1', x: '35%', y: '30%', width: '20%', height: '20%' },
+                { name: 'Camera Position 2', x: '60%', y: '30%', width: '20%', height: '20%' },
+                { name: 'Camera Position 3', x: '60%', y: '55%', width: '20%', height: '20%' }
             ]
         }
     },
@@ -1341,9 +1341,9 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
-                { name: 'Storage Area', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Set Control', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
+                { name: 'Storage Area', x: '5%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Set Control', x: '65%', y: '5%', width: '30%', height: '30%' }
             ]
         }
     },
