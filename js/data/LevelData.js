@@ -108,10 +108,10 @@ export const LEVEL_DATA = {
             width: '100%',
             height: '100%',
             zones: [
-                { name: 'Stage Left', x: '5%', y: '10%', width: '25%', height: '30%' },
-                { name: 'Stage Right', x: '70%', y: '10%', width: '25%', height: '30%' },
-                { name: 'FOH', x: '35%', y: '50%', width: '25%', height: '20%' },
-                { name: 'Power Station', x: '5%', y: '50%', width: '20%', height: '15%' }
+                { name: 'Stage Left', x: '5%', y: '5%', width: '25%', height: '35%' },
+                { name: 'Stage Right', x: '75%', y: '5%', width: '20%', height: '35%' },
+                { name: 'FOH', x: '35%', y: '45%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '5%', y: '45%', width: '25%', height: '20%' }
             ]
         }
     },
@@ -249,10 +249,10 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Monitor Zone', x: '5%', y: '55%', width: '25%', height: '20%' },
-                { name: 'Power Station', x: '35%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Wireless Zone', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'Power Station', x: '35%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Wireless Zone', x: '65%', y: '5%', width: '30%', height: '30%' }
             ]
         }
     },
@@ -438,10 +438,10 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Monitor Zone', x: '5%', y: '55%', width: '25%', height: '20%' },
-                { name: 'Power Station', x: '35%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Wireless Zone', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'Power Station', x: '35%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Wireless Zone', x: '65%', y: '5%', width: '30%', height: '30%' }
             ]
         }
     },
@@ -547,9 +547,9 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
-                { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Lighting Control', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Lighting Control', x: '65%', y: '5%', width: '30%', height: '30%' }
             ]
         }
     },
@@ -638,9 +638,9 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
-                { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Lighting Control', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Lighting Control', x: '65%', y: '5%', width: '30%', height: '30%' }
             ]
         }
     },
@@ -741,9 +741,9 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
-                { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Lighting Control', x: '70%', y: '10%', width: '25%', height: '25%' }
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Lighting Control', x: '65%', y: '5%', width: '30%', height: '30%' }
             ]
         }
     },
@@ -878,10 +878,10 @@ export const LEVEL_DATA = {
             zones: [
                 { name: 'Stage Front', x: '5%', y: '5%', width: '25%', height: '20%' },
                 { name: 'Stage Back', x: '5%', y: '30%', width: '25%', height: '20%' },
-                { name: 'FOH Position', x: '40%', y: '10%', width: '20%', height: '15%' },
-                { name: 'Power Station', x: '5%', y: '55%', width: '20%', height: '15%' },
-                { name: 'Video Control', x: '70%', y: '10%', width: '25%', height: '25%' },
-                { name: 'Presenter Area', x: '40%', y: '30%', width: '20%', height: '15%' }
+                { name: 'FOH Position', x: '35%', y: '5%', width: '25%', height: '20%' },
+                { name: 'Power Station', x: '5%', y: '55%', width: '25%', height: '20%' },
+                { name: 'Video Control', x: '65%', y: '5%', width: '30%', height: '30%' },
+                { name: 'Presenter Area', x: '35%', y: '30%', width: '25%', height: '20%' }
             ]
         }
     },
