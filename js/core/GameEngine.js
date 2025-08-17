@@ -2447,15 +2447,25 @@ export class AVMasterGame {
         console.log('🔍 Connection types found:', [...new Set(this.connections.map(c => c.cableType))]);
         console.log('🔍 Required connections:', required);
         console.log('🔍 Current progress:', this.connectionProgress);
-        
+
         // Debug: Show individual connection counts
-        console.log('🔍 Power connections:', this.connections.filter(c => c.cableType === 'power-cable').length);
-        console.log('🔍 XLR connections:', this.connections.filter(c => c.cableType === 'xlr-cable').length);
-        console.log('🔍 Wireless connections:', this.connections.filter(c => c.cableType === 'wireless-cable').length);
-        console.log('🔍 Ethernet connections:', this.connections.filter(c => c.cableType === 'ethernet-cable').length);
-        console.log('🔍 DMX connections:', this.connections.filter(c => c.cableType === 'dmx-cable').length);
-        console.log('🔍 HDMI connections:', this.connections.filter(c => c.cableType === 'hdmi-cable').length);
-        console.log('🔍 USB connections:', this.connections.filter(c => c.cableType === 'usb-cable').length);
+        const powerCount = this.connections.filter(c => c.cableType === 'power-cable').length;
+        const xlrCount = this.connections.filter(c => c.cableType === 'xlr-cable').length;
+        const wirelessCount = this.connections.filter(c => c.cableType === 'wireless-cable').length;
+        const ethernetCount = this.connections.filter(c => c.cableType === 'ethernet-cable').length;
+        const dmxCount = this.connections.filter(c => c.cableType === 'dmx-cable').length;
+        const hdmiCount = this.connections.filter(c => c.cableType === 'hdmi-cable').length;
+        const usbCount = this.connections.filter(c => c.cableType === 'usb-cable').length;
+        
+        console.log('🔍 CONNECTION COUNTS:', {
+            power: powerCount,
+            xlr: xlrCount,
+            wireless: wirelessCount,
+            ethernet: ethernetCount,
+            dmx: dmxCount,
+            hdmi: hdmiCount,
+            usb: usbCount
+        });
 
         this.updateProgressUI();
     }
@@ -2493,6 +2503,7 @@ export class AVMasterGame {
         console.log('🔍 Connection progress:', this.connectionProgress);
 
         // Check each connection type individually for debugging
+        console.log('🔍 COMPLETION STATUS:');
         Object.entries(this.connectionProgress).forEach(([type, progress]) => {
             if (progress.required > 0) {
                 console.log(`🔍 ${type}: ${progress.current}/${progress.required} - ${progress.current >= progress.required ? '✅' : '❌'}`);
