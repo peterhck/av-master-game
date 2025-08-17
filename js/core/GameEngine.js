@@ -1008,35 +1008,35 @@ export class AVMasterGame {
 
 
 
-        /**
-     * Start testing challenges
-     */
+    /**
+ * Start testing challenges
+ */
     startTestingChallenges() {
         console.log('🔬 Starting testing challenges...');
         console.log('🔬 Current level:', this.currentLevel);
- 
+
         // Close any existing winner popup first
         const winnerPopup = document.querySelector('.winner-celebration-overlay');
         if (winnerPopup) {
             console.log('🔬 Closing winner popup before starting challenges');
             document.body.removeChild(winnerPopup);
         }
- 
+
         const levelData = this.getLevelData(this.currentLevel);
         console.log('🔬 Level data:', levelData);
- 
+
         if (!levelData || !levelData.testingChallenges) {
             console.error('❌ No testing challenges found for level:', this.currentLevel);
             alert('No testing challenges available for this level.');
             return;
         }
- 
+
         console.log('🔬 Testing challenges found:', levelData.testingChallenges);
- 
+
         this.currentTestingChallenges = [...levelData.testingChallenges];
         this.currentChallengeIndex = 0;
         this.testingResults = [];
- 
+
         console.log('🔬 About to show first challenge...');
         this.showCurrentChallenge();
     }
@@ -1090,7 +1090,7 @@ export class AVMasterGame {
         console.log('🔬 Challenge modal added to DOM');
         console.log('🔬 Modal element:', challengeModal);
         console.log('🔬 Modal z-index:', window.getComputedStyle(challengeModal).zIndex);
-        
+
         // Check for any other overlays that might be blocking
         const allOverlays = document.querySelectorAll('[style*="z-index"], [class*="overlay"], [class*="modal"]');
         console.log('🔬 All overlays/modals found:', allOverlays.length);
@@ -2281,6 +2281,20 @@ export class AVMasterGame {
             toCoords: null
         };
 
+        // Check for duplicate connections before adding
+        const isDuplicate = this.connections.some(existingConn => 
+            (existingConn.fromConnectorId === connectionData.fromConnectorId && 
+             existingConn.toConnectorId === connectionData.toConnectorId) ||
+            (existingConn.fromConnectorId === connectionData.toConnectorId && 
+             existingConn.toConnectorId === connectionData.fromConnectorId)
+        );
+
+        if (isDuplicate) {
+            console.warn('⚠️ Duplicate connection detected, not adding:', connectionData);
+            this.showMessage('Connection already exists!', 'warning');
+            return;
+        }
+
         // Calculate and store coordinates immediately
         const fromCoords = this.getConnectorCoordinates(from.connector);
         const toCoords = this.getConnectorCoordinates(to.connector);
@@ -2431,22 +2445,7 @@ export class AVMasterGame {
         this.connectionProgress.hdmi.required = required.hdmi;
         this.connectionProgress.usb.required = required.usb;
 
-        // Count current connections
-        this.connectionProgress.power.current = this.connections.filter(c => c.cableType === 'power-cable').length;
-        this.connectionProgress.xlr.current = this.connections.filter(c => c.cableType === 'xlr-cable').length;
-        this.connectionProgress.wireless.current = this.connections.filter(c => c.cableType === 'wireless-cable').length;
-        this.connectionProgress.ethernet.current = this.connections.filter(c => c.cableType === 'ethernet-cable').length;
-        this.connectionProgress.dmx.current = this.connections.filter(c => c.cableType === 'dmx-cable').length;
-        this.connectionProgress.hdmi.current = this.connections.filter(c => c.cableType === 'hdmi-cable').length;
-        this.connectionProgress.usb.current = this.connections.filter(c => c.cableType === 'usb-cable').length;
-
-        // Debug: Log all connections and their types
-        console.log('🔍 All connections:', this.connections);
-        console.log('🔍 Connection types found:', [...new Set(this.connections.map(c => c.cableType))]);
-        console.log('🔍 Required connections:', required);
-        console.log('🔍 Current progress:', this.connectionProgress);
-
-        // Debug: Show individual connection counts
+        // Count current connections with safeguards
         const powerCount = this.connections.filter(c => c.cableType === 'power-cable').length;
         const xlrCount = this.connections.filter(c => c.cableType === 'xlr-cable').length;
         const wirelessCount = this.connections.filter(c => c.cableType === 'wireless-cable').length;
@@ -2454,6 +2453,30 @@ export class AVMasterGame {
         const dmxCount = this.connections.filter(c => c.cableType === 'dmx-cable').length;
         const hdmiCount = this.connections.filter(c => c.cableType === 'hdmi-cable').length;
         const usbCount = this.connections.filter(c => c.cableType === 'usb-cable').length;
+
+        // Apply safeguards to prevent counts from exceeding requirements
+        this.connectionProgress.power.current = Math.min(powerCount, required.power);
+        this.connectionProgress.xlr.current = Math.min(xlrCount, required.xlr);
+        this.connectionProgress.wireless.current = Math.min(wirelessCount, required.wireless);
+        this.connectionProgress.ethernet.current = Math.min(ethernetCount, required.ethernet);
+        this.connectionProgress.dmx.current = Math.min(dmxCount, required.dmx);
+        this.connectionProgress.hdmi.current = Math.min(hdmiCount, required.hdmi);
+        this.connectionProgress.usb.current = Math.min(usbCount, required.usb);
+
+        // Debug: Log if counts exceed requirements
+        if (powerCount > required.power) console.warn(`⚠️ Power count (${powerCount}) exceeds requirement (${required.power})`);
+        if (xlrCount > required.xlr) console.warn(`⚠️ XLR count (${xlrCount}) exceeds requirement (${required.xlr})`);
+        if (wirelessCount > required.wireless) console.warn(`⚠️ Wireless count (${wirelessCount}) exceeds requirement (${required.wireless})`);
+        if (ethernetCount > required.ethernet) console.warn(`⚠️ Ethernet count (${ethernetCount}) exceeds requirement (${required.ethernet})`);
+        if (dmxCount > required.dmx) console.warn(`⚠️ DMX count (${dmxCount}) exceeds requirement (${required.dmx})`);
+        if (hdmiCount > required.hdmi) console.warn(`⚠️ HDMI count (${hdmiCount}) exceeds requirement (${required.hdmi})`);
+        if (usbCount > required.usb) console.warn(`⚠️ USB count (${usbCount}) exceeds requirement (${required.usb})`);
+
+        // Debug: Log all connections and their types
+        console.log('🔍 All connections:', this.connections);
+        console.log('🔍 Connection types found:', [...new Set(this.connections.map(c => c.cableType))]);
+        console.log('🔍 Required connections:', required);
+        console.log('🔍 Current progress:', this.connectionProgress);
 
         console.log('🔍 CONNECTION COUNTS:', {
             power: powerCount,
