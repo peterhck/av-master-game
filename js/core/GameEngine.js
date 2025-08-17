@@ -1014,9 +1014,9 @@ export class AVMasterGame {
 
 
 
-        /**
-     * Start testing challenges flow
-     */
+    /**
+ * Start testing challenges flow
+ */
     startTestingChallenges() {
         console.log('🔬 Starting testing challenges flow...');
         console.log('🔬 Current level:', this.currentLevel);
@@ -1091,6 +1091,7 @@ export class AVMasterGame {
         }
 
         console.log('🔬 Testing challenges found:', levelData.testingChallenges);
+        console.log('🔬 Number of challenges:', levelData.testingChallenges.length);
 
         this.currentTestingChallenges = [...levelData.testingChallenges];
         this.currentChallengeIndex = 0;
@@ -1149,6 +1150,13 @@ export class AVMasterGame {
         console.log('🔬 Challenge modal added to DOM');
         console.log('🔬 Modal element:', challengeModal);
         console.log('🔬 Modal z-index:', window.getComputedStyle(challengeModal).zIndex);
+        console.log('🔬 Modal display:', window.getComputedStyle(challengeModal).display);
+        console.log('🔬 Modal visibility:', window.getComputedStyle(challengeModal).visibility);
+        console.log('🔬 Modal opacity:', window.getComputedStyle(challengeModal).opacity);
+        
+        // Temporary test to confirm modal is visible
+        console.log('🔬 Modal should be visible now!');
+        console.log('🔬 Modal HTML:', challengeModal.outerHTML);
 
         // Check for any other overlays that might be blocking
         const allOverlays = document.querySelectorAll('[style*="z-index"], [class*="overlay"], [class*="modal"]');
