@@ -184,20 +184,20 @@ function setupGlobalEventListeners() {
  */
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
-        // Ctrl+Shift+U (or Cmd+Shift+U on Mac) - Unlock all levels
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'u') {
+        // Ctrl+Shift+N (or Cmd+Shift+N on Mac) - Unlock all levels
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'n') {
             e.preventDefault();
             unlockAllLevels();
         }
-        
+
         // Ctrl+Shift+R (or Cmd+Shift+R on Mac) - Reset game state
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'r') {
             e.preventDefault();
             resetGameState();
         }
     });
-    
-    console.log('✓ Keyboard shortcuts set up (Ctrl+Shift+U: Unlock All, Ctrl+Shift+R: Reset)');
+
+    console.log('✓ Keyboard shortcuts set up (Ctrl+Shift+N: Unlock All, Ctrl+Shift+R: Reset)');
 }
 
 /**
@@ -213,18 +213,18 @@ function unlockAllLevels() {
     import('./data/LevelData.js').then(({ LEVEL_ORDER }) => {
         // Unlock all levels
         game.gameState.unlockedLevels = [...LEVEL_ORDER];
-        
+
         // Save to localStorage
         game.saveGameState();
-        
+
         // Update the level selection UI if it's currently visible
         if (game.currentScreen === 'level-select') {
             game.updateLevelSelectionUI();
         }
-        
+
         console.log('🎉 All levels unlocked for testing!');
         console.log('📋 Unlocked levels:', game.gameState.unlockedLevels);
-        
+
         // Show a brief notification
         showNotification('All levels unlocked for testing!', 'success');
     }).catch(error => {
@@ -256,15 +256,15 @@ function resetGameState() {
             difficulty: 'normal'
         }
     };
-    
+
     // Save to localStorage
     game.saveGameState();
-    
+
     // Update UI if on level selection screen
     if (game.currentScreen === 'level-select') {
         game.updateLevelSelectionUI();
     }
-    
+
     console.log('🔄 Game state reset to initial state');
     showNotification('Game state reset', 'info');
 }
@@ -280,7 +280,7 @@ function showNotification(message, type = 'info') {
         <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
         <span>${message}</span>
     `;
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -299,15 +299,15 @@ function showNotification(message, type = 'info') {
         transform: translateX(100%);
         transition: transform 0.3s ease;
     `;
-    
+
     // Add to page
     document.body.appendChild(notification);
-    
+
     // Animate in
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 100);
-    
+
     // Remove after 3 seconds
     setTimeout(() => {
         notification.style.transform = 'translateX(100%)';
