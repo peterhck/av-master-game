@@ -989,13 +989,13 @@ export class AVMasterGame {
 
         // Always show the level complete screen first
         console.log('🎯 Attempting to switch to level-complete screen...');
-        
+
         // Force hide all other screens first
         document.querySelectorAll('.screen').forEach(screen => {
             screen.classList.remove('active');
             screen.style.display = 'none';
         });
-        
+
         // Force show level complete screen
         const levelCompleteScreen = document.getElementById('level-complete');
         if (levelCompleteScreen) {
@@ -1012,10 +1012,13 @@ export class AVMasterGame {
         if (testingBtn) {
             if (this.hasTestingChallenges()) {
                 testingBtn.style.display = 'block';
-                testingBtn.addEventListener('click', () => {
+                // Remove any existing event listeners to prevent duplicates
+                const newTestingBtn = testingBtn.cloneNode(true);
+                testingBtn.parentNode.replaceChild(newTestingBtn, testingBtn);
+                newTestingBtn.addEventListener('click', () => {
                     this.startTestingChallenges();
                 });
-                console.log('🔬 Testing challenge button shown');
+                console.log('🔬 Testing challenge button shown and ready');
             } else {
                 testingBtn.style.display = 'none';
                 console.log('🔬 Testing challenge button hidden (no challenges)');
@@ -2284,7 +2287,13 @@ export class AVMasterGame {
 
         this.connections.push(connectionData);
 
-        // Apply animation
+        // Update progress and check completion IMMEDIATELY
+        console.log('📊 Updating connection progress...');
+        this.updateConnectionProgress();
+        console.log('🔍 Checking level completion immediately...');
+        this.checkLevelCompletion();
+
+        // Apply animation (non-blocking)
         this.applyConnectionAnimation(from.equipment, validConnection.animation);
         this.applyConnectionAnimation(to.equipment, validConnection.animation);
 
@@ -2297,10 +2306,6 @@ export class AVMasterGame {
         console.log('🔧 Ensuring all connectors remain clickable...');
         this.updateAllConnectorsOnEquipment(from.equipment);
         this.updateAllConnectorsOnEquipment(to.equipment);
-
-        // Update progress
-        this.updateConnectionProgress();
-        this.checkLevelCompletion();
 
         // Update connector states to ensure they remain clickable
         console.log('🔄 Updating connector states after connection...');
@@ -2454,12 +2459,20 @@ export class AVMasterGame {
      * Check if level is complete
      */
     checkLevelCompletion() {
+        console.log('🔍 Checking level completion...');
+        console.log('🔍 Connection progress:', this.connectionProgress);
+        
         const allComplete = Object.values(this.connectionProgress).every(progress =>
             progress.current >= progress.required
         );
 
+        console.log('🔍 All connections complete:', allComplete);
+
         if (allComplete) {
+            console.log('🎉 Level is complete! Calling completeLevel()...');
             this.completeLevel();
+        } else {
+            console.log('⏳ Level not yet complete - still need more connections');
         }
     }
 
@@ -2467,9 +2480,13 @@ export class AVMasterGame {
      * Complete the current level
      */
     completeLevel() {
-        if (!this.currentLevel) return;
+        if (!this.currentLevel) {
+            console.error('❌ No current level set!');
+            return;
+        }
 
-        console.log('🎉 Level completed! Showing level complete popup...');
+        console.log('🎉 Level completed! Current level:', this.currentLevel);
+        console.log('🎉 Calling showLevelComplete()...');
         this.showLevelComplete();
     }
 
