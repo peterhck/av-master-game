@@ -184,20 +184,20 @@ function setupGlobalEventListeners() {
  */
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
-        // Ctrl+Shift+N (or Cmd+Shift+N on Mac) - Unlock all levels
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'n') {
+        // Ctrl+Shift+U (or Cmd+Shift+U on Mac) - Unlock all levels
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'u') {
             e.preventDefault();
             unlockAllLevels();
         }
 
-        // Ctrl+Shift+R (or Cmd+Shift+R on Mac) - Reset game state
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'r') {
+        // Ctrl+Shift+N (or Cmd+Shift+N on Mac) - Lock/Reset game state
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'n') {
             e.preventDefault();
             resetGameState();
         }
     });
 
-    console.log('✓ Keyboard shortcuts set up (Ctrl+Shift+N: Unlock All, Ctrl+Shift+R: Reset)');
+    console.log('✓ Keyboard shortcuts set up (Ctrl+Shift+U: Unlock All, Ctrl+Shift+N: Lock/Reset)');
 }
 
 /**
