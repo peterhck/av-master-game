@@ -1153,6 +1153,13 @@ export class AVMasterGame {
         console.log('🔬 Modal display:', window.getComputedStyle(challengeModal).display);
         console.log('🔬 Modal visibility:', window.getComputedStyle(challengeModal).visibility);
         console.log('🔬 Modal opacity:', window.getComputedStyle(challengeModal).opacity);
+        console.log('🔬 Modal position:', window.getComputedStyle(challengeModal).position);
+        console.log('🔬 Modal background:', window.getComputedStyle(challengeModal).background);
+        
+        // Force the z-index to be correct
+        challengeModal.style.zIndex = '4000';
+        console.log('🔬 Forced z-index to 4000');
+        console.log('🔬 Modal z-index after force:', window.getComputedStyle(challengeModal).zIndex);
         
         // Temporary test to confirm modal is visible
         console.log('🔬 Modal should be visible now!');
