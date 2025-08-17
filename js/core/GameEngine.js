@@ -816,6 +816,12 @@ export class AVMasterGame {
             }
         });
 
+        // Clear activate test button if it exists
+        const activateButton = document.getElementById('activate-test-btn');
+        if (activateButton) {
+            activateButton.remove();
+        }
+
         // Reload the level
         this.loadLevel(this.currentLevel);
 
@@ -1008,18 +1014,71 @@ export class AVMasterGame {
 
 
 
-    /**
- * Start testing challenges
- */
+        /**
+     * Start testing challenges flow
+     */
     startTestingChallenges() {
-        console.log('🔬 Starting testing challenges...');
+        console.log('🔬 Starting testing challenges flow...');
         console.log('🔬 Current level:', this.currentLevel);
 
         // Close any existing winner popup first
         const winnerPopup = document.querySelector('.winner-celebration-overlay');
         if (winnerPopup) {
-            console.log('🔬 Closing winner popup before starting challenges');
+            console.log('🔬 Closing winner popup');
             document.body.removeChild(winnerPopup);
+        }
+
+        // Show the "Activate Test" button at the bottom of the game screen
+        this.showActivateTestButton();
+    }
+
+    /**
+     * Show "Activate Test" button at bottom of game screen
+     */
+    showActivateTestButton() {
+        console.log('🔬 Showing activate test button...');
+
+        // Remove any existing activate test button
+        const existingButton = document.getElementById('activate-test-btn');
+        if (existingButton) {
+            existingButton.remove();
+        }
+
+        // Create the activate test button
+        const activateButton = document.createElement('button');
+        activateButton.id = 'activate-test-btn';
+        activateButton.className = 'activate-test-button';
+        activateButton.innerHTML = `
+            <i class="fas fa-flask"></i>
+            Activate Test
+        `;
+
+        // Add event listener
+        activateButton.addEventListener('click', () => {
+            console.log('🔬 Activate test button clicked');
+            this.activateTestingChallenges();
+        });
+
+        // Add to the game screen (bottom of stage area)
+        const stageArea = document.getElementById('stage-area');
+        if (stageArea) {
+            stageArea.appendChild(activateButton);
+            console.log('🔬 Activate test button added to stage area');
+        } else {
+            console.error('❌ Stage area not found for activate test button');
+        }
+    }
+
+    /**
+     * Activate testing challenges (called when "Activate Test" button is clicked)
+     */
+    activateTestingChallenges() {
+        console.log('🔬 Activating testing challenges...');
+
+        // Remove the activate test button
+        const activateButton = document.getElementById('activate-test-btn');
+        if (activateButton) {
+            activateButton.remove();
         }
 
         const levelData = this.getLevelData(this.currentLevel);
@@ -2292,7 +2351,7 @@ export class AVMasterGame {
         if (isDuplicate) {
             console.warn('⚠️ Duplicate connection detected, not adding:', connectionData);
             this.showMessage('Connection already exists!', 'warning');
-            
+
             // Don't draw any visual line for duplicate connections
             console.log('🚫 Skipping visual line creation for duplicate connection');
             return;
@@ -2324,7 +2383,7 @@ export class AVMasterGame {
         const visualLines = document.querySelectorAll('.connection-line');
         console.log('🎨 Visual connection lines count:', visualLines.length);
         console.log('🔗 Stored connections count:', this.connections.length);
-        
+
         if (visualLines.length !== this.connections.length) {
             console.warn('⚠️ Mismatch between visual lines and stored connections!');
             console.warn('⚠️ Visual lines:', visualLines.length, 'Stored connections:', this.connections.length);
@@ -2513,14 +2572,14 @@ export class AVMasterGame {
     cleanupOrphanedVisualLines() {
         const visualLines = document.querySelectorAll('.connection-line');
         const storedConnections = this.connections.length;
-        
+
         console.log('🧹 Cleaning up orphaned visual lines...');
         console.log('🧹 Visual lines found:', visualLines.length);
         console.log('🧹 Stored connections:', storedConnections);
-        
+
         if (visualLines.length > storedConnections) {
             console.warn('🧹 Found orphaned visual lines, cleaning up...');
-            
+
             // Remove excess visual lines (keep only the first ones that match stored connections)
             const linesToRemove = visualLines.length - storedConnections;
             for (let i = 0; i < linesToRemove; i++) {
@@ -2530,7 +2589,7 @@ export class AVMasterGame {
                     lastLine.parentNode.removeChild(lastLine);
                 }
             }
-            
+
             console.log('🧹 Cleanup complete. Visual lines now match stored connections.');
         }
     }
