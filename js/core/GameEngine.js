@@ -1008,28 +1008,35 @@ export class AVMasterGame {
 
 
 
-    /**
+        /**
      * Start testing challenges
      */
     startTestingChallenges() {
         console.log('🔬 Starting testing challenges...');
         console.log('🔬 Current level:', this.currentLevel);
-        
+ 
+        // Close any existing winner popup first
+        const winnerPopup = document.querySelector('.winner-celebration-overlay');
+        if (winnerPopup) {
+            console.log('🔬 Closing winner popup before starting challenges');
+            document.body.removeChild(winnerPopup);
+        }
+ 
         const levelData = this.getLevelData(this.currentLevel);
         console.log('🔬 Level data:', levelData);
-        
+ 
         if (!levelData || !levelData.testingChallenges) {
             console.error('❌ No testing challenges found for level:', this.currentLevel);
             alert('No testing challenges available for this level.');
             return;
         }
-        
+ 
         console.log('🔬 Testing challenges found:', levelData.testingChallenges);
-        
+ 
         this.currentTestingChallenges = [...levelData.testingChallenges];
         this.currentChallengeIndex = 0;
         this.testingResults = [];
-
+ 
         console.log('🔬 About to show first challenge...');
         this.showCurrentChallenge();
     }
@@ -1041,7 +1048,7 @@ export class AVMasterGame {
         console.log('🔬 Showing current challenge...');
         console.log('🔬 Current challenge index:', this.currentChallengeIndex);
         console.log('🔬 Total challenges:', this.currentTestingChallenges.length);
-        
+
         if (this.currentChallengeIndex >= this.currentTestingChallenges.length) {
             console.log('🔬 All challenges completed, calling completeTestingChallenges()');
             this.completeTestingChallenges();
@@ -1050,7 +1057,7 @@ export class AVMasterGame {
 
         const challenge = this.currentTestingChallenges[this.currentChallengeIndex];
         this.currentChallenge = challenge;
-        
+
         console.log('🔬 Current challenge:', challenge);
 
         const challengeModal = document.createElement('div');
@@ -1081,6 +1088,16 @@ export class AVMasterGame {
 
         document.body.appendChild(challengeModal);
         console.log('🔬 Challenge modal added to DOM');
+        console.log('🔬 Modal element:', challengeModal);
+        console.log('🔬 Modal z-index:', window.getComputedStyle(challengeModal).zIndex);
+        
+        // Check for any other overlays that might be blocking
+        const allOverlays = document.querySelectorAll('[style*="z-index"], [class*="overlay"], [class*="modal"]');
+        console.log('🔬 All overlays/modals found:', allOverlays.length);
+        allOverlays.forEach((overlay, index) => {
+            const zIndex = window.getComputedStyle(overlay).zIndex;
+            console.log(`🔬 Overlay ${index}:`, overlay.className, 'z-index:', zIndex);
+        });
 
         // Add event listeners
         challengeModal.querySelector('#test-challenge-btn').addEventListener('click', () => {
