@@ -992,23 +992,7 @@ export class AVMasterGame {
 
         // Always show the level complete screen first
         console.log('🎯 Attempting to switch to level-complete screen...');
-
-        // Force hide all other screens first
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-            screen.style.display = 'none';
-        });
-
-        // Force show level complete screen
-        const levelCompleteScreen = document.getElementById('level-complete');
-        if (levelCompleteScreen) {
-            levelCompleteScreen.classList.add('active');
-            levelCompleteScreen.style.display = 'flex';
-            levelCompleteScreen.style.zIndex = '1000';
-            console.log('✅ Level complete screen forced to show');
-        } else {
-            console.error('❌ Level complete screen element not found!');
-        }
+        this.switchScreen('level-complete');
 
         // Show testing challenge button if available
         const testingBtn = document.getElementById('testing-challenge-btn');
@@ -2456,7 +2440,7 @@ export class AVMasterGame {
         const dmxCount = this.connections.filter(c => c.cableType === 'dmx-cable').length;
         const hdmiCount = this.connections.filter(c => c.cableType === 'hdmi-cable').length;
         const usbCount = this.connections.filter(c => c.cableType === 'usb-cable').length;
-        
+
         console.log('🔍 CONNECTION COUNTS:', {
             power: powerCount,
             xlr: xlrCount,
