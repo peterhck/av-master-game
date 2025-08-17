@@ -1015,12 +1015,12 @@ export class AVMasterGame {
         if (testingBtn) {
             console.log('🔬 Found testing challenge button');
             console.log('🔬 Current level has testing challenges:', this.hasTestingChallenges());
-            
+
             if (this.hasTestingChallenges()) {
                 testingBtn.style.display = 'block';
                 testingBtn.style.visibility = 'visible';
                 testingBtn.style.opacity = '1';
-                
+
                 // Remove any existing event listeners to prevent duplicates
                 const newTestingBtn = testingBtn.cloneNode(true);
                 testingBtn.parentNode.replaceChild(newTestingBtn, testingBtn);
@@ -2296,6 +2296,8 @@ export class AVMasterGame {
         }
 
         this.connections.push(connectionData);
+        console.log('🔗 Connection stored:', connectionData);
+        console.log('🔗 Total connections:', this.connections.length);
 
         // Update progress and check completion IMMEDIATELY
         console.log('📊 Updating connection progress...');
@@ -2478,7 +2480,15 @@ export class AVMasterGame {
      */
     checkLevelCompletion() {
         console.log('🔍 Checking level completion...');
+        console.log('🔍 Current level:', this.currentLevel);
         console.log('🔍 Connection progress:', this.connectionProgress);
+
+        // Check each connection type individually for debugging
+        Object.entries(this.connectionProgress).forEach(([type, progress]) => {
+            if (progress.required > 0) {
+                console.log(`🔍 ${type}: ${progress.current}/${progress.required} - ${progress.current >= progress.required ? '✅' : '❌'}`);
+            }
+        });
 
         const allComplete = Object.values(this.connectionProgress).every(progress =>
             progress.current >= progress.required
@@ -2491,6 +2501,14 @@ export class AVMasterGame {
             this.completeLevel();
         } else {
             console.log('⏳ Level not yet complete - still need more connections');
+            
+            // Show which connections are missing
+            Object.entries(this.connectionProgress).forEach(([type, progress]) => {
+                if (progress.required > 0 && progress.current < progress.required) {
+                    const missing = progress.required - progress.current;
+                    console.log(`❌ Missing ${missing} ${type} connection(s)`);
+                }
+            });
         }
     }
 
