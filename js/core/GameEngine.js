@@ -951,10 +951,10 @@ export class AVMasterGame {
     }
 
     /**
-     * Show level complete popup
+     * Show level complete overlay popup
      */
     showLevelComplete() {
-        console.log('🎉 Showing level complete popup');
+        console.log('🎉 Showing level complete overlay popup');
 
         // Stop the game timer
         this.stopGameTimer();
@@ -962,24 +962,6 @@ export class AVMasterGame {
         // Play victory sound and start confetti
         this.playVictorySound();
         this.startConfetti();
-
-        // Calculate final stats
-        const finalScore = this.gameState.score;
-        const finalTime = this.gameState.time;
-        const stars = Math.min(3, Math.floor(finalScore / 100));
-
-        // Update the level complete screen with final stats
-        const finalScoreEl = document.getElementById('final-score');
-        const finalTimeEl = document.getElementById('final-time');
-        const finalStarsEl = document.getElementById('final-stars');
-
-        if (finalScoreEl) finalScoreEl.textContent = finalScore;
-        if (finalTimeEl) {
-            const minutes = Math.floor(finalTime / 60);
-            const seconds = (finalTime % 60).toString().padStart(2, '0');
-            finalTimeEl.textContent = `${minutes}:${seconds}`;
-        }
-        if (finalStarsEl) finalStarsEl.textContent = stars;
 
         // Mark level as completed
         if (!this.gameState.completedLevels.includes(this.currentLevel)) {
@@ -990,38 +972,11 @@ export class AVMasterGame {
         // Unlock next level
         this.unlockNextLevel();
 
-        // Always show the level complete screen first
-        console.log('🎯 Attempting to switch to level-complete screen...');
-        this.switchScreen('level-complete');
+        // Show the overlay popup (stays on current game screen)
+        console.log('🎯 Showing winner celebration overlay popup...');
+        this.showWinnerCelebration();
 
-        // Show testing challenge button if available
-        const testingBtn = document.getElementById('testing-challenge-btn');
-        if (testingBtn) {
-            console.log('🔬 Found testing challenge button');
-            console.log('🔬 Current level has testing challenges:', this.hasTestingChallenges());
-
-            if (this.hasTestingChallenges()) {
-                testingBtn.style.display = 'block';
-                testingBtn.style.visibility = 'visible';
-                testingBtn.style.opacity = '1';
-
-                // Remove any existing event listeners to prevent duplicates
-                const newTestingBtn = testingBtn.cloneNode(true);
-                testingBtn.parentNode.replaceChild(newTestingBtn, testingBtn);
-                newTestingBtn.addEventListener('click', () => {
-                    console.log('🔬 Testing challenge button clicked!');
-                    this.startTestingChallenges();
-                });
-                console.log('🔬 Testing challenge button shown and ready');
-            } else {
-                testingBtn.style.display = 'none';
-                console.log('🔬 Testing challenge button hidden (no challenges)');
-            }
-        } else {
-            console.warn('⚠️ Testing challenge button not found in HTML');
-        }
-
-        console.log('🎉 Level complete popup shown with confetti and sound');
+        console.log('🎉 Level complete overlay popup shown with confetti and sound');
     }
 
     /**
@@ -2546,46 +2501,93 @@ export class AVMasterGame {
     }
 
     /**
-     * Show winner celebration
+     * Show winner celebration overlay popup
      */
     showWinnerCelebration() {
-        this.audioSystem.playVictorySound();
+        console.log('🎉 Creating winner celebration overlay popup');
 
+        // Create overlay popup
         const celebration = document.createElement('div');
-        celebration.className = 'winner-celebration';
+        celebration.className = 'winner-celebration-overlay';
         celebration.innerHTML = `
             <div class="celebration-content">
-                <h2>🎉 Level Complete! 🎉</h2>
-                <p>Congratulations! You've successfully completed this level.</p>
-                <div class="celebration-stats">
-                    <p>Score: ${this.gameState.score}</p>
-                    <p>Connections: ${this.successfulConnections}/${this.totalRequiredConnections}</p>
+                <div class="celebration-header">
+                    <i class="fas fa-trophy"></i>
+                    <h2>Level Complete!</h2>
                 </div>
+                
+                <div class="celebration-stats">
+                    <div class="stat">
+                        <span class="label">Score</span>
+                        <span class="value">${this.gameState.score}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Time</span>
+                        <span class="value">${this.formatTime(this.gameState.time)}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="label">Stars</span>
+                        <span class="value">${Math.min(3, Math.floor(this.gameState.score / 100))}</span>
+                    </div>
+                </div>
+
                 <div class="celebration-buttons">
-                    <button id="next-level-btn">Next Level</button>
-                    <button id="restart-level-btn">Restart Level</button>
-                    <button id="exit-to-menu-btn">Exit to Menu</button>
+                    <button id="next-level-btn" class="menu-btn primary">
+                        <i class="fas fa-arrow-right"></i>
+                        Next Level
+                    </button>
+                    <button id="testing-challenge-btn" class="menu-btn testing" style="display: none;">
+                        <i class="fas fa-flask"></i>
+                        Test Setup
+                    </button>
+                    <button id="replay-level-btn" class="menu-btn secondary">
+                        <i class="fas fa-redo"></i>
+                        Replay Level
+                    </button>
+                    <button id="level-select-btn" class="menu-btn secondary">
+                        <i class="fas fa-list"></i>
+                        Level Select
+                    </button>
                 </div>
             </div>
         `;
 
+        // Add to body
         document.body.appendChild(celebration);
+
+        // Show testing challenge button if available
+        const testingBtn = celebration.querySelector('#testing-challenge-btn');
+        if (testingBtn && this.hasTestingChallenges()) {
+            testingBtn.style.display = 'block';
+            console.log('🔬 Testing challenge button shown in overlay');
+        }
 
         // Add event listeners
         celebration.querySelector('#next-level-btn').addEventListener('click', () => {
+            console.log('🎯 Next level button clicked');
             this.nextLevel();
             document.body.removeChild(celebration);
         });
 
-        celebration.querySelector('#restart-level-btn').addEventListener('click', () => {
+        celebration.querySelector('#testing-challenge-btn').addEventListener('click', () => {
+            console.log('🔬 Testing challenge button clicked from overlay');
+            this.startTestingChallenges();
+            document.body.removeChild(celebration);
+        });
+
+        celebration.querySelector('#replay-level-btn').addEventListener('click', () => {
+            console.log('🔄 Replay level button clicked');
             this.restartLevel();
             document.body.removeChild(celebration);
         });
 
-        celebration.querySelector('#exit-to-menu-btn').addEventListener('click', () => {
+        celebration.querySelector('#level-select-btn').addEventListener('click', () => {
+            console.log('📋 Level select button clicked');
             this.exitToMenu();
             document.body.removeChild(celebration);
         });
+
+        console.log('🎉 Winner celebration overlay popup created and displayed');
     }
 
     /**
