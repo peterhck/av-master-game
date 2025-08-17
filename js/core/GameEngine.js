@@ -1131,7 +1131,7 @@ export class AVMasterGame {
         console.log('🔬 Current challenge:', challenge);
 
         const challengeModal = document.createElement('div');
-        challengeModal.className = 'testing-challenge-modal';
+        challengeModal.className = 'testing-challenge-modal testing-challenge-overlay';
         challengeModal.innerHTML = `
             <div class="challenge-modal-content">
                 <div class="challenge-header">
@@ -1176,13 +1176,27 @@ export class AVMasterGame {
         // Temporary test to confirm modal is visible
         console.log('🔬 Modal should be visible now!');
         console.log('🔬 Modal HTML:', challengeModal.outerHTML);
-        
+
         // Force the modal to be visible with additional styles
         challengeModal.style.display = 'flex';
         challengeModal.style.visibility = 'visible';
         challengeModal.style.opacity = '1';
         challengeModal.style.background = 'rgba(0, 0, 0, 0.9)';
         console.log('🔬 Forced modal visibility with additional styles');
+        
+        // Check if modal is still visible after a short delay
+        setTimeout(() => {
+            console.log('🔬 Checking modal visibility after delay...');
+            const modalStillExists = document.querySelector('.testing-challenge-modal');
+            if (modalStillExists) {
+                console.log('🔬 Modal still exists in DOM');
+                console.log('🔬 Modal computed z-index:', window.getComputedStyle(modalStillExists).zIndex);
+                console.log('🔬 Modal computed position:', window.getComputedStyle(modalStillExists).position);
+                console.log('🔬 Modal computed display:', window.getComputedStyle(modalStillExists).display);
+            } else {
+                console.error('❌ Modal was removed from DOM!');
+            }
+        }, 100);
 
         // Check for any other overlays that might be blocking
         const allOverlays = document.querySelectorAll('[style*="z-index"], [class*="overlay"], [class*="modal"]');
