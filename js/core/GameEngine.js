@@ -958,7 +958,7 @@ export class AVMasterGame {
         if (cableDialog) {
             console.log('🔌 Closing cable selection dialog');
             document.body.removeChild(cableDialog);
-            
+
             // Reset connection mode when dialog is closed
             this.connectionMode = false;
             this.selectedConnector = null;
@@ -1012,11 +1012,25 @@ export class AVMasterGame {
      * Start testing challenges
      */
     startTestingChallenges() {
+        console.log('🔬 Starting testing challenges...');
+        console.log('🔬 Current level:', this.currentLevel);
+        
         const levelData = this.getLevelData(this.currentLevel);
+        console.log('🔬 Level data:', levelData);
+        
+        if (!levelData || !levelData.testingChallenges) {
+            console.error('❌ No testing challenges found for level:', this.currentLevel);
+            alert('No testing challenges available for this level.');
+            return;
+        }
+        
+        console.log('🔬 Testing challenges found:', levelData.testingChallenges);
+        
         this.currentTestingChallenges = [...levelData.testingChallenges];
         this.currentChallengeIndex = 0;
         this.testingResults = [];
 
+        console.log('🔬 About to show first challenge...');
         this.showCurrentChallenge();
     }
 
@@ -1024,13 +1038,20 @@ export class AVMasterGame {
      * Show current testing challenge
      */
     showCurrentChallenge() {
+        console.log('🔬 Showing current challenge...');
+        console.log('🔬 Current challenge index:', this.currentChallengeIndex);
+        console.log('🔬 Total challenges:', this.currentTestingChallenges.length);
+        
         if (this.currentChallengeIndex >= this.currentTestingChallenges.length) {
+            console.log('🔬 All challenges completed, calling completeTestingChallenges()');
             this.completeTestingChallenges();
             return;
         }
 
         const challenge = this.currentTestingChallenges[this.currentChallengeIndex];
         this.currentChallenge = challenge;
+        
+        console.log('🔬 Current challenge:', challenge);
 
         const challengeModal = document.createElement('div');
         challengeModal.className = 'testing-challenge-modal';
@@ -1059,9 +1080,11 @@ export class AVMasterGame {
         `;
 
         document.body.appendChild(challengeModal);
+        console.log('🔬 Challenge modal added to DOM');
 
         // Add event listeners
         challengeModal.querySelector('#test-challenge-btn').addEventListener('click', () => {
+            console.log('🔬 Test challenge button clicked');
             this.testCurrentChallenge();
         });
 
