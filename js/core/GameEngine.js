@@ -951,10 +951,29 @@ export class AVMasterGame {
     }
 
     /**
+     * Close any open cable selection dialog
+     */
+    closeCableSelectionDialog() {
+        const cableDialog = document.querySelector('.cable-selection-dialog');
+        if (cableDialog) {
+            console.log('🔌 Closing cable selection dialog');
+            document.body.removeChild(cableDialog);
+            
+            // Reset connection mode when dialog is closed
+            this.connectionMode = false;
+            this.selectedConnector = null;
+            this.resetConnectorStates();
+        }
+    }
+
+    /**
      * Show level complete overlay popup
      */
     showLevelComplete() {
         console.log('🎉 Showing level complete overlay popup');
+
+        // Close any open cable selection dialog first
+        this.closeCableSelectionDialog();
 
         // Stop the game timer
         this.stopGameTimer();
