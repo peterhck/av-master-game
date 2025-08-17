@@ -1101,13 +1101,20 @@ export class AVMasterGame {
         this.testingResults = [];
 
         console.log('🔬 About to show first challenge...');
-        this.showCurrentChallenge();
+        console.log('🔬 Calling showCurrentChallenge()...');
+        try {
+            this.showCurrentChallenge();
+            console.log('🔬 showCurrentChallenge() completed successfully');
+        } catch (error) {
+            console.error('❌ Error in showCurrentChallenge():', error);
+        }
     }
 
     /**
      * Show current testing challenge
      */
     showCurrentChallenge() {
+        console.log('🔬 ===== SHOW CURRENT CHALLENGE FUNCTION CALLED =====');
         console.log('🔬 Showing current challenge...');
         console.log('🔬 Current challenge index:', this.currentChallengeIndex);
         console.log('🔬 Total challenges:', this.currentTestingChallenges.length);
@@ -1158,12 +1165,12 @@ export class AVMasterGame {
         console.log('🔬 Modal opacity:', window.getComputedStyle(challengeModal).opacity);
         console.log('🔬 Modal position:', window.getComputedStyle(challengeModal).position);
         console.log('🔬 Modal background:', window.getComputedStyle(challengeModal).background);
-        
+
         // Force the z-index to be correct
         challengeModal.style.zIndex = '4000';
         console.log('🔬 Forced z-index to 4000');
         console.log('🔬 Modal z-index after force:', window.getComputedStyle(challengeModal).zIndex);
-        
+
         // Temporary test to confirm modal is visible
         console.log('🔬 Modal should be visible now!');
         console.log('🔬 Modal HTML:', challengeModal.outerHTML);
