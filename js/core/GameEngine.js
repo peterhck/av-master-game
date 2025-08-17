@@ -2282,16 +2282,19 @@ export class AVMasterGame {
         };
 
         // Check for duplicate connections before adding
-        const isDuplicate = this.connections.some(existingConn => 
-            (existingConn.fromConnectorId === connectionData.fromConnectorId && 
-             existingConn.toConnectorId === connectionData.toConnectorId) ||
-            (existingConn.fromConnectorId === connectionData.toConnectorId && 
-             existingConn.toConnectorId === connectionData.fromConnectorId)
+        const isDuplicate = this.connections.some(existingConn =>
+            (existingConn.fromConnectorId === connectionData.fromConnectorId &&
+                existingConn.toConnectorId === connectionData.toConnectorId) ||
+            (existingConn.fromConnectorId === connectionData.toConnectorId &&
+                existingConn.toConnectorId === connectionData.fromConnectorId)
         );
 
         if (isDuplicate) {
             console.warn('⚠️ Duplicate connection detected, not adding:', connectionData);
             this.showMessage('Connection already exists!', 'warning');
+            
+            // Don't draw any visual line for duplicate connections
+            console.log('🚫 Skipping visual line creation for duplicate connection');
             return;
         }
 
@@ -2316,6 +2319,16 @@ export class AVMasterGame {
         this.updateConnectionProgress();
         console.log('🔍 Checking level completion immediately...');
         this.checkLevelCompletion();
+
+        // Debug: Verify visual lines match connections
+        const visualLines = document.querySelectorAll('.connection-line');
+        console.log('🎨 Visual connection lines count:', visualLines.length);
+        console.log('🔗 Stored connections count:', this.connections.length);
+        
+        if (visualLines.length !== this.connections.length) {
+            console.warn('⚠️ Mismatch between visual lines and stored connections!');
+            console.warn('⚠️ Visual lines:', visualLines.length, 'Stored connections:', this.connections.length);
+        }
 
         // Apply animation (non-blocking)
         this.applyConnectionAnimation(from.equipment, validConnection.animation);
@@ -2472,6 +2485,9 @@ export class AVMasterGame {
         if (hdmiCount > required.hdmi) console.warn(`⚠️ HDMI count (${hdmiCount}) exceeds requirement (${required.hdmi})`);
         if (usbCount > required.usb) console.warn(`⚠️ USB count (${usbCount}) exceeds requirement (${required.usb})`);
 
+        // Clean up orphaned visual lines that don't correspond to actual connections
+        this.cleanupOrphanedVisualLines();
+
         // Debug: Log all connections and their types
         console.log('🔍 All connections:', this.connections);
         console.log('🔍 Connection types found:', [...new Set(this.connections.map(c => c.cableType))]);
@@ -2489,6 +2505,34 @@ export class AVMasterGame {
         });
 
         this.updateProgressUI();
+    }
+
+    /**
+     * Clean up orphaned visual lines that don't correspond to actual connections
+     */
+    cleanupOrphanedVisualLines() {
+        const visualLines = document.querySelectorAll('.connection-line');
+        const storedConnections = this.connections.length;
+        
+        console.log('🧹 Cleaning up orphaned visual lines...');
+        console.log('🧹 Visual lines found:', visualLines.length);
+        console.log('🧹 Stored connections:', storedConnections);
+        
+        if (visualLines.length > storedConnections) {
+            console.warn('🧹 Found orphaned visual lines, cleaning up...');
+            
+            // Remove excess visual lines (keep only the first ones that match stored connections)
+            const linesToRemove = visualLines.length - storedConnections;
+            for (let i = 0; i < linesToRemove; i++) {
+                const lastLine = visualLines[visualLines.length - 1 - i];
+                if (lastLine && lastLine.parentNode) {
+                    console.log('🧹 Removing orphaned visual line:', lastLine);
+                    lastLine.parentNode.removeChild(lastLine);
+                }
+            }
+            
+            console.log('🧹 Cleanup complete. Visual lines now match stored connections.');
+        }
     }
 
     /**
