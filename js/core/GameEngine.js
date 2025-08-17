@@ -1166,10 +1166,12 @@ export class AVMasterGame {
         console.log('🔬 Modal position:', window.getComputedStyle(challengeModal).position);
         console.log('🔬 Modal background:', window.getComputedStyle(challengeModal).background);
 
-        // Force the z-index to be correct
+        // Force the z-index and position to be correct
         challengeModal.style.zIndex = '4000';
-        console.log('🔬 Forced z-index to 4000');
+        challengeModal.style.position = 'fixed';
+        console.log('🔬 Forced z-index to 4000 and position to fixed');
         console.log('🔬 Modal z-index after force:', window.getComputedStyle(challengeModal).zIndex);
+        console.log('🔬 Modal position after force:', window.getComputedStyle(challengeModal).position);
 
         // Temporary test to confirm modal is visible
         console.log('🔬 Modal should be visible now!');
