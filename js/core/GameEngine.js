@@ -41,7 +41,8 @@ export class AVMasterGame {
             wireless: { current: 0, required: 0 },
             ethernet: { current: 0, required: 0 },
             dmx: { current: 0, required: 0 },
-            hdmi: { current: 0, required: 0 }
+            hdmi: { current: 0, required: 0 },
+            usb: { current: 0, required: 0 }
         };
 
         // Initialize audio system
@@ -679,7 +680,8 @@ export class AVMasterGame {
             wireless: { current: 0, required: 0 },
             ethernet: { current: 0, required: 0 },
             dmx: { current: 0, required: 0 },
-            hdmi: { current: 0, required: 0 }
+            hdmi: { current: 0, required: 0 },
+            usb: { current: 0, required: 0 }
         };
 
         this.setupStage(levelData);
@@ -797,7 +799,8 @@ export class AVMasterGame {
             wireless: { current: 0, required: 0 },
             ethernet: { current: 0, required: 0 },
             dmx: { current: 0, required: 0 },
-            hdmi: { current: 0, required: 0 }
+            hdmi: { current: 0, required: 0 },
+            usb: { current: 0, required: 0 }
         };
 
         // Clear any active connection mode
@@ -1010,12 +1013,19 @@ export class AVMasterGame {
         // Show testing challenge button if available
         const testingBtn = document.getElementById('testing-challenge-btn');
         if (testingBtn) {
+            console.log('🔬 Found testing challenge button');
+            console.log('🔬 Current level has testing challenges:', this.hasTestingChallenges());
+            
             if (this.hasTestingChallenges()) {
                 testingBtn.style.display = 'block';
+                testingBtn.style.visibility = 'visible';
+                testingBtn.style.opacity = '1';
+                
                 // Remove any existing event listeners to prevent duplicates
                 const newTestingBtn = testingBtn.cloneNode(true);
                 testingBtn.parentNode.replaceChild(newTestingBtn, testingBtn);
                 newTestingBtn.addEventListener('click', () => {
+                    console.log('🔬 Testing challenge button clicked!');
                     this.startTestingChallenges();
                 });
                 console.log('🔬 Testing challenge button shown and ready');
@@ -2419,6 +2429,7 @@ export class AVMasterGame {
         this.connectionProgress.ethernet.required = required.ethernet;
         this.connectionProgress.dmx.required = required.dmx;
         this.connectionProgress.hdmi.required = required.hdmi;
+        this.connectionProgress.usb.required = required.usb;
 
         // Count current connections
         this.connectionProgress.power.current = this.connections.filter(c => c.cableType === 'power-cable').length;
@@ -2427,6 +2438,13 @@ export class AVMasterGame {
         this.connectionProgress.ethernet.current = this.connections.filter(c => c.cableType === 'ethernet-cable').length;
         this.connectionProgress.dmx.current = this.connections.filter(c => c.cableType === 'dmx-cable').length;
         this.connectionProgress.hdmi.current = this.connections.filter(c => c.cableType === 'hdmi-cable').length;
+        this.connectionProgress.usb.current = this.connections.filter(c => c.cableType === 'usb-cable').length;
+
+        // Debug: Log all connections and their types
+        console.log('🔍 All connections:', this.connections);
+        console.log('🔍 Connection types found:', [...new Set(this.connections.map(c => c.cableType))]);
+        console.log('🔍 Required connections:', required);
+        console.log('🔍 Current progress:', this.connectionProgress);
 
         this.updateProgressUI();
     }
@@ -2461,7 +2479,7 @@ export class AVMasterGame {
     checkLevelCompletion() {
         console.log('🔍 Checking level completion...');
         console.log('🔍 Connection progress:', this.connectionProgress);
-        
+
         const allComplete = Object.values(this.connectionProgress).every(progress =>
             progress.current >= progress.required
         );

@@ -32,7 +32,8 @@ export function calculateRequiredConnections(levelData) {
         wireless: 0,
         ethernet: 0,
         dmx: 0,
-        hdmi: 0
+        hdmi: 0,
+        usb: 0
     };
 
     if (levelData.connections) {
@@ -55,6 +56,9 @@ export function calculateRequiredConnections(levelData) {
                     break;
                 case 'hdmi-cable':
                     required.hdmi = connection.quantity;
+                    break;
+                case 'usb-cable':
+                    required.usb = connection.quantity;
                     break;
             }
         });
