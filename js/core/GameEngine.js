@@ -1056,7 +1056,9 @@ export class AVMasterGame {
         // Add event listener
         activateButton.addEventListener('click', () => {
             console.log('🔬 Activate test button clicked');
+            console.log('🔬 About to call activateTestingChallenges()...');
             this.activateTestingChallenges();
+            console.log('🔬 activateTestingChallenges() called successfully');
         });
 
         // Add to the game screen (bottom of stage area)
@@ -1073,6 +1075,7 @@ export class AVMasterGame {
      * Activate testing challenges (called when "Activate Test" button is clicked)
      */
     activateTestingChallenges() {
+        console.log('🔬 ===== ACTIVATE TESTING CHALLENGES FUNCTION CALLED =====');
         console.log('🔬 Activating testing challenges...');
 
         // Remove the activate test button
