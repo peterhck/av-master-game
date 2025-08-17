@@ -175,6 +175,18 @@ function setupGlobalEventListeners() {
     // Connector click events are handled by the game engine via event delegation
     console.log('✓ Connector click events will be set up by game engine');
 
+    // Setup global event listener for testing challenge button
+    document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'testing-challenge-btn') {
+            console.log('🔬 Global testing challenge button clicked!');
+            if (game && typeof game.startTestingChallenges === 'function') {
+                game.startTestingChallenges();
+            } else {
+                console.error('❌ Game or startTestingChallenges not available');
+            }
+        }
+    });
+
     // Setup keyboard shortcuts for testing
     setupKeyboardShortcuts();
 }
