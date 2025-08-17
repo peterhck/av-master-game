@@ -2447,6 +2447,15 @@ export class AVMasterGame {
         console.log('🔍 Connection types found:', [...new Set(this.connections.map(c => c.cableType))]);
         console.log('🔍 Required connections:', required);
         console.log('🔍 Current progress:', this.connectionProgress);
+        
+        // Debug: Show individual connection counts
+        console.log('🔍 Power connections:', this.connections.filter(c => c.cableType === 'power-cable').length);
+        console.log('🔍 XLR connections:', this.connections.filter(c => c.cableType === 'xlr-cable').length);
+        console.log('🔍 Wireless connections:', this.connections.filter(c => c.cableType === 'wireless-cable').length);
+        console.log('🔍 Ethernet connections:', this.connections.filter(c => c.cableType === 'ethernet-cable').length);
+        console.log('🔍 DMX connections:', this.connections.filter(c => c.cableType === 'dmx-cable').length);
+        console.log('🔍 HDMI connections:', this.connections.filter(c => c.cableType === 'hdmi-cable').length);
+        console.log('🔍 USB connections:', this.connections.filter(c => c.cableType === 'usb-cable').length);
 
         this.updateProgressUI();
     }
@@ -2487,6 +2496,8 @@ export class AVMasterGame {
         Object.entries(this.connectionProgress).forEach(([type, progress]) => {
             if (progress.required > 0) {
                 console.log(`🔍 ${type}: ${progress.current}/${progress.required} - ${progress.current >= progress.required ? '✅' : '❌'}`);
+            } else {
+                console.log(`🔍 ${type}: ${progress.current}/${progress.required} - ${progress.required === 0 ? '⚪' : '❌'}`);
             }
         });
 
@@ -2501,7 +2512,7 @@ export class AVMasterGame {
             this.completeLevel();
         } else {
             console.log('⏳ Level not yet complete - still need more connections');
-            
+
             // Show which connections are missing
             Object.entries(this.connectionProgress).forEach(([type, progress]) => {
                 if (progress.required > 0 && progress.current < progress.required) {
