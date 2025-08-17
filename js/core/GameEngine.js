@@ -1078,10 +1078,10 @@ export class AVMasterGame {
         console.log('🔬 ===== ACTIVATE TESTING CHALLENGES FUNCTION CALLED =====');
         console.log('🔬 Activating testing challenges...');
 
-        // Remove the activate test button
+        // Remove the activate test button safely
         const activateButton = document.getElementById('activate-test-btn');
-        if (activateButton) {
-            activateButton.remove();
+        if (activateButton && activateButton.parentNode) {
+            activateButton.parentNode.removeChild(activateButton);
         }
 
         const levelData = this.getLevelData(this.currentLevel);
@@ -1167,15 +1167,22 @@ export class AVMasterGame {
         console.log('🔬 Modal background:', window.getComputedStyle(challengeModal).background);
 
         // Force the z-index and position to be correct
-        challengeModal.style.zIndex = '4000';
+        challengeModal.style.zIndex = '15000';
         challengeModal.style.position = 'fixed';
-        console.log('🔬 Forced z-index to 4000 and position to fixed');
+        console.log('🔬 Forced z-index to 15000 and position to fixed');
         console.log('🔬 Modal z-index after force:', window.getComputedStyle(challengeModal).zIndex);
         console.log('🔬 Modal position after force:', window.getComputedStyle(challengeModal).position);
 
         // Temporary test to confirm modal is visible
         console.log('🔬 Modal should be visible now!');
         console.log('🔬 Modal HTML:', challengeModal.outerHTML);
+        
+        // Force the modal to be visible with additional styles
+        challengeModal.style.display = 'flex';
+        challengeModal.style.visibility = 'visible';
+        challengeModal.style.opacity = '1';
+        challengeModal.style.background = 'rgba(0, 0, 0, 0.9)';
+        console.log('🔬 Forced modal visibility with additional styles');
 
         // Check for any other overlays that might be blocking
         const allOverlays = document.querySelectorAll('[style*="z-index"], [class*="overlay"], [class*="modal"]');
