@@ -1348,19 +1348,73 @@ export class AVMasterGame {
      * Setup speaker control event listeners
      */
     setupSpeakerListeners(modal) {
-        const frontSpeakersBtn = modal.querySelector('#front-speakers-btn');
-        const allSpeakersBtn = modal.querySelector('#all-speakers-btn');
+        const volumeSlider = modal.querySelector('#volume-slider');
+        const volumeDisplay = modal.querySelector('#volume-display');
+        const playBtn = modal.querySelector('#play-test-audio-btn');
+        const stopBtn = modal.querySelector('#stop-test-audio-btn');
+        const speakerStatus = modal.querySelector('#speaker-status');
+        
+        let isPlaying = false;
+        let audioInterval;
 
-        frontSpeakersBtn.addEventListener('click', () => {
-            frontSpeakersBtn.style.background = '#2980b9';
-            allSpeakersBtn.style.background = '#9b59b6';
-            console.log('🔊 Front speakers activated');
+        // Volume control
+        volumeSlider.addEventListener('input', () => {
+            const volume = volumeSlider.value;
+            volumeDisplay.textContent = volume + '%';
+            console.log('🔊 Volume set to:', volume + '%');
         });
 
-        allSpeakersBtn.addEventListener('click', () => {
-            allSpeakersBtn.style.background = '#8e44ad';
-            frontSpeakersBtn.style.background = '#3498db';
-            console.log('🔊 All speakers activated');
+        // Play test audio
+        playBtn.addEventListener('click', () => {
+            const selectedSpeakers = [];
+            const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
+            
+            if (checkboxes.length === 0) {
+                speakerStatus.innerHTML = '<div style="color: #e74c3c; font-size: 14px;">⚠️ Please select at least one speaker first!</div>';
+                return;
+            }
+
+            checkboxes.forEach(checkbox => {
+                selectedSpeakers.push(checkbox.id.replace('speaker-', '').replace('-', ' '));
+            });
+
+            isPlaying = true;
+            playBtn.style.display = 'none';
+            stopBtn.style.display = 'inline-block';
+            
+            // Update status with selected speakers
+            speakerStatus.innerHTML = `
+                <div style="color: #27ae60; font-size: 14px; margin-bottom: 10px;">🎵 Playing test audio on: ${selectedSpeakers.join(', ')}</div>
+                <div style="display: flex; gap: 5px; justify-content: center;">
+                    ${selectedSpeakers.map(speaker => `
+                        <div style="width: 20px; height: 20px; background: #3498db; border-radius: 50%; animation: pulse 1s infinite;"></div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Add pulse animation for active speakers
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                    100% { opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            console.log('🔊 Playing test audio on:', selectedSpeakers);
+        });
+
+        // Stop test audio
+        stopBtn.addEventListener('click', () => {
+            isPlaying = false;
+            playBtn.style.display = 'inline-block';
+            stopBtn.style.display = 'none';
+            
+            speakerStatus.innerHTML = '<div style="color: #ecf0f1; font-size: 14px;">Audio stopped. Select speakers and click "Play Test Audio" to begin testing</div>';
+            
+            console.log('🔊 Test audio stopped');
         });
     }
 
@@ -1368,19 +1422,47 @@ export class AVMasterGame {
      * Setup channel control event listeners
      */
     setupChannelListeners(modal) {
-        const channel1Btn = modal.querySelector('#channel-1-btn');
-        const channel2Btn = modal.querySelector('#channel-2-btn');
+        const routeBtn = modal.querySelector('#route-audio-btn');
+        const clearBtn = modal.querySelector('#clear-routing-btn');
+        const channelStatus = modal.querySelector('#channel-status');
 
-        channel1Btn.addEventListener('click', () => {
-            channel1Btn.style.background = '#d35400';
-            channel2Btn.style.background = '#e67e22';
-            console.log('🎛️ Channel 1 activated');
+        // Route audio to selected channels
+        routeBtn.addEventListener('click', () => {
+            const selectedChannels = [];
+            const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
+            
+            if (checkboxes.length === 0) {
+                channelStatus.innerHTML = '<div style="color: #e74c3c; font-size: 14px;">⚠️ Please select at least one channel first!</div>';
+                return;
+            }
+
+            checkboxes.forEach(checkbox => {
+                selectedChannels.push(checkbox.id.replace('channel-', 'Channel '));
+            });
+
+            // Update status with active channels
+            channelStatus.innerHTML = `
+                <div style="color: #27ae60; font-size: 14px; margin-bottom: 10px;">🎛️ Audio routed to: ${selectedChannels.join(', ')}</div>
+                <div style="display: flex; gap: 5px; justify-content: center;">
+                    ${selectedChannels.map(channel => `
+                        <div style="width: 30px; height: 20px; background: #e67e22; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: bold;">${channel.split(' ')[1]}</div>
+                    `).join('')}
+                </div>
+            `;
+
+            console.log('🎛️ Audio routed to channels:', selectedChannels);
         });
 
-        channel2Btn.addEventListener('click', () => {
-            channel2Btn.style.background = '#d35400';
-            channel1Btn.style.background = '#e67e22';
-            console.log('🎛️ Channel 2 activated');
+        // Clear all routing
+        clearBtn.addEventListener('click', () => {
+            const checkboxes = modal.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            channelStatus.innerHTML = '<div style="color: #ecf0f1; font-size: 14px;">All routing cleared. Select channels and click "Route Audio" to test routing</div>';
+            
+            console.log('🎛️ All channel routing cleared');
         });
     }
 
@@ -1440,12 +1522,40 @@ export class AVMasterGame {
         return `
             <h4 style="margin: 0 0 15px 0; color: #3498db;">🔊 Speaker Controls:</h4>
             <div style="text-align: center;">
-                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
-                    <button id="front-speakers-btn" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔊 Front Speakers</button>
-                    <button id="all-speakers-btn" style="background: #9b59b6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔊 All Speakers</button>
+                <!-- Speaker Selection -->
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <h5 style="color: #ecf0f1; margin: 0 0 10px 0;">Select Speakers to Test:</h5>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px; color: #ecf0f1; cursor: pointer;">
+                            <input type="checkbox" id="speaker-front-left" style="margin: 0;"> Front Left
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; color: #ecf0f1; cursor: pointer;">
+                            <input type="checkbox" id="speaker-front-right" style="margin: 0;"> Front Right
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; color: #ecf0f1; cursor: pointer;">
+                            <input type="checkbox" id="speaker-monitor-left" style="margin: 0;"> Monitor Left
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; color: #ecf0f1; cursor: pointer;">
+                            <input type="checkbox" id="speaker-monitor-right" style="margin: 0;"> Monitor Right
+                        </label>
+                    </div>
                 </div>
-                <div style="color: #ecf0f1; font-size: 14px;">
-                    Click a button to test different speaker configurations
+
+                <!-- Volume Control -->
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #ecf0f1; display: block; margin-bottom: 5px;">Volume: <span id="volume-display">50%</span></label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="50" style="width: 200px;">
+                </div>
+
+                <!-- Audio Controls -->
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                    <button id="play-test-audio-btn" style="background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">▶️ Play Test Audio</button>
+                    <button id="stop-test-audio-btn" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: none;">⏹️ Stop Audio</button>
+                </div>
+
+                <!-- Speaker Status Display -->
+                <div id="speaker-status" style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 5px; min-height: 40px;">
+                    <div style="color: #ecf0f1; font-size: 14px;">Select speakers and click "Play Test Audio" to begin testing</div>
                 </div>
             </div>
         `;
@@ -1458,12 +1568,31 @@ export class AVMasterGame {
         return `
             <h4 style="margin: 0 0 15px 0; color: #3498db;">🎛️ Channel Controls:</h4>
             <div style="text-align: center;">
-                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
-                    <button id="channel-1-btn" style="background: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🎛️ Channel 1</button>
-                    <button id="channel-2-btn" style="background: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🎛️ Channel 2</button>
+                <!-- Channel Selection -->
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <h5 style="color: #ecf0f1; margin: 0 0 10px 0;">Select Audio Channels:</h5>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px; color: #ecf0f1; cursor: pointer;">
+                            <input type="checkbox" id="channel-1" style="margin: 0;"> Channel 1 (Vocals)
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; color: #ecf0f1; cursor: pointer;">
+                            <input type="checkbox" id="channel-2" style="margin: 0;"> Channel 2 (Music)
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; color: #ecf0f1; cursor: pointer;">
+                            <input type="checkbox" id="channel-3" style="margin: 0;"> Channel 3 (Effects)
+                        </label>
+                    </div>
                 </div>
-                <div style="color: #ecf0f1; font-size: 14px;">
-                    Click a button to route audio to specific channels
+
+                <!-- Channel Controls -->
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                    <button id="route-audio-btn" style="background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🎛️ Route Audio</button>
+                    <button id="clear-routing-btn" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🗑️ Clear Routing</button>
+                </div>
+
+                <!-- Channel Status Display -->
+                <div id="channel-status" style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 5px; min-height: 40px;">
+                    <div style="color: #ecf0f1; font-size: 14px;">Select channels and click "Route Audio" to test routing</div>
                 </div>
             </div>
         `;
