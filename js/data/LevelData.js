@@ -637,7 +637,7 @@ export const LEVEL_DATA = {
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'lighting-designer', name: 'Lighting Designer', icon: 'fas fa-palette', description: 'Lighting design specialist' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -727,7 +727,7 @@ export const LEVEL_DATA = {
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'lighting-designer', name: 'Lighting Designer', icon: 'fas fa-palette', description: 'Lighting design specialist' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -829,7 +829,7 @@ export const LEVEL_DATA = {
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'lighting-designer', name: 'Lighting Designer', icon: 'fas fa-palette', description: 'Lighting design specialist' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -965,7 +965,7 @@ export const LEVEL_DATA = {
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -1141,7 +1141,7 @@ export const LEVEL_DATA = {
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -1352,7 +1352,7 @@ export const LEVEL_DATA = {
             { id: 'grip', name: 'Grip', icon: 'fas fa-tools', description: 'Equipment setup specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'video-designer', name: 'Video Designer', icon: 'fas fa-palette', description: 'Video design specialist' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -1426,7 +1426,7 @@ export const LEVEL_DATA = {
             { id: 'rigger', name: 'Rigger', icon: 'fas fa-link', description: 'Stage rigging specialist' },
             { id: 'stage-manager', name: 'Stage Manager', icon: 'fas fa-clipboard-list', description: 'Stage coordination' },
             { id: 'set-designer', name: 'Set Designer', icon: 'fas fa-palette', description: 'Set design specialist' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -1480,7 +1480,7 @@ export const LEVEL_DATA = {
         settings: [
             { type: 'position', name: 'Position', icon: 'fas fa-arrows-alt' },
             { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -1550,7 +1550,7 @@ export const LEVEL_DATA = {
         settings: [
             { type: 'position', name: 'Position', icon: 'fas fa-arrows-alt' },
             { type: 'rotation', name: 'Rotation', icon: 'fas fa-redo' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -1675,7 +1675,7 @@ export const LEVEL_DATA = {
             { id: 'chat-moderator', name: 'Chat Moderator', icon: 'fas fa-shield-alt', description: 'Chat moderation specialist' },
             { id: 'lighting-tech', name: 'Lighting Tech', icon: 'fas fa-lightbulb', description: 'Lighting technician' },
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -1833,7 +1833,7 @@ export const LEVEL_DATA = {
             { id: 'streaming-tech', name: 'Streaming Tech', icon: 'fas fa-broadcast-tower', description: 'Streaming technician' },
             { id: 'tournament-director', name: 'Tournament Director', icon: 'fas fa-trophy', description: 'Tournament coordinator' },
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -2048,7 +2048,7 @@ export const LEVEL_DATA = {
             { id: 'arena-manager', name: 'Arena Manager', icon: 'fas fa-trophy', description: 'Arena operations manager' },
             { id: 'audio-tech', name: 'Audio Tech', icon: 'fas fa-volume-up', description: 'Audio technician' },
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -2271,7 +2271,7 @@ export const LEVEL_DATA = {
             { id: 'video-tech', name: 'Video Tech', icon: 'fas fa-video', description: 'Video technician' },
             { id: 'streaming-tech', name: 'Streaming Tech', icon: 'fas fa-broadcast-tower', description: 'Streaming technician' },
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [
@@ -2538,7 +2538,7 @@ export const LEVEL_DATA = {
             { id: 'broadcast-tech', name: 'Broadcast Tech', icon: 'fas fa-broadcast-tower', description: 'Broadcast technician' },
             { id: 'lighting-tech', name: 'Lighting Tech', icon: 'fas fa-lightbulb', description: 'Studio lighting technician' },
             { id: 'stage-hand', name: 'Stage Hand', icon: 'fas fa-hard-hat', description: 'Stage setup and maintenance' }
-        ],        stageSetup: {
+        ], stageSetup: {
             width: '100%',
             height: '100%',
             zones: [

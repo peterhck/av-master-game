@@ -2,6 +2,7 @@
 // Imports and coordinates all game modules
 
 import { AudioSystem } from '../modules/AudioSystem.js';
+import { AITutor } from '../modules/AITutor.js';
 import { getLevelData, LEVEL_ORDER } from '../data/LevelData.js';
 import {
     getConnectorColor,
@@ -47,6 +48,9 @@ export class AVMasterGame {
 
         // Initialize audio system
         this.audioSystem = new AudioSystem();
+
+        // Initialize AI Tutor
+        this.aiTutor = new AITutor();
 
         // Flag to prevent multiple completion triggers
         this.levelCompleted = false;
@@ -3074,28 +3078,28 @@ export class AVMasterGame {
         if (allComplete) {
             console.log('🎉 LEVEL COMPLETE! Triggering celebration...');
             this.levelCompleted = true;
-            
+
             // Close any open dialogs
             this.closeCableSelectionDialog();
-            
+
             // Stop game timer
             this.stopGameTimer();
-            
+
             // Play victory sound
             this.playVictorySound();
-            
+
             // Start confetti
             this.startConfetti();
-            
+
             // Show winner popup
             this.showWinnerCelebration();
-            
+
             // Mark level as completed
             if (!this.gameState.completedLevels.includes(this.currentLevel)) {
                 this.gameState.completedLevels.push(this.currentLevel);
                 this.saveToStorage();
             }
-            
+
             // Unlock next level
             this.unlockNextLevel();
         }
@@ -3272,6 +3276,16 @@ export class AVMasterGame {
      */
     showEquipmentSettings(equipmentType, equipmentName, equipmentElement, uniqueId = null) {
         console.log('⚙️ Showing equipment settings for:', equipmentType, equipmentName);
+
+        // Notify AI Tutor about the selected equipment
+        if (this.aiTutor) {
+            this.aiTutor.setCurrentEquipment({
+                type: equipmentType,
+                name: equipmentName,
+                element: equipmentElement,
+                uniqueId: uniqueId
+            });
+        }
 
         const settings = this.getEquipmentSettings(equipmentType, equipmentName);
         console.log('⚙️ Equipment settings:', settings);
