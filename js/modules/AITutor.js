@@ -9,6 +9,8 @@ export class AITutor {
         this.synthesis = window.speechSynthesis;
         this.currentEquipment = null;
         this.chatHistory = [];
+        this.currentConversationId = null;
+        this.backendUrl = 'http://localhost:3001';
 
         this.init();
     }
@@ -265,8 +267,13 @@ export class AITutor {
                 }
             }
 
-            // Use intelligent fallback responses (secure approach)
-            return this.getIntelligentResponse(userMessage);
+            // Try backend API first, fallback to local responses
+            try {
+                return await this.callBackendAPI(userMessage);
+            } catch (apiError) {
+                console.log('Backend API unavailable, using local responses:', apiError.message);
+                return this.getIntelligentResponse(userMessage);
+            }
         } catch (error) {
             console.error('🤖 Error generating AI response:', error);
             // Fallback to predefined responses if anything fails
@@ -274,10 +281,75 @@ export class AITutor {
         }
     }
 
+    async callBackendAPI(userMessage) {
+        const backendUrl = 'http://localhost:3001'; // Backend API URL
+        
+        try {
+            // Get current conversation ID or start new one
+            let conversationId = this.currentConversationId;
+            if (!conversationId) {
+                const sessionResponse = await fetch(`${backendUrl}/api/ai/conversation/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.getAuthToken()}`
+                    },
+                    body: JSON.stringify({
+                        sessionId: this.getCurrentSessionId()
+                    })
+                });
+
+                if (!sessionResponse.ok) {
+                    throw new Error('Failed to start conversation');
+                }
+
+                const sessionData = await sessionResponse.json();
+                conversationId = sessionData.conversation_id;
+                this.currentConversationId = conversationId;
+            }
+
+            // Send message to backend
+            const response = await fetch(`${backendUrl}/api/ai/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.getAuthToken()}`
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    conversationId: conversationId,
+                    equipmentContext: this.currentEquipment
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Backend API error');
+            }
+
+            const data = await response.json();
+            return data.response;
+
+        } catch (error) {
+            console.error('Backend API call failed:', error);
+            throw new Error(`Backend API unavailable: ${error.message}`);
+        }
+    }
+
     async callChatGPTAPI(userMessage) {
         // For security, we'll use a backend proxy instead of direct API calls
         // This would require a server-side implementation
         throw new Error('API calls require a secure backend proxy. Using fallback responses for now.');
+    }
+
+    getAuthToken() {
+        // Get JWT token from localStorage (set by login)
+        return localStorage.getItem('auth_token');
+    }
+
+    getCurrentSessionId() {
+        // Get current game session ID
+        return localStorage.getItem('game_session_id');
     }
 
     getAPIKey() {
