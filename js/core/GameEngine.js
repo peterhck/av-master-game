@@ -977,37 +977,7 @@ export class AVMasterGame {
         }
     }
 
-    /**
-     * Show level complete overlay popup
-     */
-    showLevelComplete() {
-        console.log('🎉 Showing level complete overlay popup');
 
-        // Close any open cable selection dialog first
-        this.closeCableSelectionDialog();
-
-        // Stop the game timer
-        this.stopGameTimer();
-
-        // Play victory sound and start confetti
-        this.playVictorySound();
-        this.startConfetti();
-
-        // Mark level as completed
-        if (!this.gameState.completedLevels.includes(this.currentLevel)) {
-            this.gameState.completedLevels.push(this.currentLevel);
-            this.saveToStorage();
-        }
-
-        // Unlock next level
-        this.unlockNextLevel();
-
-        // Show the overlay popup (stays on current game screen)
-        console.log('🎯 Showing winner celebration overlay popup...');
-        this.showWinnerCelebration();
-
-        console.log('🎉 Level complete overlay popup shown with confetti and sound');
-    }
 
     /**
      * Check if current level has testing challenges
@@ -3093,60 +3063,45 @@ export class AVMasterGame {
     checkLevelCompletion() {
         // Prevent multiple completion triggers
         if (this.levelCompleted) {
-            console.log('🔍 Level already completed, skipping completion check');
             return;
         }
 
-        console.log('🔍 Checking level completion...');
-        console.log('🔍 Current level:', this.currentLevel);
-        console.log('🔍 Connection progress:', this.connectionProgress);
-
-        // Check each connection type individually for debugging
-        console.log('🔍 COMPLETION STATUS:');
-        Object.entries(this.connectionProgress).forEach(([type, progress]) => {
-            if (progress.required > 0) {
-                console.log(`🔍 ${type}: ${progress.current}/${progress.required} - ${progress.current >= progress.required ? '✅' : '❌'}`);
-            } else {
-                console.log(`🔍 ${type}: ${progress.current}/${progress.required} - ${progress.required === 0 ? '⚪' : '❌'}`);
-            }
-        });
-
+        // Simple check: are all required connections made?
         const allComplete = Object.values(this.connectionProgress).every(progress =>
             progress.current >= progress.required
         );
 
-        console.log('🔍 All connections complete:', allComplete);
-
         if (allComplete) {
-            console.log('🎉 Level is complete! Setting flag and calling completeLevel()...');
-            this.levelCompleted = true; // Set flag to prevent multiple triggers
-            this.completeLevel();
-        } else {
-            console.log('⏳ Level not yet complete - still need more connections');
-
-            // Show which connections are missing
-            Object.entries(this.connectionProgress).forEach(([type, progress]) => {
-                if (progress.required > 0 && progress.current < progress.required) {
-                    const missing = progress.required - progress.current;
-                    console.log(`❌ Missing ${missing} ${type} connection(s)`);
-                }
-            });
+            console.log('🎉 LEVEL COMPLETE! Triggering celebration...');
+            this.levelCompleted = true;
+            
+            // Close any open dialogs
+            this.closeCableSelectionDialog();
+            
+            // Stop game timer
+            this.stopGameTimer();
+            
+            // Play victory sound
+            this.playVictorySound();
+            
+            // Start confetti
+            this.startConfetti();
+            
+            // Show winner popup
+            this.showWinnerCelebration();
+            
+            // Mark level as completed
+            if (!this.gameState.completedLevels.includes(this.currentLevel)) {
+                this.gameState.completedLevels.push(this.currentLevel);
+                this.saveToStorage();
+            }
+            
+            // Unlock next level
+            this.unlockNextLevel();
         }
     }
 
-    /**
-     * Complete the current level
-     */
-    completeLevel() {
-        if (!this.currentLevel) {
-            console.error('❌ No current level set!');
-            return;
-        }
 
-        console.log('🎉 Level completed! Current level:', this.currentLevel);
-        console.log('🎉 Calling showLevelComplete()...');
-        this.showLevelComplete();
-    }
 
     /**
      * Unlock next level
