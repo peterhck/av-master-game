@@ -265,59 +265,25 @@ export class AITutor {
                 }
             }
 
-            // Use ChatGPT API for all other responses
-            return await this.callChatGPTAPI(userMessage);
+            // Use intelligent fallback responses (secure approach)
+            return this.getIntelligentResponse(userMessage);
         } catch (error) {
             console.error('🤖 Error generating AI response:', error);
-            // Fallback to predefined responses if API fails
+            // Fallback to predefined responses if anything fails
             return this.getFallbackResponse(userMessage);
         }
     }
 
     async callChatGPTAPI(userMessage) {
-        const apiKey = this.getAPIKey();
-        if (!apiKey) {
-            throw new Error('OpenAI API key not configured');
-        }
-
-        const systemPrompt = this.buildSystemPrompt();
-        const messages = this.buildMessageHistory(userMessage);
-
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-4o', // Using GPT-4o (latest model)
-                messages: messages,
-                max_tokens: 500,
-                temperature: 0.7,
-                stream: false
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`OpenAI API error: ${errorData.error?.message || response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data.choices[0].message.content;
+        // For security, we'll use a backend proxy instead of direct API calls
+        // This would require a server-side implementation
+        throw new Error('API calls require a secure backend proxy. Using fallback responses for now.');
     }
 
     getAPIKey() {
-        // Check for API key in localStorage
-        let apiKey = localStorage.getItem('openai_api_key');
-        
-        // If not in localStorage, show settings modal
-        if (!apiKey) {
-            this.showAPISettingsModal();
-            return null;
-        }
-        
-        return apiKey;
+        // For security reasons, we don't store API keys in the browser
+        // Instead, we'll use a backend proxy or fallback to predefined responses
+        return null;
     }
 
     showAPISettingsModal() {
@@ -326,28 +292,32 @@ export class AITutor {
         modal.innerHTML = `
             <div class="ai-settings-content">
                 <div class="ai-settings-header">
-                    <h3><i class="fas fa-cog"></i> AI Tutor Settings</h3>
+                    <h3><i class="fas fa-shield-alt"></i> AI Tutor Security Notice</h3>
                     <button class="ai-settings-close">&times;</button>
                 </div>
                 <div class="ai-settings-body">
-                    <p>To use the AI Tutor with ChatGPT, you need to provide your OpenAI API key.</p>
-                    <div class="api-key-input">
-                        <label for="api-key-input">OpenAI API Key:</label>
-                        <input type="password" id="api-key-input" placeholder="sk-..." />
-                        <button id="save-api-key" class="save-btn">Save API Key</button>
+                    <div class="security-notice">
+                        <h4>🔒 Security First</h4>
+                        <p>For security reasons, the AI Tutor currently uses intelligent fallback responses instead of external API calls. This protects your privacy and ensures no sensitive data is transmitted.</p>
                     </div>
-                    <div class="api-key-info">
-                        <p><strong>How to get an API key:</strong></p>
-                        <ol>
-                            <li>Go to <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a></li>
-                            <li>Sign in or create an account</li>
-                            <li>Click "Create new secret key"</li>
-                            <li>Copy the key and paste it above</li>
-                        </ol>
-                        <p><small>Your API key is stored locally and never shared.</small></p>
+                    <div class="ai-capabilities">
+                        <h4>🤖 Current AI Capabilities</h4>
+                        <ul>
+                            <li>✅ Equipment information and explanations</li>
+                            <li>✅ Audio-visual industry knowledge</li>
+                            <li>✅ Best practices and troubleshooting</li>
+                            <li>✅ Real-world equipment shopping links</li>
+                            <li>✅ Voice interaction and speech synthesis</li>
+                        </ul>
                     </div>
-                    <div class="api-key-actions">
-                        <button id="use-fallback" class="fallback-btn">Use Fallback Mode (No API)</button>
+                    <div class="future-enhancement">
+                        <h4>🚀 Future Enhancement</h4>
+                        <p>To enable full ChatGPT integration, a secure backend proxy would need to be implemented. This would:</p>
+                        <ul>
+                            <li>Keep API keys secure on the server</li>
+                            <li>Protect user privacy</li>
+                            <li>Provide enhanced AI responses</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -357,29 +327,8 @@ export class AITutor {
 
         // Event listeners
         const closeBtn = modal.querySelector('.ai-settings-close');
-        const saveBtn = modal.querySelector('#save-api-key');
-        const fallbackBtn = modal.querySelector('#use-fallback');
-        const apiKeyInput = modal.querySelector('#api-key-input');
-
         closeBtn.addEventListener('click', () => {
             document.body.removeChild(modal);
-        });
-
-        saveBtn.addEventListener('click', () => {
-            const apiKey = apiKeyInput.value.trim();
-            if (apiKey && apiKey.startsWith('sk-')) {
-                localStorage.setItem('openai_api_key', apiKey);
-                document.body.removeChild(modal);
-                this.addAIMessage('API key saved! You can now use the full AI Tutor functionality.');
-            } else {
-                alert('Please enter a valid OpenAI API key (starts with sk-)');
-            }
-        });
-
-        fallbackBtn.addEventListener('click', () => {
-            localStorage.setItem('ai_tutor_fallback_mode', 'true');
-            document.body.removeChild(modal);
-            this.addAIMessage('Using fallback mode. Some features may be limited, but I can still help with basic questions.');
         });
 
         // Close on outside click
@@ -434,6 +383,52 @@ If the user asks about purchasing equipment, suggest they ask "show me where to 
         messages.push({ role: 'user', content: userMessage });
 
         return messages;
+    }
+
+    getIntelligentResponse(userMessage) {
+        const lowerMessage = userMessage.toLowerCase();
+
+        // Check for equipment-related queries
+        if (this.currentEquipment) {
+            if (lowerMessage.includes('what') || lowerMessage.includes('how') || lowerMessage.includes('explain')) {
+                return this.handleEquipmentInfoQuery();
+            }
+        }
+
+        // Enhanced keyword matching with context awareness
+        if (lowerMessage.includes('microphone') || lowerMessage.includes('mic')) {
+            return this.getMicrophoneInfo();
+        }
+        if (lowerMessage.includes('speaker') || lowerMessage.includes('audio') || lowerMessage.includes('sound')) {
+            return this.getSpeakerInfo();
+        }
+        if (lowerMessage.includes('light') || lowerMessage.includes('dmx') || lowerMessage.includes('illumination')) {
+            return this.getLightingInfo();
+        }
+        if (lowerMessage.includes('cable') || lowerMessage.includes('connection') || lowerMessage.includes('wire')) {
+            return this.getCableInfo();
+        }
+        if (lowerMessage.includes('mixer') || lowerMessage.includes('console') || lowerMessage.includes('mixing')) {
+            return this.getMixerInfo();
+        }
+        if (lowerMessage.includes('camera') || lowerMessage.includes('video') || lowerMessage.includes('recording')) {
+            return this.getVideoInfo();
+        }
+        if (lowerMessage.includes('projector') || lowerMessage.includes('display') || lowerMessage.includes('screen')) {
+            return this.getProjectorInfo();
+        }
+        if (lowerMessage.includes('wireless') || lowerMessage.includes('bluetooth') || lowerMessage.includes('radio')) {
+            return this.getWirelessInfo();
+        }
+        if (lowerMessage.includes('power') || lowerMessage.includes('electrical') || lowerMessage.includes('voltage')) {
+            return this.getPowerInfo();
+        }
+        if (lowerMessage.includes('troubleshoot') || lowerMessage.includes('problem') || lowerMessage.includes('issue')) {
+            return this.getTroubleshootingInfo();
+        }
+
+        // Default response
+        return this.getDefaultResponse();
     }
 
     getFallbackResponse(userMessage) {
@@ -537,6 +532,78 @@ Lighting design can dramatically enhance the visual impact of any event.`;
 • Ethernet cables: Network connectivity and digital audio
 
 Proper cable management and quality are essential for reliable performance.`;
+    }
+
+    getMixerInfo() {
+        return `Mixing consoles are the heart of audio production:
+
+• Analog mixers: Traditional knobs and faders for hands-on control
+• Digital mixers: Advanced features with recall and automation
+• Live sound mixers: Optimized for real-time performance mixing
+• Recording mixers: Studio-grade preamps and processing
+• Monitor mixers: Dedicated to stage monitoring systems
+
+Key features include EQ, compression, effects, and routing capabilities.`;
+    }
+
+    getVideoInfo() {
+        return `Video equipment is essential for modern productions:
+
+• Professional cameras: High-quality recording and streaming
+• PTZ cameras: Remote-controlled pan/tilt/zoom for live events
+• Video switchers: Seamless transitions between multiple sources
+• Video recorders: Capture and playback of video content
+• Streaming encoders: Real-time video distribution online
+
+Modern video systems support 4K, HDR, and various streaming protocols.`;
+    }
+
+    getProjectorInfo() {
+        return `Projectors and displays create visual impact:
+
+• Video projectors: Large-scale image projection for audiences
+• LED displays: Bright, high-contrast screens for any environment
+• Video walls: Multiple displays combined for massive visuals
+• Interactive displays: Touch-enabled screens for engagement
+• Video processors: Signal management and image enhancement
+
+Consider brightness, resolution, and throw distance for optimal setup.`;
+    }
+
+    getWirelessInfo() {
+        return `Wireless technology provides freedom of movement:
+
+• Wireless microphones: Freedom for performers and presenters
+• Wireless in-ear monitors: Personal monitoring without cables
+• Wireless video transmission: Camera feeds without physical connections
+• Wireless control systems: Remote operation of equipment
+• Frequency coordination: Managing multiple wireless devices
+
+Always check frequency compatibility and local regulations.`;
+    }
+
+    getPowerInfo() {
+        return `Power management is critical for reliable operation:
+
+• Power distribution: Safe electrical supply to all equipment
+• UPS systems: Uninterruptible power for critical systems
+• Power conditioners: Clean, stable power for sensitive equipment
+• Grounding: Proper electrical safety and noise reduction
+• Load calculation: Ensuring adequate power capacity
+
+Always use professional-grade power equipment for live events.`;
+    }
+
+    getTroubleshootingInfo() {
+        return `Common AV troubleshooting techniques:
+
+• Check connections: Ensure all cables are properly seated
+• Power cycle: Restart equipment to clear temporary issues
+• Signal flow: Trace audio/video from source to destination
+• Ground loops: Identify and eliminate electrical interference
+• Frequency conflicts: Resolve wireless interference issues
+
+Systematic troubleshooting saves time and prevents further problems.`;
     }
 
     getDefaultResponse() {
