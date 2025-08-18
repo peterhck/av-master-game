@@ -48,6 +48,9 @@ export class AVMasterGame {
         // Initialize audio system
         this.audioSystem = new AudioSystem();
 
+        // Flag to prevent multiple completion triggers
+        this.levelCompleted = false;
+
         // Don't initialize immediately - wait for DOM to be ready
         // this.init();
     }
@@ -658,6 +661,7 @@ export class AVMasterGame {
         this.currentLevel = levelId;
         this.successfulConnections = 0;
         this.totalRequiredConnections = 0;
+        this.levelCompleted = false; // Reset completion flag for new level
 
         const levelData = getLevelData(levelId);
         if (!levelData) {
@@ -788,6 +792,7 @@ export class AVMasterGame {
         this.connections = [];
         this.successfulConnections = 0;
         this.totalRequiredConnections = 0;
+        this.levelCompleted = false; // Reset completion flag
 
         // Clear connection lines
         this.clearAllConnectionLines();
@@ -1353,7 +1358,7 @@ export class AVMasterGame {
         const playBtn = modal.querySelector('#play-test-audio-btn');
         const stopBtn = modal.querySelector('#stop-test-audio-btn');
         const speakerStatus = modal.querySelector('#speaker-status');
-        
+
         let isPlaying = false;
         let audioInterval;
 
@@ -1368,7 +1373,7 @@ export class AVMasterGame {
         playBtn.addEventListener('click', () => {
             const selectedSpeakers = [];
             const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
-            
+
             if (checkboxes.length === 0) {
                 speakerStatus.innerHTML = '<div style="color: #e74c3c; font-size: 14px;">⚠️ Please select at least one speaker first!</div>';
                 return;
@@ -1381,7 +1386,7 @@ export class AVMasterGame {
             isPlaying = true;
             playBtn.style.display = 'none';
             stopBtn.style.display = 'inline-block';
-            
+
             // Update status with selected speakers
             speakerStatus.innerHTML = `
                 <div style="color: #27ae60; font-size: 14px; margin-bottom: 10px;">🎵 Playing test audio on: ${selectedSpeakers.join(', ')}</div>
@@ -1411,9 +1416,9 @@ export class AVMasterGame {
             isPlaying = false;
             playBtn.style.display = 'inline-block';
             stopBtn.style.display = 'none';
-            
+
             speakerStatus.innerHTML = '<div style="color: #ecf0f1; font-size: 14px;">Audio stopped. Select speakers and click "Play Test Audio" to begin testing</div>';
-            
+
             console.log('🔊 Test audio stopped');
         });
     }
@@ -1430,7 +1435,7 @@ export class AVMasterGame {
         routeBtn.addEventListener('click', () => {
             const selectedChannels = [];
             const checkboxes = modal.querySelectorAll('input[type="checkbox"]:checked');
-            
+
             if (checkboxes.length === 0) {
                 channelStatus.innerHTML = '<div style="color: #e74c3c; font-size: 14px;">⚠️ Please select at least one channel first!</div>';
                 return;
@@ -1459,9 +1464,9 @@ export class AVMasterGame {
             checkboxes.forEach(checkbox => {
                 checkbox.checked = false;
             });
-            
+
             channelStatus.innerHTML = '<div style="color: #ecf0f1; font-size: 14px;">All routing cleared. Select channels and click "Route Audio" to test routing</div>';
-            
+
             console.log('🎛️ All channel routing cleared');
         });
     }
@@ -3086,6 +3091,12 @@ export class AVMasterGame {
      * Check if level is complete
      */
     checkLevelCompletion() {
+        // Prevent multiple completion triggers
+        if (this.levelCompleted) {
+            console.log('🔍 Level already completed, skipping completion check');
+            return;
+        }
+
         console.log('🔍 Checking level completion...');
         console.log('🔍 Current level:', this.currentLevel);
         console.log('🔍 Connection progress:', this.connectionProgress);
@@ -3107,7 +3118,8 @@ export class AVMasterGame {
         console.log('🔍 All connections complete:', allComplete);
 
         if (allComplete) {
-            console.log('🎉 Level is complete! Calling completeLevel()...');
+            console.log('🎉 Level is complete! Setting flag and calling completeLevel()...');
+            this.levelCompleted = true; // Set flag to prevent multiple triggers
             this.completeLevel();
         } else {
             console.log('⏳ Level not yet complete - still need more connections');
