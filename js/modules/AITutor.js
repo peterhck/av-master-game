@@ -9,7 +9,7 @@ export class AITutor {
         this.synthesis = window.speechSynthesis;
         this.currentEquipment = null;
         this.chatHistory = [];
-        
+
         this.init();
     }
 
@@ -71,6 +71,11 @@ export class AITutor {
         }
 
         // Chat interface controls
+        const aiChatSettings = document.getElementById('ai-chat-settings');
+        if (aiChatSettings) {
+            aiChatSettings.addEventListener('click', () => this.showAPISettingsModal());
+        }
+
         const aiChatVoice = document.getElementById('ai-chat-voice');
         if (aiChatVoice) {
             aiChatVoice.addEventListener('click', () => this.toggleVoiceMode());
@@ -179,7 +184,7 @@ export class AITutor {
     sendMessage() {
         const inputField = document.getElementById('ai-chat-input-field');
         const message = inputField.value.trim();
-        
+
         if (message) {
             this.addUserMessage(message);
             this.processAIResponse(message);
@@ -201,7 +206,7 @@ export class AITutor {
         `;
         chatMessages.appendChild(userMessage);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        
+
         this.chatHistory.push({ role: 'user', content: message });
     }
 
@@ -219,9 +224,9 @@ export class AITutor {
         `;
         chatMessages.appendChild(aiMessage);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        
+
         this.chatHistory.push({ role: 'assistant', content: message });
-        
+
         // Speak the response if in voice mode
         if (this.isVoiceMode) {
             this.speakMessage(message);
@@ -231,18 +236,18 @@ export class AITutor {
     async processAIResponse(userMessage) {
         // Show typing indicator
         this.addTypingIndicator();
-        
+
         try {
             // Simulate AI processing delay
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
+
             // Remove typing indicator
             this.removeTypingIndicator();
-            
+
             // Generate AI response based on user message
             const response = await this.generateAIResponse(userMessage);
             this.addAIMessage(response);
-            
+
         } catch (error) {
             console.error('🤖 Error processing AI response:', error);
             this.removeTypingIndicator();
@@ -251,18 +256,196 @@ export class AITutor {
     }
 
     async generateAIResponse(userMessage) {
-        const lowerMessage = userMessage.toLowerCase();
+        try {
+            // First, check for equipment-specific actions that don't need API calls
+            if (this.currentEquipment) {
+                const lowerMessage = userMessage.toLowerCase();
+                if (lowerMessage.includes('show') || lowerMessage.includes('buy') || lowerMessage.includes('purchase')) {
+                    return this.handleEquipmentPurchaseQuery();
+                }
+            }
+
+            // Use ChatGPT API for all other responses
+            return await this.callChatGPTAPI(userMessage);
+        } catch (error) {
+            console.error('🤖 Error generating AI response:', error);
+            // Fallback to predefined responses if API fails
+            return this.getFallbackResponse(userMessage);
+        }
+    }
+
+    async callChatGPTAPI(userMessage) {
+        const apiKey = this.getAPIKey();
+        if (!apiKey) {
+            throw new Error('OpenAI API key not configured');
+        }
+
+        const systemPrompt = this.buildSystemPrompt();
+        const messages = this.buildMessageHistory(userMessage);
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o', // Using GPT-4o (latest model)
+                messages: messages,
+                max_tokens: 500,
+                temperature: 0.7,
+                stream: false
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`OpenAI API error: ${errorData.error?.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+    }
+
+    getAPIKey() {
+        // Check for API key in localStorage
+        let apiKey = localStorage.getItem('openai_api_key');
         
+        // If not in localStorage, show settings modal
+        if (!apiKey) {
+            this.showAPISettingsModal();
+            return null;
+        }
+        
+        return apiKey;
+    }
+
+    showAPISettingsModal() {
+        const modal = document.createElement('div');
+        modal.className = 'ai-settings-modal';
+        modal.innerHTML = `
+            <div class="ai-settings-content">
+                <div class="ai-settings-header">
+                    <h3><i class="fas fa-cog"></i> AI Tutor Settings</h3>
+                    <button class="ai-settings-close">&times;</button>
+                </div>
+                <div class="ai-settings-body">
+                    <p>To use the AI Tutor with ChatGPT, you need to provide your OpenAI API key.</p>
+                    <div class="api-key-input">
+                        <label for="api-key-input">OpenAI API Key:</label>
+                        <input type="password" id="api-key-input" placeholder="sk-..." />
+                        <button id="save-api-key" class="save-btn">Save API Key</button>
+                    </div>
+                    <div class="api-key-info">
+                        <p><strong>How to get an API key:</strong></p>
+                        <ol>
+                            <li>Go to <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a></li>
+                            <li>Sign in or create an account</li>
+                            <li>Click "Create new secret key"</li>
+                            <li>Copy the key and paste it above</li>
+                        </ol>
+                        <p><small>Your API key is stored locally and never shared.</small></p>
+                    </div>
+                    <div class="api-key-actions">
+                        <button id="use-fallback" class="fallback-btn">Use Fallback Mode (No API)</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Event listeners
+        const closeBtn = modal.querySelector('.ai-settings-close');
+        const saveBtn = modal.querySelector('#save-api-key');
+        const fallbackBtn = modal.querySelector('#use-fallback');
+        const apiKeyInput = modal.querySelector('#api-key-input');
+
+        closeBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+
+        saveBtn.addEventListener('click', () => {
+            const apiKey = apiKeyInput.value.trim();
+            if (apiKey && apiKey.startsWith('sk-')) {
+                localStorage.setItem('openai_api_key', apiKey);
+                document.body.removeChild(modal);
+                this.addAIMessage('API key saved! You can now use the full AI Tutor functionality.');
+            } else {
+                alert('Please enter a valid OpenAI API key (starts with sk-)');
+            }
+        });
+
+        fallbackBtn.addEventListener('click', () => {
+            localStorage.setItem('ai_tutor_fallback_mode', 'true');
+            document.body.removeChild(modal);
+            this.addAIMessage('Using fallback mode. Some features may be limited, but I can still help with basic questions.');
+        });
+
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+    }
+
+    buildSystemPrompt() {
+        let prompt = `You are an expert AI tutor specializing in audio-visual equipment and live event production. You have extensive knowledge of:
+
+- Professional audio equipment (microphones, speakers, mixing consoles, amplifiers)
+- Video equipment (cameras, projectors, displays, streaming gear)
+- Lighting systems (LED fixtures, moving lights, DMX control)
+- Cables and connectors (XLR, DMX, HDMI, power, etc.)
+- Live event production best practices
+- Industry standards and protocols
+- Troubleshooting common AV issues
+
+Current context: `;
+
+        if (this.currentEquipment) {
+            prompt += `The user is currently working with a ${this.currentEquipment.name} (${this.currentEquipment.type}) in an AV learning game. `;
+        }
+
+        prompt += `
+
+Provide helpful, educational responses that:
+- Are concise but informative (max 2-3 sentences)
+- Use simple language suitable for learners
+- Include practical tips when relevant
+- Reference real-world applications
+- Encourage further learning
+
+If the user asks about purchasing equipment, suggest they ask "show me where to buy [equipment name]" to see shopping results.`;
+
+        return prompt;
+    }
+
+    buildMessageHistory(userMessage) {
+        const messages = [
+            { role: 'system', content: this.buildSystemPrompt() }
+        ];
+
+        // Add recent chat history for context (last 5 exchanges)
+        const recentHistory = this.chatHistory.slice(-10);
+        messages.push(...recentHistory);
+
+        // Add current user message
+        messages.push({ role: 'user', content: userMessage });
+
+        return messages;
+    }
+
+    getFallbackResponse(userMessage) {
+        const lowerMessage = userMessage.toLowerCase();
+
         // Check for equipment-related queries
         if (this.currentEquipment) {
-            if (lowerMessage.includes('show') || lowerMessage.includes('buy') || lowerMessage.includes('purchase')) {
-                return this.handleEquipmentPurchaseQuery();
-            }
             if (lowerMessage.includes('what') || lowerMessage.includes('how') || lowerMessage.includes('explain')) {
                 return this.handleEquipmentInfoQuery();
             }
         }
-        
+
         // General AV industry knowledge
         if (lowerMessage.includes('microphone') || lowerMessage.includes('mic')) {
             return this.getMicrophoneInfo();
@@ -276,7 +459,7 @@ export class AITutor {
         if (lowerMessage.includes('cable') || lowerMessage.includes('connection')) {
             return this.getCableInfo();
         }
-        
+
         // Default response
         return this.getDefaultResponse();
     }
@@ -285,16 +468,16 @@ export class AITutor {
         const equipmentName = this.currentEquipment.name;
         const searchQuery = encodeURIComponent(`${equipmentName} professional audio visual equipment`);
         const searchUrl = `https://www.google.com/search?q=${searchQuery}&tbm=shop`;
-        
+
         this.showPopupBrowser(`Where to buy ${equipmentName}`, searchUrl);
-        
+
         return `I've opened a browser window showing where you can purchase ${equipmentName}. You can find professional-grade equipment from reputable audio-visual suppliers.`;
     }
 
     handleEquipmentInfoQuery() {
         const equipmentName = this.currentEquipment.name;
         const equipmentType = this.currentEquipment.type;
-        
+
         return `The ${equipmentName} is a ${equipmentType} commonly used in professional audio-visual setups. It's designed for ${this.getEquipmentDescription(equipmentType)}. Would you like me to show you where to purchase this equipment?`;
     }
 
@@ -373,7 +556,7 @@ What would you like to know more about?`;
         const popupBrowser = document.getElementById('ai-popup-browser');
         const popupTitle = document.getElementById('ai-popup-title');
         const popupIframe = document.getElementById('ai-popup-iframe');
-        
+
         popupTitle.textContent = title;
         popupIframe.src = url;
         popupBrowser.style.display = 'flex';
@@ -382,7 +565,7 @@ What would you like to know more about?`;
     closePopupBrowser() {
         const popupBrowser = document.getElementById('ai-popup-browser');
         const popupIframe = document.getElementById('ai-popup-iframe');
-        
+
         popupIframe.src = 'about:blank';
         popupBrowser.style.display = 'none';
     }
@@ -444,7 +627,7 @@ What would you like to know more about?`;
     showVoiceStatus(text) {
         const voiceStatusIndicator = document.getElementById('voice-status-indicator');
         const voiceStatusText = document.getElementById('voice-status-text');
-        
+
         voiceStatusText.textContent = text;
         voiceStatusIndicator.style.display = 'flex';
     }
