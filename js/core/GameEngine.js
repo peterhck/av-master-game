@@ -1111,7 +1111,7 @@ export class AVMasterGame {
     }
 
         /**
-     * Show current testing challenge - SIMPLIFIED VERSION
+     * Show current testing challenge - SIMPLE WORKING MODAL
      */
     showCurrentChallenge() {
         console.log('🔬 ===== SHOW CURRENT CHALLENGE FUNCTION CALLED =====');
@@ -1121,7 +1121,7 @@ export class AVMasterGame {
 
         if (this.currentChallengeIndex >= this.currentTestingChallenges.length) {
             console.log('🔬 All challenges completed!');
-            alert('🎉 All testing challenges completed! You have successfully tested your audio setup.');
+            this.showCompletionMessage();
             return;
         }
 
@@ -1130,100 +1130,274 @@ export class AVMasterGame {
 
         console.log('🔬 Current challenge:', challenge);
 
-        // Simple alert-based challenge system
-        const challengeText = `
-🎯 TESTING CHALLENGE ${this.currentChallengeIndex + 1}/${this.currentTestingChallenges.length}
+        // Create a simple, clean modal that will definitely work
+        this.createSimpleModal(challenge);
+    }
 
-📋 ${challenge.title}
-${challenge.description}
+    /**
+     * Create a simple modal that will definitely work
+     */
+    createSimpleModal(challenge) {
+        // Remove any existing modal first
+        const existingModal = document.getElementById('simple-test-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
 
-📝 Instructions:
-${challenge.instructions.map((instruction, index) => `${index + 1}. ${instruction}`).join('\n')}
-
-Click OK to start this challenge, then follow the instructions.
+        // Create modal container
+        const modal = document.createElement('div');
+        modal.id = 'simple-test-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
         `;
 
-        if (confirm(challengeText)) {
-            // Start the challenge
-            this.startSimpleChallenge(challenge);
-        } else {
-            // Skip this challenge
+        // Create modal content
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        `;
+
+        // Create header
+        const header = document.createElement('div');
+        header.style.cssText = `
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        `;
+        header.innerHTML = `
+            <h2 style="margin: 0; color: #3498db; font-size: 24px;">🎯 Testing Challenge ${this.currentChallengeIndex + 1}/${this.currentTestingChallenges.length}</h2>
+            <h3 style="margin: 10px 0 0 0; color: #ecf0f1; font-size: 18px;">${challenge.title}</h3>
+            <p style="margin: 10px 0 0 0; color: #bdc3c7; font-size: 14px;">${challenge.description}</p>
+        `;
+
+        // Create instructions
+        const instructions = document.createElement('div');
+        instructions.style.cssText = `
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        `;
+        instructions.innerHTML = `
+            <h4 style="margin: 0 0 15px 0; color: #3498db;">📝 Instructions:</h4>
+            <ol style="margin: 0; padding-left: 20px; color: #ecf0f1;">
+                ${challenge.instructions.map(instruction => `<li style="margin-bottom: 8px;">${instruction}</li>`).join('')}
+            </ol>
+        `;
+
+        // Create controls based on challenge type
+        const controls = this.createChallengeControls(challenge);
+
+        // Create buttons
+        const buttons = document.createElement('div');
+        buttons.style.cssText = `
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        `;
+
+        const skipBtn = document.createElement('button');
+        skipBtn.textContent = '⏭️ Skip Challenge';
+        skipBtn.style.cssText = `
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        `;
+        skipBtn.onmouseover = () => skipBtn.style.background = '#7f8c8d';
+        skipBtn.onmouseout = () => skipBtn.style.background = '#95a5a6';
+        skipBtn.onclick = () => {
+            modal.remove();
             this.currentChallengeIndex++;
             this.showCurrentChallenge();
-        }
+        };
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '✅ Complete Challenge';
+        nextBtn.style.cssText = `
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        `;
+        nextBtn.onmouseover = () => nextBtn.style.background = '#229954';
+        nextBtn.onmouseout = () => nextBtn.style.background = '#27ae60';
+        nextBtn.onclick = () => {
+            modal.remove();
+            this.currentChallengeIndex++;
+            this.showCurrentChallenge();
+        };
+
+        buttons.appendChild(skipBtn);
+        buttons.appendChild(nextBtn);
+
+        // Assemble modal
+        content.appendChild(header);
+        content.appendChild(instructions);
+        content.appendChild(controls);
+        content.appendChild(buttons);
+        modal.appendChild(content);
+
+        // Add to page
+        document.body.appendChild(modal);
+        console.log('🔬 Simple modal created and added to DOM');
     }
 
     /**
-     * Start a simple challenge using alerts
+     * Create challenge-specific controls
      */
-    startSimpleChallenge(challenge) {
-        console.log('🔬 Starting simple challenge:', challenge.type);
-        
+    createChallengeControls(challenge) {
+        const controls = document.createElement('div');
+        controls.style.cssText = `
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        `;
+
         if (challenge.type === 'microphone') {
-            this.startMicrophoneChallenge();
+            controls.innerHTML = this.createMicrophoneControls();
         } else if (challenge.type === 'speaker') {
-            this.startSpeakerChallenge();
+            controls.innerHTML = this.createSpeakerControls();
         } else if (challenge.type === 'channel') {
-            this.startChannelChallenge();
+            controls.innerHTML = this.createChannelControls();
         }
+
+        return controls;
     }
 
     /**
-     * Simple microphone challenge
+     * Create microphone controls
      */
-    startMicrophoneChallenge() {
-        alert('🎤 MICROPHONE TEST\n\n1. Click "Mute" to mute the microphone\n2. Click "Unmute" to restore audio\n3. Verify the visualizer responds correctly');
-        
-        const muteResult = confirm('Click OK to mute the microphone, or Cancel to skip');
-        if (muteResult) {
-            alert('🔇 Microphone muted! The visualizer should show no activity.');
-            
-            const unmuteResult = confirm('Click OK to unmute the microphone');
-            if (unmuteResult) {
-                alert('🔊 Microphone unmuted! The visualizer should show audio activity.');
-                alert('✅ Microphone test completed successfully!');
-            }
-        }
-        
-        this.currentChallengeIndex++;
-        this.showCurrentChallenge();
+    createMicrophoneControls() {
+        return `
+            <h4 style="margin: 0 0 15px 0; color: #3498db;">🎤 Microphone Controls:</h4>
+            <div style="text-align: center;">
+                <div style="margin-bottom: 15px;">
+                    <span style="color: #ecf0f1; margin-right: 10px;">Status:</span>
+                    <span id="mic-status" style="background: #27ae60; color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold;">Ready</span>
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                    <button id="mute-btn" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔇 Mute</button>
+                    <button id="unmute-btn" style="background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔊 Unmute</button>
+                </div>
+                <div id="audio-visualizer" style="display: flex; gap: 3px; justify-content: center; height: 40px; align-items: end;">
+                    <div class="viz-bar" style="width: 8px; background: #3498db; border-radius: 2px; transition: height 0.3s;"></div>
+                    <div class="viz-bar" style="width: 8px; background: #3498db; border-radius: 2px; transition: height 0.3s;"></div>
+                    <div class="viz-bar" style="width: 8px; background: #3498db; border-radius: 2px; transition: height 0.3s;"></div>
+                    <div class="viz-bar" style="width: 8px; background: #3498db; border-radius: 2px; transition: height 0.3s;"></div>
+                    <div class="viz-bar" style="width: 8px; background: #3498db; border-radius: 2px; transition: height 0.3s;"></div>
+                </div>
+            </div>
+        `;
     }
 
     /**
-     * Simple speaker challenge
+     * Create speaker controls
      */
-    startSpeakerChallenge() {
-        alert('🔊 SPEAKER TEST\n\n1. Select which speakers to test\n2. Verify audio routing works correctly\n3. Check speaker color changes');
-        
-        const speakerResult = confirm('Click OK to test front speakers, or Cancel to test all speakers');
-        if (speakerResult) {
-            alert('🔊 Testing front speakers only! They should change color to indicate audio.');
-        } else {
-            alert('🔊 Testing all speakers! They should all change color to indicate audio.');
-        }
-        
-        alert('✅ Speaker test completed successfully!');
-        this.currentChallengeIndex++;
-        this.showCurrentChallenge();
+    createSpeakerControls() {
+        return `
+            <h4 style="margin: 0 0 15px 0; color: #3498db;">🔊 Speaker Controls:</h4>
+            <div style="text-align: center;">
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                    <button id="front-speakers-btn" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔊 Front Speakers</button>
+                    <button id="all-speakers-btn" style="background: #9b59b6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔊 All Speakers</button>
+                </div>
+                <div style="color: #ecf0f1; font-size: 14px;">
+                    Click a button to test different speaker configurations
+                </div>
+            </div>
+        `;
     }
 
     /**
-     * Simple channel challenge
+     * Create channel controls
      */
-    startChannelChallenge() {
-        alert('🎛️ CHANNEL ROUTING TEST\n\n1. Route audio to specific channels\n2. Verify channel control works\n3. Test audio isolation between channels');
-        
-        const channelResult = confirm('Click OK to route to channel 1, or Cancel to route to channel 2');
-        if (channelResult) {
-            alert('🎛️ Audio routed to Channel 1! Only Channel 1 should be active.');
-        } else {
-            alert('🎛️ Audio routed to Channel 2! Only Channel 2 should be active.');
-        }
-        
-        alert('✅ Channel routing test completed successfully!');
-        this.currentChallengeIndex++;
-        this.showCurrentChallenge();
+    createChannelControls() {
+        return `
+            <h4 style="margin: 0 0 15px 0; color: #3498db;">🎛️ Channel Controls:</h4>
+            <div style="text-align: center;">
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                    <button id="channel-1-btn" style="background: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🎛️ Channel 1</button>
+                    <button id="channel-2-btn" style="background: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🎛️ Channel 2</button>
+                </div>
+                <div style="color: #ecf0f1; font-size: 14px;">
+                    Click a button to route audio to specific channels
+                </div>
+            </div>
+        `;
     }
+
+    /**
+     * Show completion message
+     */
+    showCompletionMessage() {
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        `;
+
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        `;
+
+        content.innerHTML = `
+            <h2 style="color: #27ae60; margin-bottom: 20px;">🎉 All Challenges Completed!</h2>
+            <p style="color: #ecf0f1; margin-bottom: 30px; font-size: 16px;">You have successfully tested your audio setup!</p>
+            <button id="close-completion" style="background: #3498db; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-size: 16px;">Close</button>
+        `;
+
+        content.querySelector('#close-completion').onclick = () => modal.remove();
+
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+    }
+
+    
 
     /**
      * Generate challenge-specific controls
