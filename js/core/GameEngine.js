@@ -1110,9 +1110,9 @@ export class AVMasterGame {
         }
     }
 
-        /**
-     * Show current testing challenge - SIMPLE WORKING MODAL
-     */
+    /**
+ * Show current testing challenge - SIMPLE WORKING MODAL
+ */
     showCurrentChallenge() {
         console.log('🔬 ===== SHOW CURRENT CHALLENGE FUNCTION CALLED =====');
         console.log('🔬 Showing current challenge...');
@@ -1269,6 +1269,119 @@ export class AVMasterGame {
         // Add to page
         document.body.appendChild(modal);
         console.log('🔬 Simple modal created and added to DOM');
+
+        // Add event listeners to the controls
+        this.setupModalEventListeners(modal, challenge);
+    }
+
+    /**
+     * Setup event listeners for modal controls
+     */
+    setupModalEventListeners(modal, challenge) {
+        if (challenge.type === 'microphone-test') {
+            this.setupMicrophoneListeners(modal);
+        } else if (challenge.type === 'speaker-test') {
+            this.setupSpeakerListeners(modal);
+        } else if (challenge.type === 'channel-test') {
+            this.setupChannelListeners(modal);
+        }
+    }
+
+    /**
+     * Setup microphone control event listeners
+     */
+    setupMicrophoneListeners(modal) {
+        const muteBtn = modal.querySelector('#mute-btn');
+        const unmuteBtn = modal.querySelector('#unmute-btn');
+        const micStatus = modal.querySelector('#mic-status');
+        const visualizer = modal.querySelector('#audio-visualizer');
+        const vizBars = visualizer.querySelectorAll('.viz-bar');
+
+        let isMuted = false;
+        let audioInterval;
+
+        // Start audio visualizer animation
+        const startVisualizer = () => {
+            audioInterval = setInterval(() => {
+                if (!isMuted) {
+                    vizBars.forEach(bar => {
+                        const height = Math.random() * 30 + 5;
+                        bar.style.height = height + 'px';
+                    });
+                }
+            }, 100);
+        };
+
+        // Stop audio visualizer animation
+        const stopVisualizer = () => {
+            if (audioInterval) {
+                clearInterval(audioInterval);
+                vizBars.forEach(bar => {
+                    bar.style.height = '5px';
+                });
+            }
+        };
+
+        // Start visualizer immediately
+        startVisualizer();
+
+        // Mute button functionality
+        muteBtn.addEventListener('click', () => {
+            isMuted = true;
+            micStatus.textContent = 'Muted';
+            micStatus.style.background = '#e74c3c';
+            stopVisualizer();
+            console.log('🔇 Microphone muted');
+        });
+
+        // Unmute button functionality
+        unmuteBtn.addEventListener('click', () => {
+            isMuted = false;
+            micStatus.textContent = 'Active';
+            micStatus.style.background = '#27ae60';
+            startVisualizer();
+            console.log('🔊 Microphone unmuted');
+        });
+    }
+
+    /**
+     * Setup speaker control event listeners
+     */
+    setupSpeakerListeners(modal) {
+        const frontSpeakersBtn = modal.querySelector('#front-speakers-btn');
+        const allSpeakersBtn = modal.querySelector('#all-speakers-btn');
+
+        frontSpeakersBtn.addEventListener('click', () => {
+            frontSpeakersBtn.style.background = '#2980b9';
+            allSpeakersBtn.style.background = '#9b59b6';
+            console.log('🔊 Front speakers activated');
+        });
+
+        allSpeakersBtn.addEventListener('click', () => {
+            allSpeakersBtn.style.background = '#8e44ad';
+            frontSpeakersBtn.style.background = '#3498db';
+            console.log('🔊 All speakers activated');
+        });
+    }
+
+    /**
+     * Setup channel control event listeners
+     */
+    setupChannelListeners(modal) {
+        const channel1Btn = modal.querySelector('#channel-1-btn');
+        const channel2Btn = modal.querySelector('#channel-2-btn');
+
+        channel1Btn.addEventListener('click', () => {
+            channel1Btn.style.background = '#d35400';
+            channel2Btn.style.background = '#e67e22';
+            console.log('🎛️ Channel 1 activated');
+        });
+
+        channel2Btn.addEventListener('click', () => {
+            channel2Btn.style.background = '#d35400';
+            channel1Btn.style.background = '#e67e22';
+            console.log('🎛️ Channel 2 activated');
+        });
     }
 
     /**
@@ -1283,11 +1396,11 @@ export class AVMasterGame {
             margin-bottom: 20px;
         `;
 
-        if (challenge.type === 'microphone') {
+        if (challenge.type === 'microphone-test') {
             controls.innerHTML = this.createMicrophoneControls();
-        } else if (challenge.type === 'speaker') {
+        } else if (challenge.type === 'speaker-test') {
             controls.innerHTML = this.createSpeakerControls();
-        } else if (challenge.type === 'channel') {
+        } else if (challenge.type === 'channel-test') {
             controls.innerHTML = this.createChannelControls();
         }
 
@@ -1397,7 +1510,7 @@ export class AVMasterGame {
         document.body.appendChild(modal);
     }
 
-    
+
 
     /**
      * Generate challenge-specific controls
