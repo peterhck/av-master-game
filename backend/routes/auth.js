@@ -26,7 +26,7 @@ router.get('/test-db', async (req, res) => {
             .from('users')
             .select('count')
             .limit(1);
-        
+
         if (error) {
             return res.status(500).json({
                 error: 'Database connection failed',
@@ -34,7 +34,7 @@ router.get('/test-db', async (req, res) => {
                 code: error.code
             });
         }
-        
+
         res.json({
             status: 'OK',
             message: 'Database connection successful',
@@ -77,6 +77,60 @@ router.get('/test-auth', async (req, res) => {
             details: error.message
         });
     }
+});
+
+// Test database schema
+router.get('/test-schema', async (req, res) => {
+    try {
+        // Test if users table exists and get its structure
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .limit(1);
+        
+        if (error) {
+            return res.status(500).json({
+                error: 'Database schema test failed',
+                details: error.message,
+                code: error.code
+            });
+        }
+        
+        // Get table information
+        const { data: tableInfo, error: tableError } = await supabase
+            .rpc('get_table_info', { table_name: 'users' })
+            .catch(() => ({ data: null, error: { message: 'RPC not available' } }));
+        
+        res.json({
+            status: 'OK',
+            message: 'Database schema test successful',
+            tableExists: true,
+            sampleData: data,
+            tableInfo: tableInfo,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Database schema test failed',
+            details: error.message
+        });
+    }
+});
+
+// Test environment variables
+router.get('/test-env', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'Environment variables check',
+        env: {
+            NODE_ENV: process.env.NODE_ENV,
+            SUPABASE_URL: process.env.SUPABASE_URL ? 'configured' : 'missing',
+            SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'configured' : 'missing',
+            JWT_SECRET: process.env.JWT_SECRET ? 'configured' : 'missing',
+            OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'configured' : 'missing'
+        },
+        timestamp: new Date().toISOString()
+    });
 });
 
 // Initialize Supabase client
@@ -132,9 +186,31 @@ router.post('/register', [
 
         const { email, password, firstName, lastName, organization, role } = req.body;
 
-        // Skip user existence check for now to avoid RLS recursion
-        // We'll let Supabase Auth handle duplicate email validation
-        console.log('Skipping user existence check to avoid RLS recursion');
+        // Check if user already exists in Supabase Auth
+        console.log('Checking if user already exists:', email);
+        const { data: existingAuthUser, error: checkError } = await supabase.auth.admin.listUsers({
+            page: 1,
+            perPage: 1000
+        });
+
+        if (checkError) {
+            console.error('Error checking existing users:', checkError);
+            return res.status(500).json({ 
+                error: 'Failed to check existing users',
+                details: checkError.message
+            });
+        }
+
+        const userExists = existingAuthUser.users?.some(user => user.email === email);
+        if (userExists) {
+            console.log('User already exists:', email);
+            return res.status(400).json({ 
+                error: 'User already exists',
+                message: 'A user with this email already exists'
+            });
+        }
+
+        console.log('User does not exist, proceeding with creation');
 
         // Hash password
         const hashedPassword = await hashPassword(password);
@@ -148,10 +224,10 @@ router.post('/register', [
             password: password,
             email_confirm: true,
             user_metadata: {
-                firstName,
-                lastName,
-                organization,
-                role
+                firstName: firstName,
+                lastName: lastName,
+                organization: organization || '',
+                role: role || 'user'
             }
         });
 
