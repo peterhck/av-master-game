@@ -25,17 +25,17 @@ export class AuthManager {
     }
 }
 
-init() {
-    // Check if we have a valid token on startup
-    if (this.token) {
-        this.validateToken();
+    init() {
+        // Check if we have a valid token on startup
+        if (this.token) {
+            this.validateToken();
+        }
+
+        this.setupEventListeners();
+        console.log('🔐 Auth Manager initialized');
     }
 
-    this.setupEventListeners();
-    console.log('🔐 Auth Manager initialized');
-}
-
-setupEventListeners() {
+    setupEventListeners() {
     // Auth modal triggers (game header)
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
@@ -91,32 +91,32 @@ setupEventListeners() {
 }
 
     async validateToken() {
-    try {
-        const response = await fetch(`${this.backendUrl}/api/auth/profile`, {
-            headers: {
-                'Authorization': `Bearer ${this.token}`
-            }
-        });
+        try {
+            const response = await fetch(`${this.backendUrl}/api/auth/profile`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
 
-        if (response.ok) {
-            const data = await response.json();
-            this.currentUser = data.user;
-            this.isAuthenticated = true;
-            this.updateUI();
-            console.log('✅ Token validated, user authenticated');
-        } else {
+            if (response.ok) {
+                const data = await response.json();
+                this.currentUser = data.user;
+                this.isAuthenticated = true;
+                this.updateUI();
+                console.log('✅ Token validated, user authenticated');
+            } else {
+                this.clearAuth();
+                console.log('❌ Token invalid, cleared auth');
+            }
+        } catch (error) {
+            console.error('Token validation error:', error);
             this.clearAuth();
-            console.log('❌ Token invalid, cleared auth');
         }
-    } catch (error) {
-        console.error('Token validation error:', error);
-        this.clearAuth();
     }
-}
 
     async register(userData) {
-    try {
-        const response = await fetch(`${this.backendUrl}/api/auth/register`, {
+        try {
+            const response = await fetch(`${this.backendUrl}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -248,37 +248,37 @@ setupEventListeners() {
     }
 }
 
-setAuth(token, user) {
-    this.token = token;
-    this.currentUser = user;
-    this.isAuthenticated = true;
+    setAuth(token, user) {
+        this.token = token;
+        this.currentUser = user;
+        this.isAuthenticated = true;
 
-    localStorage.setItem('auth_token', token);
-    localStorage.setItem('user_data', JSON.stringify(user));
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user_data', JSON.stringify(user));
 
-    this.updateUI();
-    console.log('🔐 User authenticated:', user.email);
-}
+        this.updateUI();
+        console.log('🔐 User authenticated:', user.email);
+    }
 
-clearAuth() {
-    this.token = null;
-    this.currentUser = null;
-    this.isAuthenticated = false;
-    this.pendingGameAction = null; // Clear pending action on logout
+    clearAuth() {
+        this.token = null;
+        this.currentUser = null;
+        this.isAuthenticated = false;
+        this.pendingGameAction = null; // Clear pending action on logout
 
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_data');
 
-    this.updateUI();
-    console.log('🔐 Auth cleared');
-}
+        this.updateUI();
+        console.log('🔐 Auth cleared');
+    }
 
-setPendingGameAction(action) {
-    this.pendingGameAction = action;
-    console.log('🎮 Pending game action set:', action);
-}
+    setPendingGameAction(action) {
+        this.pendingGameAction = action;
+        console.log('🎮 Pending game action set:', action);
+    }
 
-executePendingGameAction() {
+    executePendingGameAction() {
     if (this.pendingGameAction && window.game) {
         console.log('🎮 Executing pending game action:', this.pendingGameAction);
 
@@ -300,9 +300,9 @@ executePendingGameAction() {
     }
 }
 
-updateUI() {
-    // Game header elements
-    const authContainer = document.getElementById('auth-container');
+    updateUI() {
+        // Game header elements
+        const authContainer = document.getElementById('auth-container');
     const userContainer = document.getElementById('user-container');
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
@@ -688,15 +688,15 @@ showProfileModal() {
     });
 }
 
-closeAllModals() {
-    const modals = document.querySelectorAll('.modal-overlay');
-    modals.forEach(modal => modal.remove());
-}
+    closeAllModals() {
+        const modals = document.querySelectorAll('.modal-overlay');
+        modals.forEach(modal => modal.remove());
+    }
 
-showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
             <div class="notification-content">
                 <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
                 <span>${message}</span>
@@ -704,40 +704,40 @@ showNotification(message, type = 'info') {
             <button class="notification-close">&times;</button>
         `;
 
-    document.body.appendChild(notification);
+        document.body.appendChild(notification);
 
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, 5000);
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
 
-    // Manual close
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', () => notification.remove());
-}
+        // Manual close
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', () => notification.remove());
+    }
 
-// Get auth headers for API requests
-getAuthHeaders() {
-    return {
-        'Authorization': `Bearer ${this.token}`,
-        'Content-Type': 'application/json'
-    };
-}
+    // Get auth headers for API requests
+    getAuthHeaders() {
+        return {
+            'Authorization': `Bearer ${this.token}`,
+            'Content-Type': 'application/json'
+        };
+    }
 
-// Check if user is authenticated
-isUserAuthenticated() {
-    return this.isAuthenticated && this.currentUser;
-}
+    // Check if user is authenticated
+    isUserAuthenticated() {
+        return this.isAuthenticated && this.currentUser;
+    }
 
-// Get current user
-getCurrentUser() {
-    return this.currentUser;
-}
+    // Get current user
+    getCurrentUser() {
+        return this.currentUser;
+    }
 
-// Get user token
-getToken() {
-    return this.token;
-}
+    // Get user token
+    getToken() {
+        return this.token;
+    }
 }
