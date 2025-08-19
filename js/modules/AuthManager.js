@@ -505,10 +505,10 @@ export class AuthManager {
             e.preventDefault();
 
             console.log('🔍 Form submission started');
-            
+
             const formData = new FormData(form);
             console.log('🔍 FormData entries:', Array.from(formData.entries()));
-            
+
             const userData = {
                 firstName: formData.get('firstName'),
                 lastName: formData.get('lastName'),
@@ -517,7 +517,7 @@ export class AuthManager {
                 organization: formData.get('organization') || null,
                 role: formData.get('role')
             };
-            
+
             console.log('🔍 Processed userData:', userData);
 
             const submitBtn = form.querySelector('button[type="submit"]');

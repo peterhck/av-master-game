@@ -15,6 +15,19 @@ export class AITutor {
         this.backendUrl = config.BACKEND_URL; // Backend API URL
         this.linkPreviewQueue = []; // Queue for link preview requests
         this.isProcessingLinkPreview = false;
+        this.currentLanguage = 'en'; // Default language
+        this.languageMap = {
+            'en': { name: 'English', code: 'en-US', voice: 'en-US' },
+            'es': { name: 'Spanish', code: 'es-ES', voice: 'es-ES' },
+            'fr': { name: 'French', code: 'fr-FR', voice: 'fr-FR' },
+            'zh': { name: 'Mandarin', code: 'zh-CN', voice: 'zh-CN' },
+            'ht': { name: 'Haitian Creole', code: 'ht-HT', voice: 'ht-HT' },
+            'de': { name: 'German', code: 'de-DE', voice: 'de-DE' },
+            'ja': { name: 'Japanese', code: 'ja-JP', voice: 'ja-JP' },
+            'bn': { name: 'Bengali', code: 'bn-BD', voice: 'bn-BD' },
+            'hi': { name: 'Hindi', code: 'hi-IN', voice: 'hi-IN' },
+            'ar': { name: 'Arabic', code: 'ar-SA', voice: 'ar-SA' }
+        };
 
         this.init();
     }
@@ -53,7 +66,7 @@ export class AITutor {
             this.recognition = new SpeechRecognition();
             this.recognition.continuous = false;
             this.recognition.interimResults = false;
-            this.recognition.lang = 'en-US';
+            this.recognition.lang = this.languageMap[this.currentLanguage].code;
 
             this.recognition.onstart = () => {
                 console.log('🎤 Voice recognition started');
@@ -95,6 +108,12 @@ export class AITutor {
         const aiVoiceToggle = document.getElementById('ai-voice-toggle');
         if (aiVoiceToggle) {
             aiVoiceToggle.addEventListener('click', () => this.toggleVoiceMode());
+        }
+
+        // Language selection dropdown
+        const aiLanguageSelect = document.getElementById('ai-language-select');
+        if (aiLanguageSelect) {
+            aiLanguageSelect.addEventListener('change', (e) => this.changeLanguage(e.target.value));
         }
 
         // Chat interface controls
@@ -208,6 +227,22 @@ export class AITutor {
                     this.addAIMessage('Backend connection failed. Please check the server.');
                 }
             }
+        }
+    }
+
+    changeLanguage(languageCode) {
+        this.currentLanguage = languageCode;
+        console.log('🌍 Language changed to:', this.languageMap[languageCode].name);
+        
+        // Update voice recognition language
+        if (this.recognition) {
+            this.recognition.lang = this.languageMap[languageCode].code;
+        }
+        
+        // If AI is active, send a message to inform about language change
+        if (this.isActive) {
+            const languageName = this.languageMap[languageCode].name;
+            this.addMessageToChat('system', `Language changed to ${languageName}. I will now communicate in ${languageName}.`);
         }
     }
 
@@ -521,7 +556,8 @@ export class AITutor {
                 body: JSON.stringify({
                     message: userMessage,
                     conversationId: conversationId,
-                    equipmentContext: this.currentEquipment || null
+                    equipmentContext: this.currentEquipment || null,
+                    language: this.currentLanguage
                 })
             });
 
@@ -584,7 +620,8 @@ export class AITutor {
                 },
                 body: JSON.stringify({
                     query: userMessage,
-                    conversationId: conversationId
+                    conversationId: conversationId,
+                    language: this.currentLanguage
                 })
             });
 
@@ -647,7 +684,8 @@ export class AITutor {
                 },
                 body: JSON.stringify({
                     query: userMessage,
-                    conversationId: conversationId
+                    conversationId: conversationId,
+                    language: this.currentLanguage
                 })
             });
 
@@ -1224,38 +1262,44 @@ export class AITutor {
             // Use the specified voice
             selectedVoice = voices.find(voice => voice.name === voiceName);
         } else {
-            // Try to find a natural-sounding voice
-            const preferredVoices = [
-                'Google UK English Female',
-                'Google UK English Male',
-                'Google US English Female',
-                'Google US English Male',
-                'Samantha',
-                'Alex',
-                'Victoria',
-                'Daniel'
-            ];
-
-            // First try to find a preferred voice
-            for (const preferredVoiceName of preferredVoices) {
-                selectedVoice = voices.find(voice => voice.name === preferredVoiceName);
-                if (selectedVoice) break;
-            }
-
-            // If no preferred voice found, try to find any natural-sounding voice
+            // Try to find a voice for the current language
+            const languageCode = this.languageMap[this.currentLanguage].voice;
+            selectedVoice = voices.find(voice => voice.lang.startsWith(languageCode.split('-')[0]));
+            
+            // If no voice found for current language, fall back to English
             if (!selectedVoice) {
-                selectedVoice = voices.find(voice =>
-                    voice.name.includes('Google') ||
-                    voice.name.includes('Samantha') ||
-                    voice.name.includes('Alex') ||
-                    voice.name.includes('Victoria') ||
-                    voice.name.includes('Daniel')
-                );
-            }
+                const preferredVoices = [
+                    'Google UK English Female',
+                    'Google UK English Male',
+                    'Google US English Female',
+                    'Google US English Male',
+                    'Samantha',
+                    'Alex',
+                    'Victoria',
+                    'Daniel'
+                ];
 
-            // If still no voice found, use the first available
-            if (!selectedVoice && voices.length > 0) {
-                selectedVoice = voices[0];
+                // First try to find a preferred voice
+                for (const preferredVoiceName of preferredVoices) {
+                    selectedVoice = voices.find(voice => voice.name === preferredVoiceName);
+                    if (selectedVoice) break;
+                }
+
+                // If no preferred voice found, try to find any natural-sounding voice
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(voice =>
+                        voice.name.includes('Google') ||
+                        voice.name.includes('Samantha') ||
+                        voice.name.includes('Alex') ||
+                        voice.name.includes('Victoria') ||
+                        voice.name.includes('Daniel')
+                    );
+                }
+
+                // If still no voice found, use the first available
+                if (!selectedVoice && voices.length > 0) {
+                    selectedVoice = voices[0];
+                }
             }
         }
 
