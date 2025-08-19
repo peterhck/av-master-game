@@ -37,22 +37,37 @@ const io = new Server(server, {
 initializeSupabase();
 initializeOpenAI();
 
+// CORS configuration - MUST BE FIRST
+app.use(cors({
+    origin: true, // Allow all origins
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
+    exposedHeaders: ['Content-Length', 'X-Requested-With']
+}));
+
+// Handle CORS preflight requests
+app.options('*', cors());
+
 // Security middleware - Disable CSP for now to avoid CORS conflicts
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration - Allow all origins for now
-app.use(cors({
-    origin: true, // Allow all origins
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept']
-}));
-
-// Handle CORS preflight requests
-app.options('*', cors());
+// Manual CORS headers as backup
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
 
 // Log CORS requests for debugging
 app.use((req, res, next) => {
