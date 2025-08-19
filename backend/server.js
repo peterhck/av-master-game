@@ -27,24 +27,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: function (origin, callback) {
-            // Allow requests with no origin
-            if (!origin) return callback(null, true);
-            
-            const allowedOrigins = [
-                'http://localhost:8001',
-                'http://localhost:8080',
-                'https://your-frontend-domain.com',
-                process.env.CORS_ORIGIN
-            ].filter(Boolean);
-            
-            if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-                callback(null, true);
-            } else {
-                console.log('Socket.IO CORS blocked origin:', origin);
-                callback(new Error('Not allowed by Socket.IO CORS'));
-            }
-        },
+        origin: true, // Allow all origins
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -54,47 +37,30 @@ const io = new Server(server, {
 initializeSupabase();
 initializeOpenAI();
 
-// Security middleware
+// Security middleware - Disable CSP for now to avoid CORS conflicts
 app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            scriptSrc: ["'self'"],
-            imgSrc: ["'self'", "data:", "https:"],
-        },
-    },
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        
-        const allowedOrigins = [
-            'http://localhost:8001',  // Development frontend
-            'http://localhost:8080',  // Production frontend
-            'https://your-frontend-domain.com', // Replace with your actual frontend domain
-            process.env.CORS_ORIGIN   // Environment variable for additional origins
-        ].filter(Boolean); // Remove undefined values
-        
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-            callback(null, true);
-        } else {
-            console.log('CORS blocked origin:', origin);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+// CORS configuration - Allow all origins for now
+app.use(cors({
+    origin: true, // Allow all origins
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-};
-
-app.use(cors(corsOptions));
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept']
+}));
 
 // Handle CORS preflight requests
-app.options('*', cors(corsOptions));
+app.options('*', cors());
+
+// Log CORS requests for debugging
+app.use((req, res, next) => {
+    console.log('🌐 Request from origin:', req.headers.origin);
+    console.log('🌐 Request method:', req.method);
+    console.log('🌐 Request URL:', req.url);
+    next();
+});
 
 // Compression middleware
 app.use(compression());
@@ -136,6 +102,16 @@ app.get('/cors-test', (req, res) => {
     res.status(200).json({
         message: 'CORS is working!',
         origin: req.headers.origin,
+        timestamp: new Date().toISOString(),
+        headers: req.headers
+    });
+});
+
+// Simple test endpoint
+app.get('/test', (req, res) => {
+    res.status(200).json({
+        message: 'Backend is working!',
+        cors: 'enabled',
         timestamp: new Date().toISOString()
     });
 });
