@@ -26,7 +26,7 @@ router.get('/test-db', async (req, res) => {
             .from('users')
             .select('count')
             .limit(1);
-        
+
         if (error) {
             return res.status(500).json({
                 error: 'Database connection failed',
@@ -34,7 +34,7 @@ router.get('/test-db', async (req, res) => {
                 code: error.code
             });
         }
-        
+
         res.json({
             status: 'OK',
             message: 'Database connection successful',
@@ -111,6 +111,7 @@ router.post('/register', [
         let userProfile; // Declare variable for user profile
 
         // Create user in Supabase Auth first
+        console.log('Creating Supabase Auth user for:', email);
         const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
             email: email,
             password: password,
@@ -124,9 +125,16 @@ router.post('/register', [
         });
 
         if (authError) {
+            console.error('Supabase Auth error:', authError);
             logger.error('Error creating auth user:', authError);
-            return res.status(500).json({ error: 'Failed to create user account' });
+            return res.status(500).json({ 
+                error: 'Failed to create user account',
+                details: authError.message,
+                code: authError.status
+            });
         }
+
+        console.log('Supabase Auth user created successfully:', authUser.user.id);
 
         // Check if user profile already exists (in case of previous failed registration)
         const { data: existingProfile, error: profileCheckError } = await supabase
@@ -162,6 +170,7 @@ router.post('/register', [
         } else {
 
             // Create user profile directly in database (bypass RLS)
+            console.log('Creating user profile in database for:', authUser.user.id);
             const { data: newUserProfile, error: profileError } = await supabase
                 .from('users')
                 .insert({
@@ -179,11 +188,18 @@ router.post('/register', [
                 .single();
 
             if (profileError) {
+                console.error('Profile creation error:', profileError);
                 logger.error('Error creating user profile:', profileError);
                 // Clean up auth user if profile creation fails
                 await supabase.auth.admin.deleteUser(authUser.user.id);
-                return res.status(500).json({ error: 'Failed to create user profile' });
+                return res.status(500).json({ 
+                    error: 'Failed to create user profile',
+                    details: profileError.message,
+                    code: profileError.code
+                });
             }
+
+            console.log('User profile created successfully');
 
             userProfile = newUserProfile;
         }
