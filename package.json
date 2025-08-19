@@ -4,12 +4,16 @@
     "description": "AV Master - Interactive Audio Visual Equipment Learning Game",
     "main": "index.html",
     "scripts": {
-        "start": "cd backend && npm start",
-        "dev": "cd backend && npm run dev",
+        "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+        "start:frontend": "npx http-server . -p 8001 -c-1",
+        "start:backend": "cd backend && npm start",
+        "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+        "dev:frontend": "npx http-server . -p 8001 -c-1",
+        "dev:backend": "cd backend && npm run dev",
         "build": "echo 'Frontend is static HTML/CSS/JS - no build step needed'",
         "deploy": "npm run build && echo 'Ready for deployment'",
         "test": "echo 'Tests can be run from testsprite_tests directory'",
-        "install-deps": "cd backend && npm install",
+        "install-deps": "npm install && cd backend && npm install",
         "setup": "npm run install-deps && echo 'Setup complete'",
         "clean": "rm -rf node_modules backend/node_modules && echo 'Cleaned node_modules'"
     },
@@ -33,6 +37,9 @@
         "url": "https://github.com/your-username/av-master-game.git"
     },
     "homepage": "https://your-domain.com",
-    "dependencies": {},
+    "dependencies": {
+        "concurrently": "^8.2.2",
+        "http-server": "^14.1.1"
+    },
     "devDependencies": {}
 }

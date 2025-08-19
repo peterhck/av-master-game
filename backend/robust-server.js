@@ -78,14 +78,14 @@ app.get('/', (req, res) => {
     const indexPath = path.join(__dirname, '..', 'index.html');
     console.log('🌐 Request for root path (/)');
     console.log('📁 Attempting to serve index.html from:', indexPath);
-    
+
     // Check if file exists
     const fs = require('fs');
     if (!fs.existsSync(indexPath)) {
         console.error('❌ index.html file not found at:', indexPath);
         console.log('📂 Current directory:', __dirname);
         console.log('📂 Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
-        
+
         return res.status(500).json({
             error: 'Frontend file not found',
             message: 'index.html not found in expected location',
@@ -94,7 +94,7 @@ app.get('/', (req, res) => {
             parentDirContents: fs.readdirSync(path.join(__dirname, '..'))
         });
     }
-    
+
     console.log('✅ index.html file found, serving...');
     res.sendFile(indexPath, (err) => {
         if (err) {

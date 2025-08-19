@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  av-master-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: av-master-frontend
+    ports:
+      - "8001:8001"
+    environment:
+      - NODE_ENV=production
+      - BACKEND_URL=http://av-master-backend:3001
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8001" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   av-master-backend:
     build: .
     container_name: av-master-backend
@@ -33,6 +51,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./static:/usr/share/nginx/html:ro
     depends_on:
+      - av-master-frontend
       - av-master-backend
     restart: unless-stopped
 

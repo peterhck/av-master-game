@@ -10,7 +10,7 @@ export class AITutor {
         this.currentEquipment = null;
         this.chatHistory = [];
         this.currentConversationId = null;
-        this.backendUrl = ''; // Use relative URLs for production
+        this.backendUrl = window.AV_CONFIG ? window.AV_CONFIG.backendUrl : 'http://localhost:3001';
         this.linkPreviewQueue = []; // Queue for link preview requests
         this.isProcessingLinkPreview = false;
 
