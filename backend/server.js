@@ -147,8 +147,9 @@ try {
 
 const app = express();
 
-// Trust proxy for Railway deployment
+// Trust proxy for Railway deployment - must be before rate limiting
 app.set('trust proxy', 1);
+app.enable('trust proxy');
 
 const server = createServer(app);
 const io = new Server(server, {

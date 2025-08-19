@@ -87,7 +87,7 @@ router.get('/test-schema', async (req, res) => {
             .from('users')
             .select('*')
             .limit(1);
-        
+
         if (error) {
             return res.status(500).json({
                 error: 'Database schema test failed',
@@ -95,23 +95,23 @@ router.get('/test-schema', async (req, res) => {
                 code: error.code
             });
         }
-        
+
         // Try to get table structure by attempting to select specific columns
         const { data: idData, error: idError } = await supabase
             .from('users')
             .select('id')
             .limit(1);
-            
+
         const { data: emailData, error: emailError } = await supabase
             .from('users')
             .select('email')
             .limit(1);
-            
+
         const { data: nameData, error: nameError } = await supabase
             .from('users')
             .select('first_name, last_name')
             .limit(1);
-        
+
         res.json({
             status: 'OK',
             message: 'Database schema test successful',
@@ -141,29 +141,29 @@ router.get('/schema-details', async (req, res) => {
             .from('users')
             .select('*')
             .limit(3);
-        
+
         if (usersSampleError) {
             console.error('Error getting users sample data:', usersSampleError);
         }
-        
+
         // Get user count
         const { count: userCount, error: countError } = await supabase
             .from('users')
             .select('*', { count: 'exact', head: true });
-        
+
         if (countError) {
             console.error('Error getting user count:', countError);
         }
-        
+
         // Test specific columns to understand schema
         const columnTests = {};
         const columns = [
-            'id', 'email', 'username', 'full_name', 'avatar_url', 'created_at', 
+            'id', 'email', 'username', 'full_name', 'avatar_url', 'created_at',
             'updated_at', 'last_login', 'preferences', 'first_name', 'last_name',
             'organization', 'role', 'is_active', 'is_verified', 'email_verified_at',
             'login_count', 'password_hash'
         ];
-        
+
         for (const column of columns) {
             try {
                 const { data, error } = await supabase
@@ -175,7 +175,7 @@ router.get('/schema-details', async (req, res) => {
                 columnTests[column] = 'error';
             }
         }
-        
+
         // Try to get auth.users info (limited access)
         let authUsersInfo = null;
         try {
@@ -199,7 +199,7 @@ router.get('/schema-details', async (req, res) => {
                 error: error.message
             };
         }
-        
+
         res.json({
             status: 'OK',
             message: 'Database schema details retrieved',
@@ -234,6 +234,60 @@ router.get('/test-env', (req, res) => {
         },
         timestamp: new Date().toISOString()
     });
+});
+
+// Test Supabase Auth admin functions
+router.get('/test-auth-admin', async (req, res) => {
+    try {
+        // Test basic admin functions
+        const { data: users, error: listError } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1 });
+        
+        if (listError) {
+            return res.status(500).json({
+                error: 'Auth admin test failed',
+                details: listError.message,
+                code: listError.code
+            });
+        }
+        
+        // Test user creation with minimal data
+        const testEmail = `test-${Date.now()}@example.com`;
+        const { data: testUser, error: createError } = await supabase.auth.admin.createUser({
+            email: testEmail,
+            password: 'testpass123',
+            email_confirm: true
+        });
+        
+        if (createError) {
+            return res.status(500).json({
+                error: 'User creation test failed',
+                details: createError.message,
+                code: createError.code,
+                testEmail: testEmail
+            });
+        }
+        
+        // Clean up test user
+        if (testUser?.user?.id) {
+            await supabase.auth.admin.deleteUser(testUser.user.id);
+        }
+        
+        res.json({
+            status: 'OK',
+            message: 'Auth admin functions working correctly',
+            testResults: {
+                listUsers: 'success',
+                createUser: 'success',
+                deleteUser: 'success'
+            },
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Auth admin test failed',
+            details: error.message
+        });
+    }
 });
 
 // Initialize Supabase client
@@ -336,11 +390,26 @@ router.post('/register', [
 
         if (authError) {
             console.error('Supabase Auth error:', authError);
+            console.error('Error details:', {
+                message: authError.message,
+                code: authError.code,
+                status: authError.status,
+                name: authError.name
+            });
             logger.error('Error creating auth user:', authError);
+            
+            // Check if it's a duplicate email error
+            if (authError.message && authError.message.includes('duplicate')) {
+                return res.status(400).json({
+                    error: 'User already exists',
+                    message: 'A user with this email already exists'
+                });
+            }
+            
             return res.status(500).json({
                 error: 'Failed to create user account',
                 details: authError.message,
-                code: authError.status
+                code: authError.code || authError.status
             });
         }
 
