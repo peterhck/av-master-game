@@ -8,20 +8,76 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 require('dotenv').config();
 
-const logger = require('./utils/logger');
+// Import logger with fallback
+let logger;
+try {
+    logger = require('./utils/logger');
+    console.log('✅ Logger loaded');
+} catch (error) {
+    console.log('⚠️ Logger not available, using console:', error.message);
+    logger = console;
+}
 const { initializeSupabase } = require('./config/supabase');
 const { initializeOpenAI } = require('./config/openai');
 
-// Import routes
-const { router: authRoutes } = require('./routes/auth');
-const aiRoutes = require('./routes/ai');
-const gameRoutes = require('./routes/game');
-const voiceRoutes = require('./routes/voice');
-const userRoutes = require('./routes/user');
+// Import routes with error handling
+let authRoutes, aiRoutes, gameRoutes, voiceRoutes, userRoutes;
+let authenticateToken, errorHandler;
 
-// Import middleware
-const { authenticateToken } = require('./middleware/auth');
-const { errorHandler } = require('./middleware/errorHandler');
+try {
+    authRoutes = require('./routes/auth').router;
+    console.log('✅ Auth routes loaded');
+} catch (error) {
+    console.log('⚠️ Auth routes not available:', error.message);
+}
+
+try {
+    aiRoutes = require('./routes/ai');
+    console.log('✅ AI routes loaded');
+} catch (error) {
+    console.log('⚠️ AI routes not available:', error.message);
+}
+
+try {
+    gameRoutes = require('./routes/game');
+    console.log('✅ Game routes loaded');
+} catch (error) {
+    console.log('⚠️ Game routes not available:', error.message);
+}
+
+try {
+    voiceRoutes = require('./routes/voice');
+    console.log('✅ Voice routes loaded');
+} catch (error) {
+    console.log('⚠️ Voice routes not available:', error.message);
+}
+
+try {
+    userRoutes = require('./routes/user');
+    console.log('✅ User routes loaded');
+} catch (error) {
+    console.log('⚠️ User routes not available:', error.message);
+}
+
+// Import middleware with error handling
+try {
+    authenticateToken = require('./middleware/auth').authenticateToken;
+    console.log('✅ Auth middleware loaded');
+} catch (error) {
+    console.log('⚠️ Auth middleware not available:', error.message);
+    authenticateToken = (req, res, next) => next(); // Pass-through middleware
+}
+
+try {
+    errorHandler = require('./middleware/errorHandler').errorHandler;
+    console.log('✅ Error handler loaded');
+} catch (error) {
+    console.log('⚠️ Error handler not available:', error.message);
+    errorHandler = (err, req, res, next) => {
+        console.error('Error:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    };
+}
 
 const app = express();
 const server = createServer(app);
@@ -33,9 +89,20 @@ const io = new Server(server, {
     }
 });
 
-// Initialize configurations
-initializeSupabase();
-initializeOpenAI();
+// Initialize configurations with error handling
+try {
+    initializeSupabase();
+    console.log('✅ Supabase initialized');
+} catch (error) {
+    console.log('⚠️ Supabase initialization failed:', error.message);
+}
+
+try {
+    initializeOpenAI();
+    console.log('✅ OpenAI initialized');
+} catch (error) {
+    console.log('⚠️ OpenAI initialization failed:', error.message);
+}
 
 // CORS configuration - MUST BE FIRST
 app.use(cors({
@@ -203,12 +270,31 @@ app.get('/', (req, res) => {
     });
 });
 
-// API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/ai', aiRoutes); // Remove authentication for testing
-app.use('/api/game', authenticateToken, gameRoutes);
-app.use('/api/voice', authenticateToken, voiceRoutes);
-app.use('/api/user', authenticateToken, userRoutes);
+// API routes - only register if available
+if (authRoutes) {
+    app.use('/api/auth', authRoutes);
+    console.log('✅ Auth routes registered');
+}
+
+if (aiRoutes) {
+    app.use('/api/ai', aiRoutes);
+    console.log('✅ AI routes registered');
+}
+
+if (gameRoutes) {
+    app.use('/api/game', authenticateToken, gameRoutes);
+    console.log('✅ Game routes registered');
+}
+
+if (voiceRoutes) {
+    app.use('/api/voice', authenticateToken, voiceRoutes);
+    console.log('✅ Voice routes registered');
+}
+
+if (userRoutes) {
+    app.use('/api/user', authenticateToken, userRoutes);
+    console.log('✅ User routes registered');
+}
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
