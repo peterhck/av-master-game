@@ -19,12 +19,11 @@ COPY . .
 RUN echo "NODE_ENV=production" > backend/.env.production
 
 # Expose ports
-EXPOSE 3001
-EXPOSE 8001
+EXPOSE $PORT
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:3001/health || exit 1
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["./start.sh"]
