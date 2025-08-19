@@ -164,7 +164,7 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Serve static files from the parent directory (frontend files)
+// Serve static files from the app root directory (frontend files)
 const staticPath = path.join(__dirname, '..');
 console.log('📁 Serving static files from:', staticPath);
 
@@ -176,7 +176,11 @@ if (fs.existsSync(indexPath)) {
     console.log('📄 File size:', fs.statSync(indexPath).size, 'bytes');
 } else {
     console.log('❌ index.html not found at:', indexPath);
-    console.log('📂 Parent directory contents:', fs.readdirSync(staticPath));
+    try {
+        console.log('📂 Parent directory contents:', fs.readdirSync(staticPath));
+    } catch (error) {
+        console.log('❌ Could not read parent directory:', error.message);
+    }
 }
 
 app.use(express.static(staticPath));
@@ -240,7 +244,11 @@ app.get('/', (req, res) => {
         if (err) {
             console.error('❌ Error serving frontend:', err);
             console.log('📂 Current directory:', __dirname);
-            console.log('📂 Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
+            try {
+                console.log('📂 Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
+            } catch (error) {
+                console.log('❌ Could not read parent directory:', error.message);
+            }
 
             // Fallback HTML response
             res.status(200).send(`
