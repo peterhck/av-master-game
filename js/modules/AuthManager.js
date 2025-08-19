@@ -108,6 +108,9 @@ export class AuthManager {
 
     async register(userData) {
         try {
+            console.log('🔍 Frontend sending registration data:', userData);
+            console.log('🔍 Backend URL:', this.backendUrl);
+            
             const response = await fetch(`${this.backendUrl}/api/auth/register`, {
                 method: 'POST',
                 headers: {
@@ -135,6 +138,9 @@ export class AuthManager {
 
     async login(credentials) {
         try {
+            console.log('🔍 Frontend sending login data:', credentials);
+            console.log('🔍 Backend URL:', this.backendUrl);
+            
             const response = await fetch(`${this.backendUrl}/api/auth/login`, {
                 method: 'POST',
                 headers: {
