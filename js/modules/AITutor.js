@@ -1,6 +1,8 @@
 // AI Tutor Module
 // Handles AI chat functionality, voice recognition, and equipment information display
 
+import { config } from '../config.js';
+
 export class AITutor {
     constructor() {
         this.isActive = false;
@@ -10,7 +12,7 @@ export class AITutor {
         this.currentEquipment = null;
         this.chatHistory = [];
         this.currentConversationId = null;
-        this.backendUrl = process.env.BACKEND_URL || 'https://av-master-backend-production.up.railway.app'; // Backend API URL
+        this.backendUrl = config.BACKEND_URL; // Backend API URL
         this.linkPreviewQueue = []; // Queue for link preview requests
         this.isProcessingLinkPreview = false;
 
@@ -18,6 +20,11 @@ export class AITutor {
     }
 
     init() {
+        this.setupVoiceRecognition();
+        this.setupEventListeners();
+        this.initializeVoices();
+        console.log('🤖 AI Tutor initialized');
+    }
         this.setupVoiceRecognition();
         this.setupEventListeners();
         this.initializeVoices();

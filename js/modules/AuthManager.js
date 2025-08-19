@@ -1,15 +1,28 @@
 // Authentication Manager Module
 // Handles user authentication, registration, and session management
 
+import { config } from '../config.js';
+
 export class AuthManager {
     constructor() {
-        this.backendUrl = process.env.BACKEND_URL || 'https://av-master-backend-production.up.railway.app'; // Backend API URL
+        this.backendUrl = config.BACKEND_URL; // Backend API URL
         this.currentUser = null;
         this.token = localStorage.getItem('auth_token');
         this.isAuthenticated = false;
         this.pendingGameAction = null; // Store pending game action after login
 
         this.init();
+    }
+
+    init() {
+        // Check if we have a valid token on startup
+        if (this.token) {
+            this.validateToken();
+        }
+
+        this.setupEventListeners();
+        console.log('🔐 Auth Manager initialized');
+    }
     }
 
     init() {

@@ -222,6 +222,18 @@ app.get('/test', (req, res) => {
     });
 });
 
+// Configuration endpoint for frontend
+app.get('/api/config', (req, res) => {
+    res.status(200).json({
+        BACKEND_URL: process.env.BACKEND_URL || `https://${req.get('host')}`,
+        NODE_ENV: process.env.NODE_ENV || 'production',
+        CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
+        SUPABASE_URL: process.env.SUPABASE_URL || null,
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'configured' : null,
+        timestamp: new Date().toISOString()
+    });
+});
+
 // API info endpoint
 app.get('/', (req, res) => {
     res.json({

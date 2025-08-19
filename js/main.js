@@ -1,6 +1,7 @@
 // Main Entry Point
 // Initializes the AV Master Game with proper loading sequence
 
+import { config } from './config.js';
 import { AVMasterGame } from './core/GameEngine.js';
 import { getLevelData } from './data/LevelData.js';
 import { getConnectorColor, saveToStorage, loadFromStorage } from './utils/Helpers.js';
