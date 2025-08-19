@@ -136,29 +136,7 @@ router.get('/test-schema', async (req, res) => {
 // Get detailed database schema
 router.get('/schema-details', async (req, res) => {
     try {
-        // Get users table schema by querying information_schema
-        const { data: usersSchema, error: usersSchemaError } = await supabase
-            .from('information_schema.columns')
-            .select('column_name, data_type, is_nullable, column_default')
-            .eq('table_name', 'users')
-            .eq('table_schema', 'public');
-        
-        if (usersSchemaError) {
-            console.error('Error getting users table schema:', usersSchemaError);
-        }
-        
-        // Get auth.users table schema (if accessible)
-        const { data: authUsersSchema, error: authUsersSchemaError } = await supabase
-            .from('information_schema.columns')
-            .select('column_name, data_type, is_nullable, column_default')
-            .eq('table_name', 'users')
-            .eq('table_schema', 'auth');
-        
-        if (authUsersSchemaError) {
-            console.error('Error getting auth.users table schema:', authUsersSchemaError);
-        }
-        
-        // Get sample data from users table
+        // Get sample data from users table to infer schema
         const { data: usersSample, error: usersSampleError } = await supabase
             .from('users')
             .select('*')
@@ -177,19 +155,61 @@ router.get('/schema-details', async (req, res) => {
             console.error('Error getting user count:', countError);
         }
         
+        // Test specific columns to understand schema
+        const columnTests = {};
+        const columns = [
+            'id', 'email', 'username', 'full_name', 'avatar_url', 'created_at', 
+            'updated_at', 'last_login', 'preferences', 'first_name', 'last_name',
+            'organization', 'role', 'is_active', 'is_verified', 'email_verified_at',
+            'login_count', 'password_hash'
+        ];
+        
+        for (const column of columns) {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select(column)
+                    .limit(1);
+                columnTests[column] = error ? 'missing' : 'exists';
+            } catch (err) {
+                columnTests[column] = 'error';
+            }
+        }
+        
+        // Try to get auth.users info (limited access)
+        let authUsersInfo = null;
+        try {
+            const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1 });
+            if (!authError && authUsers?.users?.length > 0) {
+                authUsersInfo = {
+                    accessible: true,
+                    sampleUser: {
+                        id: authUsers.users[0].id,
+                        email: authUsers.users[0].email,
+                        created_at: authUsers.users[0].created_at,
+                        email_confirmed_at: authUsers.users[0].email_confirmed_at,
+                        last_sign_in_at: authUsers.users[0].last_sign_in_at,
+                        user_metadata: authUsers.users[0].user_metadata
+                    }
+                };
+            }
+        } catch (error) {
+            authUsersInfo = {
+                accessible: false,
+                error: error.message
+            };
+        }
+        
         res.json({
             status: 'OK',
             message: 'Database schema details retrieved',
             usersTable: {
-                schema: usersSchema || [],
+                schema: columnTests,
                 sampleData: usersSample || [],
                 userCount: userCount || 0,
-                schemaError: usersSchemaError?.message || null
+                inferredSchema: usersSample && usersSample.length > 0 ? Object.keys(usersSample[0]) : []
             },
-            authUsersTable: {
-                schema: authUsersSchema || [],
-                schemaError: authUsersSchemaError?.message || null
-            },
+            authUsersTable: authUsersInfo,
             timestamp: new Date().toISOString()
         });
     } catch (error) {
