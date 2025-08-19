@@ -28,8 +28,8 @@ EXPOSE $PORT
 
 # Health check
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=5 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
 # Start the frontend server
 WORKDIR /app/frontend
-CMD ["sh", "-c", "node server.js"]
+CMD ["node", "server.js"]
