@@ -32,4 +32,4 @@ HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=5 \
 
 # Start the frontend server
 WORKDIR /app/frontend
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "node server.js"]
