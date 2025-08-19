@@ -70,7 +70,6 @@ README.md
 
 # Test files
 testsprite_tests/
-test-*.js
 *.test.js
 *.spec.js
 
