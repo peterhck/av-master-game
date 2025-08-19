@@ -290,6 +290,59 @@ router.get('/test-auth-admin', async (req, res) => {
     }
 });
 
+// Test specific user creation pattern
+router.get('/test-specific-user', async (req, res) => {
+    try {
+        const testEmail = `peter.lewis.${Date.now()}@frp.live`;
+        
+        console.log('Testing user creation with pattern:', testEmail);
+        
+        const { data: testUser, error: createError } = await supabase.auth.admin.createUser({
+            email: testEmail,
+            password: 'testpass123',
+            email_confirm: true,
+            user_metadata: {
+                firstName: 'Peter',
+                lastName: 'Lewis',
+                organization: '',
+                role: 'user'
+            }
+        });
+        
+        if (createError) {
+            return res.status(500).json({
+                error: 'Specific user creation test failed',
+                details: createError.message,
+                code: createError.code,
+                testEmail: testEmail,
+                metadata: {
+                    firstName: 'Peter',
+                    lastName: 'Lewis',
+                    organization: '',
+                    role: 'user'
+                }
+            });
+        }
+        
+        // Clean up test user
+        if (testUser?.user?.id) {
+            await supabase.auth.admin.deleteUser(testUser.user.id);
+        }
+        
+        res.json({
+            status: 'OK',
+            message: 'Specific user creation test successful',
+            testEmail: testEmail,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Specific user creation test failed',
+            details: error.message
+        });
+    }
+});
+
 // Initialize Supabase client
 const supabase = createClient(
     process.env.SUPABASE_URL,
