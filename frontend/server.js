@@ -96,8 +96,8 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`🚀 Frontend server running on port ${PORT}`);
     console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-    console.log(`🌐 Frontend: http://localhost:${PORT}/`);
+    console.log(`🔗 Health check: https://av-master-frontend-production.up.railway.app/health`);
+    console.log(`🌐 Frontend: https://av-master-frontend-production.up.railway.app/`);
 });
 
 // Error handling
