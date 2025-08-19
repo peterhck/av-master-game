@@ -4,7 +4,7 @@ This guide explains how to deploy the AV Master Game with separated frontend and
 
 ## Architecture Overview
 
-- **Frontend**: Static HTML/CSS/JS served on port 8001
+- **Frontend**: Static HTML/CSS/JS served on port 8080 (production) / 8001 (development)
 - **Backend**: Node.js API server on port 3001
 - **Nginx**: Reverse proxy (optional)
 
@@ -49,7 +49,7 @@ docker-compose up -d
 ```
 
 This will start:
-- Frontend on http://localhost:8001
+- Frontend on http://localhost:8080
 - Backend on http://localhost:3001
 - Nginx on http://localhost:80
 
@@ -80,7 +80,7 @@ The frontend uses `config.js` to manage backend URLs and feature flags. Update t
 
 ## Health Checks
 
-- Frontend: `http://localhost:8001/`
+- Frontend: `http://localhost:8080/` (production) / `http://localhost:8001/` (development)
 - Backend: `http://localhost:3001/health`
 
 ## Troubleshooting

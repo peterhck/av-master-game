@@ -7,13 +7,13 @@ services:
       dockerfile: Dockerfile.frontend
     container_name: av-master-frontend
     ports:
-      - "8001:8001"
+      - "8080:8080"
     environment:
       - NODE_ENV=production
       - BACKEND_URL=http://av-master-backend:3001
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8001" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080" ]
       interval: 30s
       timeout: 10s
       retries: 3

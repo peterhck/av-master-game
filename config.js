@@ -2,10 +2,10 @@
 const config = {
     // Backend API URL - will be replaced during deployment
     backendUrl: process.env.BACKEND_URL || 'http://localhost:3001',
-    
+
     // Environment
     environment: process.env.NODE_ENV || 'development',
-    
+
     // Feature flags
     features: {
         ai: true,

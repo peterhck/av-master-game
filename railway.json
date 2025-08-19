@@ -16,7 +16,8 @@
         "production": {
             "variables": {
                 "NODE_ENV": "production",
-                "PORT": "3001"
+                "PORT": "3001",
+                "FRONTEND_PORT": "8080"
             }
         }
     }

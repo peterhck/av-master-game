@@ -17,7 +17,7 @@ COPY config.js ./
 COPY js/ ./js/
 
 # Expose frontend port
-EXPOSE 8001
+EXPOSE 8080
 
 # Start the frontend server
 CMD ["npm", "run", "start:frontend"]
