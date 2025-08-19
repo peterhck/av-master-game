@@ -27,8 +27,26 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.CORS_ORIGIN || "http://localhost:8001",
-        methods: ["GET", "POST"]
+        origin: function (origin, callback) {
+            // Allow requests with no origin
+            if (!origin) return callback(null, true);
+            
+            const allowedOrigins = [
+                'http://localhost:8001',
+                'http://localhost:8080',
+                'https://your-frontend-domain.com',
+                process.env.CORS_ORIGIN
+            ].filter(Boolean);
+            
+            if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+                callback(null, true);
+            } else {
+                console.log('Socket.IO CORS blocked origin:', origin);
+                callback(new Error('Not allowed by Socket.IO CORS'));
+            }
+        },
+        methods: ["GET", "POST"],
+        credentials: true
     }
 });
 
@@ -49,12 +67,34 @@ app.use(helmet({
 }));
 
 // CORS configuration
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:8001",
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        const allowedOrigins = [
+            'http://localhost:8001',  // Development frontend
+            'http://localhost:8080',  // Production frontend
+            'https://your-frontend-domain.com', // Replace with your actual frontend domain
+            process.env.CORS_ORIGIN   // Environment variable for additional origins
+        ].filter(Boolean); // Remove undefined values
+        
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+};
+
+app.use(cors(corsOptions));
+
+// Handle CORS preflight requests
+app.options('*', cors(corsOptions));
 
 // Compression middleware
 app.use(compression());
@@ -83,7 +123,20 @@ app.get('/health', (req, res) => {
         message: 'AV Master Backend API Server',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
-        environment: process.env.NODE_ENV
+        environment: process.env.NODE_ENV,
+        cors: {
+            origin: req.headers.origin,
+            allowed: true
+        }
+    });
+});
+
+// CORS test endpoint
+app.get('/cors-test', (req, res) => {
+    res.status(200).json({
+        message: 'CORS is working!',
+        origin: req.headers.origin,
+        timestamp: new Date().toISOString()
     });
 });
 
