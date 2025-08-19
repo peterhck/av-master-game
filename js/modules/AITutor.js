@@ -17,10 +17,11 @@ export class AITutor {
         this.isProcessingLinkPreview = false;
         this.currentLanguage = 'en'; // Default language
         this.languageMap = {
-            'en': { 
-                name: 'English', 
-                code: 'en-US', 
+            'en': {
+                name: 'English',
+                code: 'en-US',
                 voice: 'en-US',
+                // Only voices that are proven to speak English fluently
                 preferredVoices: [
                     'Google US English Female',
                     'Google US English Male',
@@ -30,102 +31,131 @@ export class AITutor {
                     'Alex',
                     'Victoria',
                     'Daniel'
-                ]
+                ],
+                // Exact language codes that indicate fluent English
+                fluentLanguageCodes: ['en-US', 'en-GB', 'en-CA', 'en-AU']
             },
-            'es': { 
-                name: 'Spanish', 
-                code: 'es-ES', 
+            'es': {
+                name: 'Spanish',
+                code: 'es-ES',
                 voice: 'es-ES',
+                // Only voices that are proven to speak Spanish fluently
                 preferredVoices: [
                     'Google español',
                     'Google español de España',
                     'Google español de México',
                     'Microsoft Helena - Spanish (Spain)',
                     'Microsoft Pablo - Spanish (Spain)'
-                ]
+                ],
+                // Exact language codes that indicate fluent Spanish
+                fluentLanguageCodes: ['es-ES', 'es-MX', 'es-AR', 'es-CO']
             },
-            'fr': { 
-                name: 'French', 
-                code: 'fr-FR', 
+            'fr': {
+                name: 'French',
+                code: 'fr-FR',
                 voice: 'fr-FR',
+                // Only voices that are proven to speak French fluently
                 preferredVoices: [
                     'Google français',
                     'Google français de France',
                     'Microsoft Julie - French (France)',
                     'Microsoft Paul - French (France)'
-                ]
+                ],
+                // Exact language codes that indicate fluent French
+                fluentLanguageCodes: ['fr-FR', 'fr-CA', 'fr-BE', 'fr-CH']
             },
-            'zh': { 
-                name: 'Mandarin', 
-                code: 'zh-CN', 
+            'zh': {
+                name: 'Mandarin',
+                code: 'zh-CN',
                 voice: 'zh-CN',
+                // Only voices that are proven to speak Mandarin fluently
                 preferredVoices: [
                     'Google 普通话（中国大陆）',
                     'Google 國語（香港）',
                     'Microsoft Huihui - Chinese (Simplified)',
                     'Microsoft Kangkang - Chinese (Simplified)'
-                ]
+                ],
+                // Exact language codes that indicate fluent Mandarin
+                fluentLanguageCodes: ['zh-CN', 'zh-TW', 'zh-HK']
             },
-            'ht': { 
-                name: 'Haitian Creole', 
-                code: 'ht-HT', 
+            'ht': {
+                name: 'Haitian Creole',
+                code: 'ht-HT',
                 voice: 'ht-HT',
+                // Only voices that are proven to speak Haitian Creole fluently
                 preferredVoices: [
                     'Google Kreyòl Ayisyen'
-                ]
+                ],
+                // Exact language codes that indicate fluent Haitian Creole
+                fluentLanguageCodes: ['ht-HT', 'ht']
             },
-            'de': { 
-                name: 'German', 
-                code: 'de-DE', 
+            'de': {
+                name: 'German',
+                code: 'de-DE',
                 voice: 'de-DE',
+                // Only voices that are proven to speak German fluently
                 preferredVoices: [
                     'Google Deutsch',
                     'Google Deutsch (Deutschland)',
                     'Microsoft Hedda - German (Germany)',
                     'Microsoft Stefan - German (Germany)'
-                ]
+                ],
+                // Exact language codes that indicate fluent German
+                fluentLanguageCodes: ['de-DE', 'de-AT', 'de-CH']
             },
-            'ja': { 
-                name: 'Japanese', 
-                code: 'ja-JP', 
+            'ja': {
+                name: 'Japanese',
+                code: 'ja-JP',
                 voice: 'ja-JP',
+                // Only voices that are proven to speak Japanese fluently
                 preferredVoices: [
                     'Google 日本語',
                     'Google 日本語（日本）',
                     'Microsoft Nanami - Japanese (Japan)',
                     'Microsoft Ichiro - Japanese (Japan)'
-                ]
+                ],
+                // Exact language codes that indicate fluent Japanese
+                fluentLanguageCodes: ['ja-JP']
             },
-            'bn': { 
-                name: 'Bengali', 
-                code: 'bn-BD', 
+            'bn': {
+                name: 'Bengali',
+                code: 'bn-BD',
                 voice: 'bn-BD',
+                // Only voices that are proven to speak Bengali fluently
                 preferredVoices: [
                     'Google বাংলা',
                     'Google বাংলা (বাংলাদেশ)'
-                ]
+                ],
+                // Exact language codes that indicate fluent Bengali
+                fluentLanguageCodes: ['bn-BD', 'bn-IN']
             },
-            'hi': { 
-                name: 'Hindi', 
-                code: 'hi-IN', 
+            'hi': {
+                name: 'Hindi',
+                code: 'hi-IN',
                 voice: 'hi-IN',
+                // Only voices that are proven to speak Hindi fluently
                 preferredVoices: [
                     'Google हिन्दी',
                     'Google हिन्दी (भारत)',
                     'Microsoft Kalpana - Hindi (India)',
                     'Microsoft Hemant - Hindi (India)'
-                ]
+                ],
+                // Exact language codes that indicate fluent Hindi
+                fluentLanguageCodes: ['hi-IN']
             },
-            'ar': { 
-                name: 'Arabic', 
-                code: 'ar-SA', 
+            'ar': {
+                name: 'Arabic',
+                code: 'ar-SA',
                 voice: 'ar-SA',
+                // Only voices that are proven to speak Arabic fluently
                 preferredVoices: [
                     'Google العربية',
                     'Google العربية (السعودية)',
                     'Microsoft Hoda - Arabic (Egypt)',
                     'Microsoft Naayf - Arabic (Saudi Arabia)'
-                ]
+                ],
+                // Exact language codes that indicate fluent Arabic
+                fluentLanguageCodes: ['ar-SA', 'ar-EG', 'ar-AE', 'ar-LB']
             }
         };
 
@@ -146,7 +176,7 @@ export class AITutor {
             const loadVoices = () => {
                 const voices = this.synthesis.getVoices();
                 console.log('🎤 Available voices:', voices.length);
-                
+
                 // Group voices by language for better debugging
                 const voicesByLang = {};
                 voices.forEach(voice => {
@@ -156,13 +186,13 @@ export class AITutor {
                     }
                     voicesByLang[lang].push(voice);
                 });
-                
+
                 // Log voices grouped by language
                 Object.keys(voicesByLang).forEach(lang => {
-                    console.log(`🎤 ${lang} voices (${voicesByLang[lang].length}):`, 
+                    console.log(`🎤 ${lang} voices (${voicesByLang[lang].length}):`,
                         voicesByLang[lang].map(v => v.name).join(', '));
                 });
-                
+
                 // Test voice selection for current language
                 if (this.currentLanguage) {
                     const currentLang = this.languageMap[this.currentLanguage];
@@ -352,10 +382,10 @@ export class AITutor {
         }
     }
 
-        findBestVoiceForLanguage(voices, languageConfig) {
+    findBestVoiceForLanguage(voices, languageConfig) {
         let selectedVoice = null;
-        
-        // Step 1: Try to find exact preferred voices for this language
+
+        // Step 1: Try to find exact preferred voices for this language (highest quality)
         for (const preferredVoiceName of languageConfig.preferredVoices) {
             selectedVoice = voices.find(voice => voice.name === preferredVoiceName);
             if (selectedVoice) {
@@ -363,63 +393,86 @@ export class AITutor {
                 return selectedVoice;
             }
         }
-        
-        // Step 2: Try to find any voice that matches the language code
-        const languageCode = languageConfig.voice;
-        selectedVoice = voices.find(voice => voice.lang === languageCode);
-        if (selectedVoice) {
-            console.log('🎤 Found exact language match for', languageConfig.name, ':', selectedVoice.name);
-            return selectedVoice;
-        }
-        
-        // Step 3: Try to find any voice that starts with the language code
-        selectedVoice = voices.find(voice => voice.lang.startsWith(languageCode.split('-')[0]));
-        if (selectedVoice) {
-            console.log('🎤 Found language prefix match for', languageConfig.name, ':', selectedVoice.name);
-            return selectedVoice;
-        }
-        
-        // Step 4: For non-English languages, try to find any voice with the language name in the name
-        const languageName = languageConfig.name.toLowerCase();
-        selectedVoice = voices.find(voice => 
-            voice.name.toLowerCase().includes(languageName) ||
-            voice.name.toLowerCase().includes(languageCode.split('-')[0])
-        );
-        if (selectedVoice) {
-            console.log('🎤 Found language name match for', languageConfig.name, ':', selectedVoice.name);
-            return selectedVoice;
-        }
-        
-        // Step 5: Fall back to English voices if no language-specific voice found
-        console.log('🎤 No language-specific voice found for', languageConfig.name, ', falling back to English');
-        const englishConfig = this.languageMap['en'];
-        for (const preferredVoiceName of englishConfig.preferredVoices) {
-            selectedVoice = voices.find(voice => voice.name === preferredVoiceName);
+
+        // Step 2: Try to find voices with exact fluent language codes
+        for (const fluentCode of languageConfig.fluentLanguageCodes) {
+            selectedVoice = voices.find(voice => voice.lang === fluentCode);
             if (selectedVoice) {
-                console.log('🎤 Using English fallback voice:', selectedVoice.name);
+                console.log('🎤 Found fluent language code match for', languageConfig.name, ':', selectedVoice.name, '(', selectedVoice.lang, ')');
                 return selectedVoice;
             }
         }
-        
-        // Step 6: Last resort - use any available voice
-        if (voices.length > 0) {
-            selectedVoice = voices[0];
-            console.log('🎤 Using fallback voice:', selectedVoice.name);
+
+        // Step 3: Try to find voices with exact language code match
+        const languageCode = languageConfig.voice;
+        selectedVoice = voices.find(voice => voice.lang === languageCode);
+        if (selectedVoice) {
+            console.log('🎤 Found exact language match for', languageConfig.name, ':', selectedVoice.name, '(', selectedVoice.lang, ')');
             return selectedVoice;
         }
-        
+
+        // Step 4: For non-English languages, ONLY accept voices that explicitly mention the language
+        if (languageConfig.name !== 'English') {
+            const languageName = languageConfig.name.toLowerCase();
+            const languageCodePrefix = languageCode.split('-')[0];
+            
+            // Look for voices that explicitly mention the language in their name
+            selectedVoice = voices.find(voice => {
+                const voiceName = voice.name.toLowerCase();
+                const voiceLang = voice.lang.toLowerCase();
+                
+                // Must have the language name or code in the voice name
+                const hasLanguageInName = voiceName.includes(languageName) || 
+                                         voiceName.includes(languageCodePrefix) ||
+                                         voiceName.includes(languageCode.toLowerCase());
+                
+                // Must also have a matching language code
+                const hasMatchingLang = voiceLang.startsWith(languageCodePrefix);
+                
+                return hasLanguageInName && hasMatchingLang;
+            });
+            
+            if (selectedVoice) {
+                console.log('🎤 Found explicit language voice for', languageConfig.name, ':', selectedVoice.name, '(', selectedVoice.lang, ')');
+                return selectedVoice;
+            }
+            
+            // If no fluent voice found for non-English language, DO NOT fall back to English
+            // Instead, inform the user that no fluent voice is available
+            console.warn('🎤 No fluent voice available for', languageConfig.name, '- will use text-only mode');
+            return null;
+        }
+
+        // Step 5: For English, fall back to any English voice
+        if (languageConfig.name === 'English') {
+            // Try to find any English voice
+            selectedVoice = voices.find(voice => voice.lang.startsWith('en-'));
+            if (selectedVoice) {
+                console.log('🎤 Found English fallback voice:', selectedVoice.name, '(', selectedVoice.lang, ')');
+                return selectedVoice;
+            }
+        }
+
+        // Step 6: Last resort - only for English, use any available voice
+        if (languageConfig.name === 'English' && voices.length > 0) {
+            selectedVoice = voices[0];
+            console.log('🎤 Using last resort voice for English:', selectedVoice.name, '(', selectedVoice.lang, ')');
+            return selectedVoice;
+        }
+
+        console.warn('🎤 No suitable voice found for', languageConfig.name);
         return null;
     }
 
     changeLanguage(languageCode) {
         this.currentLanguage = languageCode;
         console.log('🌍 Language changed to:', this.languageMap[languageCode].name);
-        
+
         // Update voice recognition language
         if (this.recognition) {
             this.recognition.lang = this.languageMap[languageCode].code;
         }
-        
+
         // If AI is active, send a message to inform about language change
         if (this.isActive) {
             const languageName = this.languageMap[languageCode].name;
@@ -428,6 +481,17 @@ export class AITutor {
     }
 
     toggleVoiceMode() {
+        // Check if a fluent voice is available for the current language
+        const voices = this.synthesis ? this.synthesis.getVoices() : [];
+        const currentLang = this.languageMap[this.currentLanguage];
+        const fluentVoice = this.findBestVoiceForLanguage(voices, currentLang);
+        
+        if (!fluentVoice && this.currentLanguage !== 'en') {
+            // No fluent voice available for this language
+            this.addMessageToChat('system', `Voice mode is not available for ${currentLang.name}. Please switch to English or use text mode for the best experience.`);
+            return; // Don't enable voice mode
+        }
+        
         this.isVoiceMode = !this.isVoiceMode;
         const aiVoiceToggle = document.getElementById('ai-voice-toggle');
         const aiChatVoice = document.getElementById('ai-chat-voice');
@@ -1442,7 +1506,7 @@ export class AITutor {
         if (voiceName) {
             // Use the specified voice
             selectedVoice = voices.find(voice => voice.name === voiceName);
-                } else {
+        } else {
             // Try to find the best voice for the current language
             const currentLang = this.languageMap[this.currentLanguage];
             selectedVoice = this.findBestVoiceForLanguage(voices, currentLang);
@@ -1453,7 +1517,13 @@ export class AITutor {
         // Set voice if found
         if (selectedVoice) {
             utterance.voice = selectedVoice;
-            console.log('🎤 Using voice:', selectedVoice.name);
+            console.log('🎤 Using voice:', selectedVoice.name, 'for', this.languageMap[this.currentLanguage].name);
+        } else {
+            // No fluent voice available for this language
+            console.warn('🎤 No fluent voice available for', this.languageMap[this.currentLanguage].name, '- using text-only mode');
+            // Don't speak - let the user know via text
+            this.addMessageToChat('system', `Voice mode is not available for ${this.languageMap[this.currentLanguage].name}. Please use text mode for the best experience.`);
+            return; // Don't speak
         }
 
         // Set speech parameters
