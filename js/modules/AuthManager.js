@@ -110,7 +110,8 @@ export class AuthManager {
         try {
             console.log('🔍 Frontend sending registration data:', userData);
             console.log('🔍 Backend URL:', this.backendUrl);
-            
+            console.log('🔍 Request body:', JSON.stringify(userData));
+
             const response = await fetch(`${this.backendUrl}/api/auth/register`, {
                 method: 'POST',
                 headers: {
@@ -119,7 +120,11 @@ export class AuthManager {
                 body: JSON.stringify(userData)
             });
 
+            console.log('🔍 Response status:', response.status);
+            console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()));
+
             const data = await response.json();
+            console.log('🔍 Response data:', data);
 
             if (response.ok) {
                 this.setAuth(data.token, data.user);
@@ -130,7 +135,11 @@ export class AuthManager {
                 throw new Error(data.error || 'Registration failed');
             }
         } catch (error) {
-            console.error('Registration error:', error);
+            console.error('🔍 Registration error details:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack
+            });
             this.showNotification(error.message, 'error');
             return { success: false, error: error.message };
         }
@@ -140,7 +149,7 @@ export class AuthManager {
         try {
             console.log('🔍 Frontend sending login data:', credentials);
             console.log('🔍 Backend URL:', this.backendUrl);
-            
+
             const response = await fetch(`${this.backendUrl}/api/auth/login`, {
                 method: 'POST',
                 headers: {
@@ -495,7 +504,11 @@ export class AuthManager {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            console.log('🔍 Form submission started');
+            
             const formData = new FormData(form);
+            console.log('🔍 FormData entries:', Array.from(formData.entries()));
+            
             const userData = {
                 firstName: formData.get('firstName'),
                 lastName: formData.get('lastName'),
@@ -504,6 +517,8 @@ export class AuthManager {
                 organization: formData.get('organization') || null,
                 role: formData.get('role')
             };
+            
+            console.log('🔍 Processed userData:', userData);
 
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
