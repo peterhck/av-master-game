@@ -148,6 +148,23 @@ app.get('/test', (req, res) => {
     });
 });
 
+// Frontend test endpoint
+app.get('/frontend-test', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>Frontend Test</title></head>
+        <body>
+            <h1>Frontend Test Page</h1>
+            <p>If you can see this, the server is serving HTML correctly.</p>
+            <p><a href="/">Try the main frontend</a></p>
+            <p><a href="/health">Health Check</a></p>
+            <p><a href="/test">Backend Test</a></p>
+        </body>
+        </html>
+    `);
+});
+
 // Serve frontend for root path
 app.get('/', (req, res) => {
     const indexPath = path.join(__dirname, '..', 'index.html');
@@ -157,7 +174,7 @@ app.get('/', (req, res) => {
             console.error('❌ Error serving frontend:', err);
             console.log('📂 Current directory:', __dirname);
             console.log('📂 Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
-            
+
             // Fallback HTML response
             res.status(200).send(`
                 <!DOCTYPE html>
