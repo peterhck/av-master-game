@@ -20,24 +20,35 @@ try {
 const { initializeSupabase } = require('./config/supabase');
 const { initializeOpenAI } = require('./config/openai');
 
-// Import routes with error handling
+// Import routes with error handling - only load if environment variables are available
 let authRoutes, aiRoutes, gameRoutes, voiceRoutes, userRoutes;
 let authenticateToken, errorHandler;
 
-try {
-    authRoutes = require('./routes/auth').router;
-    console.log('✅ Auth routes loaded');
-} catch (error) {
-    console.log('⚠️ Auth routes not available:', error.message);
+// Only load auth routes if Supabase environment variables are available
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+        authRoutes = require('./routes/auth').router;
+        console.log('✅ Auth routes loaded');
+    } catch (error) {
+        console.log('⚠️ Auth routes not available:', error.message);
+    }
+} else {
+    console.log('⚠️ Auth routes skipped - missing Supabase environment variables');
 }
 
-try {
-    aiRoutes = require('./routes/ai');
-    console.log('✅ AI routes loaded');
-} catch (error) {
-    console.log('⚠️ AI routes not available:', error.message);
+// Only load AI routes if OpenAI environment variables are available
+if (process.env.OPENAI_API_KEY) {
+    try {
+        aiRoutes = require('./routes/ai');
+        console.log('✅ AI routes loaded');
+    } catch (error) {
+        console.log('⚠️ AI routes not available:', error.message);
+    }
+} else {
+    console.log('⚠️ AI routes skipped - missing OpenAI environment variables');
 }
 
+// Load game routes (these don't require external APIs)
 try {
     gameRoutes = require('./routes/game');
     console.log('✅ Game routes loaded');
@@ -45,6 +56,7 @@ try {
     console.log('⚠️ Game routes not available:', error.message);
 }
 
+// Load voice routes (these don't require external APIs)
 try {
     voiceRoutes = require('./routes/voice');
     console.log('✅ Voice routes loaded');
@@ -52,6 +64,7 @@ try {
     console.log('⚠️ Voice routes not available:', error.message);
 }
 
+// Load user routes (these don't require external APIs)
 try {
     userRoutes = require('./routes/user');
     console.log('✅ User routes loaded');
@@ -89,19 +102,27 @@ const io = new Server(server, {
     }
 });
 
-// Initialize configurations with error handling
-try {
-    initializeSupabase();
-    console.log('✅ Supabase initialized');
-} catch (error) {
-    console.log('⚠️ Supabase initialization failed:', error.message);
+// Initialize configurations only if environment variables are available
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+        initializeSupabase();
+        console.log('✅ Supabase initialized');
+    } catch (error) {
+        console.log('⚠️ Supabase initialization failed:', error.message);
+    }
+} else {
+    console.log('⚠️ Supabase initialization skipped - missing environment variables');
 }
 
-try {
-    initializeOpenAI();
-    console.log('✅ OpenAI initialized');
-} catch (error) {
-    console.log('⚠️ OpenAI initialization failed:', error.message);
+if (process.env.OPENAI_API_KEY) {
+    try {
+        initializeOpenAI();
+        console.log('✅ OpenAI initialized');
+    } catch (error) {
+        console.log('⚠️ OpenAI initialization failed:', error.message);
+    }
+} else {
+    console.log('⚠️ OpenAI initialization skipped - missing environment variables');
 }
 
 // CORS configuration - MUST BE FIRST
