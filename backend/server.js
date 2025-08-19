@@ -127,16 +127,30 @@ if (process.env.OPENAI_API_KEY) {
 
 // CORS configuration - MUST BE FIRST
 app.use(cors({
-    origin: [
-        'https://av-master-frontend-production.up.railway.app',
-        'http://localhost:8080',
-        'http://localhost:3000',
-        'http://localhost:5173'
-    ],
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            'https://av-master-frontend-production.up.railway.app',
+            'http://localhost:8080',
+            'http://localhost:3000',
+            'http://localhost:5173'
+        ];
+
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log('🚫 CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
-    exposedHeaders: ['Content-Length', 'X-Requested-With']
+    exposedHeaders: ['Content-Length', 'X-Requested-With'],
+    preflightContinue: false,
+    optionsSuccessStatus: 200
 }));
 
 // Handle CORS preflight requests
@@ -148,20 +162,12 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false
 }));
 
-// Manual CORS headers as backup
+// Manual CORS headers as backup (simplified)
 app.use((req, res, next) => {
-    const allowedOrigins = [
-        'https://av-master-frontend-production.up.railway.app',
-        'http://localhost:8080',
-        'http://localhost:3000',
-        'http://localhost:5173'
-    ];
-
     const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
+    if (origin) {
         res.header('Access-Control-Allow-Origin', origin);
     }
-
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -171,6 +177,16 @@ app.use((req, res, next) => {
     } else {
         next();
     }
+});
+
+// CORS test endpoint
+app.get('/api/cors-test', (req, res) => {
+    console.log('🧪 CORS test request from:', req.headers.origin);
+    res.json({
+        message: 'CORS test successful',
+        origin: req.headers.origin,
+        timestamp: new Date().toISOString()
+    });
 });
 
 // Log CORS requests for debugging
