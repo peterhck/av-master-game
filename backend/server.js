@@ -155,10 +155,31 @@ app.get('/', (req, res) => {
     res.sendFile(indexPath, (err) => {
         if (err) {
             console.error('❌ Error serving frontend:', err);
-            res.status(500).json({
-                error: 'Frontend not available',
-                message: err.message
-            });
+            console.log('📂 Current directory:', __dirname);
+            console.log('📂 Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
+            
+            // Fallback HTML response
+            res.status(200).send(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>AV Master Game</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .error { color: red; }
+                        .success { color: green; }
+                    </style>
+                </head>
+                <body>
+                    <h1>AV Master Game</h1>
+                    <p class="error">Frontend files not found at: ${indexPath}</p>
+                    <p>Backend is running successfully!</p>
+                    <p><a href="/health">Health Check</a></p>
+                    <p><a href="/test">Test Endpoint</a></p>
+                    <p><a href="/cors-test">CORS Test</a></p>
+                </body>
+                </html>
+            `);
         } else {
             console.log('✅ Frontend served successfully');
         }

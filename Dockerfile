@@ -18,6 +18,14 @@ RUN cd backend && node -e "require('express'); console.log('Express is installed
 # Copy application files
 COPY . .
 
+# Verify frontend files are copied
+RUN ls -la /app/
+RUN ls -la /app/backend/
+RUN echo "Checking for index.html..."
+RUN if [ -f /app/index.html ]; then echo "✅ index.html found"; else echo "❌ index.html not found"; fi
+RUN if [ -f /app/styles.css ]; then echo "✅ styles.css found"; else echo "❌ styles.css not found"; fi
+RUN if [ -d /app/js ]; then echo "✅ js directory found"; else echo "❌ js directory not found"; fi
+
 # Make startup scripts executable
 RUN chmod +x start.sh start-test.sh start-minimal.sh
 
