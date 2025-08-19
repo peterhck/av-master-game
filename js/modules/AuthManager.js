@@ -93,30 +93,30 @@ export class AuthManager {
     async validateToken() {
         try {
             const response = await fetch(`${this.backendUrl}/api/auth/profile`, {
-                headers: {
-                    'Authorization': `Bearer ${this.token}`
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                this.currentUser = data.user;
-                this.isAuthenticated = true;
-                this.updateUI();
-                console.log('✅ Token validated, user authenticated');
-            } else {
-                this.clearAuth();
-                console.log('❌ Token invalid, cleared auth');
+            headers: {
+                'Authorization': `Bearer ${this.token}`
             }
-        } catch (error) {
-            console.error('Token validation error:', error);
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            this.currentUser = data.user;
+            this.isAuthenticated = true;
+            this.updateUI();
+            console.log('✅ Token validated, user authenticated');
+        } else {
             this.clearAuth();
+            console.log('❌ Token invalid, cleared auth');
         }
+    } catch (error) {
+        console.error('Token validation error:', error);
+        this.clearAuth();
     }
+}
 
     async register(userData) {
-        try {
-            const response = await fetch(`${this.backendUrl}/api/auth/register`, {
+    try {
+        const response = await fetch(`${this.backendUrl}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
