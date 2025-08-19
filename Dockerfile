@@ -27,7 +27,7 @@ RUN if [ -f /app/styles.css ]; then echo "✅ styles.css found"; else echo "❌ 
 RUN if [ -d /app/js ]; then echo "✅ js directory found"; else echo "❌ js directory not found"; fi
 
 # Make startup scripts executable
-RUN chmod +x start.sh start-test.sh start-minimal.sh
+RUN chmod +x start.sh start-test.sh start-minimal.sh start-debug.sh
 
 # Create production environment file
 RUN echo "NODE_ENV=production" > backend/.env.production
@@ -39,5 +39,5 @@ EXPOSE $PORT
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:3001/health || exit 1
 
-# Start the backend API server only
-CMD ["npm", "run", "start:backend"]
+# Start with debug script to identify issues
+CMD ["./start-debug.sh"]
