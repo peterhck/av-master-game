@@ -24,7 +24,7 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
     const indexPath = path.join(__dirname, '..', 'index.html');
     console.log('🌐 Trying to serve:', indexPath);
-    
+
     const fs = require('fs');
     if (fs.existsSync(indexPath)) {
         console.log('✅ index.html exists');
