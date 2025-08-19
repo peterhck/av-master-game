@@ -3,7 +3,7 @@
 
 // Configuration object
 const config = {
-    BACKEND_URL: 'https://av-master-game-production.up.railway.app',
+    BACKEND_URL: 'https://wcllmsgames-backend-production.up.railway.app',
     NODE_ENV: 'production',
     CORS_ORIGIN: '*'
 };
