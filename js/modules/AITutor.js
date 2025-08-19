@@ -10,7 +10,7 @@ export class AITutor {
         this.currentEquipment = null;
         this.chatHistory = [];
         this.currentConversationId = null;
-        this.backendUrl = 'http://localhost:3001';
+        this.backendUrl = ''; // Use relative URLs for production
         this.linkPreviewQueue = []; // Queue for link preview requests
         this.isProcessingLinkPreview = false;
 
@@ -478,7 +478,7 @@ export class AITutor {
     }
 
     async callBackendAPI(userMessage) {
-        const backendUrl = this.backendUrl || 'http://localhost:3001'; // Backend API URL
+        const backendUrl = this.backendUrl || ''; // Backend API URL
         console.log('🤖 Attempting to call backend API...');
 
         try {
@@ -541,7 +541,7 @@ export class AITutor {
     }
 
     async callWebSearchAPI(userMessage) {
-        const backendUrl = this.backendUrl || 'http://localhost:3001'; // Backend API URL
+        const backendUrl = this.backendUrl || ''; // Backend API URL
         console.log('🌐 Attempting web search with GPT-5...');
 
         try {
@@ -604,7 +604,7 @@ export class AITutor {
     }
 
     async callPricingSearchAPI(userMessage) {
-        const backendUrl = this.backendUrl || 'http://localhost:3001'; // Backend API URL
+        const backendUrl = this.backendUrl || ''; // Backend API URL
         console.log('💰 Attempting pricing search...');
 
         try {
@@ -979,7 +979,7 @@ export class AITutor {
     }
 
     createWebContentSection(urls) {
-        const backendUrl = this.backendUrl || 'http://localhost:3001';
+        const backendUrl = this.backendUrl || '';
         const itemsHtml = urls.map((url) => {
             const domain = this.getDomainFromUrl(url);
             const isImage = this.isImageUrl(url);
@@ -1358,7 +1358,7 @@ export class AITutor {
     async testLinkPreview() {
         console.log('Testing link preview functionality...');
         const testUrl = 'https://www.amazon.com';
-        const backendUrl = this.backendUrl || 'http://localhost:3001';
+        const backendUrl = this.backendUrl || '';
 
         try {
             console.log('Testing backend health...');

@@ -180,6 +180,14 @@ server.listen(PORT, () => {
     console.log(`🌐 Frontend: http://localhost:${PORT}/`);
     console.log(`📁 Static path: ${path.join(__dirname, '..')}`);
     console.log(`📄 Index path: ${path.join(__dirname, '..', 'index.html')}`);
+    
+    // Log the actual Railway URL if available
+    if (process.env.RAILWAY_STATIC_URL) {
+        console.log(`🚂 Railway URL: ${process.env.RAILWAY_STATIC_URL}`);
+    }
+    if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+        console.log(`🌍 Public Domain: https://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
+    }
 });
 
 // Graceful shutdown

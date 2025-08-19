@@ -3,7 +3,7 @@
 
 export class AuthManager {
     constructor() {
-        this.backendUrl = 'http://localhost:3001';
+        this.backendUrl = ''; // Use relative URLs for production
         this.currentUser = null;
         this.token = localStorage.getItem('auth_token');
         this.isAuthenticated = false;
