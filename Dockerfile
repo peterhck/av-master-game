@@ -1,5 +1,5 @@
-# Use Node.js 20 LTS as base image
-FROM node:20-alpine
+# Use Node.js 18 LTS as base image
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
@@ -9,8 +9,11 @@ COPY package*.json ./
 COPY backend/package*.json ./backend/
 
 # Install dependencies
-RUN npm install
-RUN cd backend && npm install
+RUN npm install --production=false
+RUN cd backend && npm install --production=false
+
+# Verify express is installed
+RUN cd backend && node -e "require('express'); console.log('Express is installed successfully')"
 
 # Copy application files
 COPY . .
