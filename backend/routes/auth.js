@@ -18,6 +18,36 @@ router.get('/health', (req, res) => {
     });
 });
 
+// Test database connection
+router.get('/test-db', async (req, res) => {
+    try {
+        // Test basic Supabase connection
+        const { data, error } = await supabase
+            .from('users')
+            .select('count')
+            .limit(1);
+        
+        if (error) {
+            return res.status(500).json({
+                error: 'Database connection failed',
+                details: error.message,
+                code: error.code
+            });
+        }
+        
+        res.json({
+            status: 'OK',
+            message: 'Database connection successful',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Database test failed',
+            details: error.message
+        });
+    }
+});
+
 // Initialize Supabase client
 const supabase = createClient(
     process.env.SUPABASE_URL,
