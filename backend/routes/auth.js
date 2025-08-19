@@ -8,6 +8,16 @@ const logger = require('../utils/logger');
 
 const router = express.Router();
 
+// Health check endpoint
+router.get('/health', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'Auth service is running',
+        timestamp: new Date().toISOString(),
+        supabase: process.env.SUPABASE_URL ? 'configured' : 'not configured'
+    });
+});
+
 // Initialize Supabase client
 const supabase = createClient(
     process.env.SUPABASE_URL,
