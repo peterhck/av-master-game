@@ -3,7 +3,7 @@
 
 export class AuthManager {
     constructor() {
-        this.backendUrl = window.AV_CONFIG ? window.AV_CONFIG.backendUrl : 'http://localhost:3001';
+        this.backendUrl = ''; // Use relative URLs since frontend and backend are on same domain
         this.currentUser = null;
         this.token = localStorage.getItem('auth_token');
         this.isAuthenticated = false;

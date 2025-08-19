@@ -61,7 +61,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
-    
+
     if (req.method === 'OPTIONS') {
         res.sendStatus(200);
     } else {
@@ -96,6 +96,9 @@ app.use('/api/', limiter);
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files from the parent directory (frontend files)
+app.use(express.static(path.join(__dirname, '..')));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -194,12 +197,18 @@ io.on('connection', (socket) => {
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-// 404 handler for API routes
+// Serve the main HTML file for all non-API routes (SPA routing)
 app.use('*', (req, res) => {
-    res.status(404).json({
-        error: 'API endpoint not found',
-        message: 'This is the backend API server. Frontend is served separately.',
-        path: req.originalUrl
+    const indexPath = path.join(__dirname, '..', 'index.html');
+    res.sendFile(indexPath, (err) => {
+        if (err) {
+            console.error('Error serving index.html:', err);
+            res.status(404).json({
+                error: 'Frontend not available',
+                message: 'index.html not found',
+                path: req.originalUrl
+            });
+        }
     });
 });
 
