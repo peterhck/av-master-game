@@ -4,32 +4,40 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy frontend package files
-COPY frontend/package*.json ./frontend/
+# Copy package files
+COPY package*.json ./
+COPY backend/package*.json ./backend/
 
-# Install frontend dependencies
-RUN cd frontend && npm install --production=false
+# Install dependencies
+RUN npm install --production=false
+RUN cd backend && npm install --production=false
+
+# Verify express is installed
+RUN cd backend && node -e "require('express'); console.log('Express is installed successfully')"
 
 # Copy application files
 COPY . .
 
 # Verify frontend files are copied
 RUN ls -la /app/
+RUN ls -la /app/backend/
 RUN echo "Checking for index.html..."
 RUN if [ -f /app/index.html ]; then echo "✅ index.html found"; else echo "❌ index.html not found"; fi
 RUN if [ -f /app/styles.css ]; then echo "✅ styles.css found"; else echo "❌ styles.css not found"; fi
 RUN if [ -d /app/js ]; then echo "✅ js directory found"; else echo "❌ js directory not found"; fi
 
+# Make startup scripts executable
+RUN chmod +x start.sh start-test.sh start-minimal.sh start-debug.sh
+
 # Create production environment file
-RUN echo "NODE_ENV=production" > frontend/.env.production
+RUN echo "NODE_ENV=production" > backend/.env.production
 
 # Expose ports
 EXPOSE $PORT
 
-# Health check
+# Health check - more lenient for Railway
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=5 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost:3001/health || exit 1
 
-# Start the frontend server
-WORKDIR /app/frontend
-CMD ["node", "server.js"]
+# Start the backend server
+CMD ["npm", "start"]
