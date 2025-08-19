@@ -127,24 +127,7 @@ if (process.env.OPENAI_API_KEY) {
 
 // CORS configuration - MUST BE FIRST
 app.use(cors({
-    origin: function (origin, callback) {
-        const allowedOrigins = [
-            'https://av-master-frontend-production.up.railway.app',
-            'http://localhost:8080',
-            'http://localhost:3000',
-            'http://localhost:5173'
-        ];
-
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            console.log('🚫 CORS blocked origin:', origin);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: true, // Allow all origins temporarily for debugging
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
@@ -184,6 +167,17 @@ app.get('/api/cors-test', (req, res) => {
     console.log('🧪 CORS test request from:', req.headers.origin);
     res.json({
         message: 'CORS test successful',
+        origin: req.headers.origin,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Simple health check endpoint
+app.get('/api/health', (req, res) => {
+    console.log('🏥 Health check request from:', req.headers.origin);
+    res.json({
+        status: 'OK',
+        message: 'Backend is running',
         origin: req.headers.origin,
         timestamp: new Date().toISOString()
     });
