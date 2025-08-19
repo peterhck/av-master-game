@@ -85,6 +85,15 @@ app.get('/health', (req, res) => {
     });
 });
 
+// Simple health check for Railway
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        message: 'AV Master Game Backend is running',
+        timestamp: new Date().toISOString()
+    });
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes); // Remove authentication for testing
