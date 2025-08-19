@@ -36,16 +36,29 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     console.log('⚠️ Auth routes skipped - missing Supabase environment variables');
 }
 
-// Only load AI routes if OpenAI environment variables are available
-if (process.env.OPENAI_API_KEY) {
-    try {
-        aiRoutes = require('./routes/ai');
-        console.log('✅ AI routes loaded');
-    } catch (error) {
-        console.log('⚠️ AI routes not available:', error.message);
-    }
-} else {
-    console.log('⚠️ AI routes skipped - missing OpenAI environment variables');
+// Load AI routes (with fallback if OpenAI not available)
+try {
+    aiRoutes = require('./routes/ai');
+    console.log('✅ AI routes loaded');
+} catch (error) {
+    console.log('⚠️ AI routes not available:', error.message);
+    // Create fallback AI routes
+    aiRoutes = require('express').Router();
+    aiRoutes.post('/conversation/start', (req, res) => {
+        res.status(503).json({
+            error: 'AI service unavailable',
+            message: 'OpenAI API key not configured',
+            timestamp: new Date().toISOString()
+        });
+    });
+    aiRoutes.post('/conversation/message', (req, res) => {
+        res.status(503).json({
+            error: 'AI service unavailable',
+            message: 'OpenAI API key not configured',
+            timestamp: new Date().toISOString()
+        });
+    });
+    console.log('✅ Fallback AI routes created');
 }
 
 // Load game routes (these don't require external APIs)
