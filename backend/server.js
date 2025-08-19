@@ -398,19 +398,17 @@ app.use('*', (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 
-// Add a small delay to ensure all modules are loaded
-setTimeout(() => {
-    server.listen(PORT, () => {
-        logger.info(`🚀 AV Master Backend Server running on port ${PORT}`);
-        logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
-        logger.info(`🔗 Health check: http://localhost:${PORT}/health`);
-        console.log(`🚀 Server started successfully on port ${PORT}`);
-    }).on('error', (error) => {
-        console.error('❌ Server failed to start:', error);
-        logger.error(`Server failed to start: ${error.message}`);
-        process.exit(1);
-    });
-}, 1000);
+// Start server immediately
+server.listen(PORT, () => {
+    logger.info(`🚀 AV Master Backend Server running on port ${PORT}`);
+    logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
+    logger.info(`🔗 Health check: http://localhost:${PORT}/health`);
+    console.log(`🚀 Server started successfully on port ${PORT}`);
+}).on('error', (error) => {
+    console.error('❌ Server failed to start:', error);
+    logger.error(`Server failed to start: ${error.message}`);
+    process.exit(1);
+});
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
