@@ -343,6 +343,47 @@ router.get('/test-specific-user', async (req, res) => {
     }
 });
 
+// Check if specific email exists in Supabase Auth
+router.get('/check-email/:email', async (req, res) => {
+    try {
+        const email = req.params.email;
+        console.log('Checking if email exists in Supabase Auth:', email);
+        
+        // List all users and search for the email
+        const { data: users, error: listError } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1000 });
+        
+        if (listError) {
+            return res.status(500).json({
+                error: 'Failed to list users',
+                details: listError.message,
+                code: listError.code
+            });
+        }
+        
+        const existingUser = users.users.find(user => user.email === email);
+        
+        res.json({
+            status: 'OK',
+            email: email,
+            exists: !!existingUser,
+            userCount: users.users.length,
+            existingUser: existingUser ? {
+                id: existingUser.id,
+                email: existingUser.email,
+                created_at: existingUser.created_at,
+                email_confirmed_at: existingUser.email_confirmed_at,
+                user_metadata: existingUser.user_metadata
+            } : null,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Email check failed',
+            details: error.message
+        });
+    }
+});
+
 // Test database constraints and triggers
 router.get('/test-db-constraints', async (req, res) => {
     try {
@@ -503,26 +544,32 @@ router.post('/register', [
 
         // Check if user already exists in Supabase Auth
         console.log('Checking if user already exists:', email);
-        const { data: existingAuthUser, error: checkError } = await supabase.auth.admin.listUsers({
-            page: 1,
-            perPage: 1000
-        });
-
-        if (checkError) {
-            console.error('Error checking existing users:', checkError);
-            return res.status(500).json({
-                error: 'Failed to check existing users',
-                details: checkError.message
+        
+        try {
+            const { data: existingAuthUser, error: checkError } = await supabase.auth.admin.listUsers({
+                page: 1,
+                perPage: 1000
             });
-        }
 
-        const userExists = existingAuthUser.users?.some(user => user.email === email);
-        if (userExists) {
-            console.log('User already exists:', email);
-            return res.status(400).json({
-                error: 'User already exists',
-                message: 'A user with this email already exists'
-            });
+            if (checkError) {
+                console.error('Error checking existing users:', checkError);
+                return res.status(500).json({
+                    error: 'Failed to check existing users',
+                    details: checkError.message
+                });
+            }
+
+            const userExists = existingAuthUser.users?.some(user => user.email === email);
+            if (userExists) {
+                console.log('User already exists:', email);
+                return res.status(400).json({
+                    error: 'User already exists',
+                    message: 'A user with this email already exists'
+                });
+            }
+        } catch (error) {
+            console.error('Exception during user existence check:', error);
+            // Continue with registration attempt - let Supabase handle the duplicate error
         }
 
         console.log('User does not exist, proceeding with creation');
@@ -567,11 +614,16 @@ router.post('/register', [
             });
             logger.error('Error creating auth user:', authError);
 
-            // Check if it's a duplicate email error
-            if (authError.message && authError.message.includes('duplicate')) {
+            // Check if it's a duplicate email error (multiple patterns)
+            if (authError.message && (
+                authError.message.includes('duplicate') ||
+                authError.message.includes('already exists') ||
+                authError.message.includes('already registered') ||
+                authError.code === 'unexpected_failure'
+            )) {
                 return res.status(400).json({
                     error: 'User already exists',
-                    message: 'A user with this email already exists'
+                    message: 'A user with this email already exists. Please try logging in instead.'
                 });
             }
 
