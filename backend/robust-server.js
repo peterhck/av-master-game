@@ -43,6 +43,16 @@ app.use(express.static(path.join(__dirname, '..')));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+    const fs = require('fs');
+    const parentDir = path.join(__dirname, '..');
+    let parentDirContents = [];
+    
+    try {
+        parentDirContents = fs.readdirSync(parentDir);
+    } catch (error) {
+        console.error('Error reading parent directory:', error);
+    }
+    
     res.status(200).json({
         status: 'OK',
         message: 'AV Master Game Backend is running',
@@ -53,6 +63,12 @@ app.get('/health', (req, res) => {
             supabase: !!process.env.SUPABASE_URL,
             openai: !!process.env.OPENAI_API_KEY,
             jwt: !!process.env.JWT_SECRET
+        },
+        files: {
+            currentDir: __dirname,
+            parentDir: parentDir,
+            parentDirContents: parentDirContents,
+            indexHtmlExists: fs.existsSync(path.join(parentDir, 'index.html'))
         }
     });
 });
@@ -60,17 +76,36 @@ app.get('/health', (req, res) => {
 // Serve the main HTML file for root
 app.get('/', (req, res) => {
     const indexPath = path.join(__dirname, '..', 'index.html');
-    console.log('Serving index.html from:', indexPath);
+    console.log('🌐 Request for root path (/)');
+    console.log('📁 Attempting to serve index.html from:', indexPath);
+    
+    // Check if file exists
+    const fs = require('fs');
+    if (!fs.existsSync(indexPath)) {
+        console.error('❌ index.html file not found at:', indexPath);
+        console.log('📂 Current directory:', __dirname);
+        console.log('📂 Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
+        
+        return res.status(500).json({
+            error: 'Frontend file not found',
+            message: 'index.html not found in expected location',
+            path: indexPath,
+            currentDir: __dirname,
+            parentDirContents: fs.readdirSync(path.join(__dirname, '..'))
+        });
+    }
+    
+    console.log('✅ index.html file found, serving...');
     res.sendFile(indexPath, (err) => {
         if (err) {
-            console.error('Error serving index.html:', err);
+            console.error('❌ Error serving index.html:', err);
             res.status(500).json({
                 error: 'Failed to serve frontend',
-                message: 'Frontend files not found or inaccessible',
+                message: err.message,
                 path: indexPath
             });
         } else {
-            console.log('Successfully served index.html');
+            console.log('✅ Successfully served index.html');
         }
     });
 });
@@ -157,16 +192,37 @@ io.on('connection', (socket) => {
     });
 });
 
+// Test endpoint to verify server is working
+app.get('/test', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>AV Master Test</title></head>
+        <body>
+            <h1>AV Master Backend is Working!</h1>
+            <p>Server is running and serving HTML correctly.</p>
+            <p>Current time: ${new Date().toISOString()}</p>
+            <p><a href="/">Try the main frontend</a></p>
+            <p><a href="/health">Check health endpoint</a></p>
+        </body>
+        </html>
+    `);
+});
+
 // Serve the main HTML file for all non-API routes (SPA routing)
 app.use('*', (req, res) => {
     const indexPath = path.join(__dirname, '..', 'index.html');
+    console.log('🔄 SPA route requested:', req.originalUrl);
     res.sendFile(indexPath, (err) => {
         if (err) {
-            console.error('Error serving index.html for SPA route:', err);
+            console.error('❌ Error serving index.html for SPA route:', err);
             res.status(404).json({
                 error: 'Route not found',
-                message: 'Frontend not available'
+                message: 'Frontend not available',
+                requestedUrl: req.originalUrl
             });
+        } else {
+            console.log('✅ SPA route served successfully');
         }
     });
 });
@@ -180,7 +236,7 @@ server.listen(PORT, () => {
     console.log(`🌐 Frontend: http://localhost:${PORT}/`);
     console.log(`📁 Static path: ${path.join(__dirname, '..')}`);
     console.log(`📄 Index path: ${path.join(__dirname, '..', 'index.html')}`);
-    
+
     // Log the actual Railway URL if available
     if (process.env.RAILWAY_STATIC_URL) {
         console.log(`🚂 Railway URL: ${process.env.RAILWAY_STATIC_URL}`);
