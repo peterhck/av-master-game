@@ -28,5 +28,5 @@ EXPOSE $PORT
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:3001/health || exit 1
 
-# Start the test static server
-CMD ["node", "backend/test-static.js"]
+# Start the simple server with static files
+CMD ["node", "backend/simple-server.js"]
