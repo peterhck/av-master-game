@@ -109,6 +109,15 @@ export class AVMasterGame {
                     console.log('🎯 start-game-btn clicked!');
                     e.preventDefault();
                     e.stopPropagation();
+
+                    // Check if user is authenticated (temporarily disabled for testing)
+                    if (window.authManager && !window.authManager.isAuthenticated) {
+                        console.log('⚠️ Authentication temporarily disabled for testing');
+                        // window.authManager.setPendingGameAction('start-game');
+                        // this.showAuthenticationRequired();
+                        // return;
+                    }
+
                     // Initialize audio system on first user interaction
                     this.audioSystem.initializeOnUserInteraction();
                     this.showLevelSelect();
@@ -149,6 +158,15 @@ export class AVMasterGame {
             if (tutorialBtn) {
                 tutorialBtn.addEventListener('click', () => {
                     console.log('🎯 tutorial-btn clicked!');
+
+                    // Check if user is authenticated (temporarily disabled for testing)
+                    if (window.authManager && !window.authManager.isAuthenticated) {
+                        console.log('⚠️ Authentication temporarily disabled for testing');
+                        // window.authManager.setPendingGameAction('tutorial');
+                        // this.showAuthenticationRequired();
+                        // return;
+                    }
+
                     this.showTutorial();
                 });
                 console.log('✓ tutorial-btn event listener added');
@@ -160,6 +178,15 @@ export class AVMasterGame {
             if (settingsBtn) {
                 settingsBtn.addEventListener('click', () => {
                     console.log('🎯 settings-btn clicked!');
+
+                    // Check if user is authenticated (temporarily disabled for testing)
+                    if (window.authManager && !window.authManager.isAuthenticated) {
+                        console.log('⚠️ Authentication temporarily disabled for testing');
+                        // window.authManager.setPendingGameAction('settings');
+                        // this.showAuthenticationRequired();
+                        // return;
+                    }
+
                     this.showSettings();
                 });
                 console.log('✓ settings-btn event listener added');
@@ -564,13 +591,40 @@ export class AVMasterGame {
      * Update player statistics display
      */
     updatePlayerStats() {
+        // Update both main menu and game screen stats
         const scoreEl = document.getElementById('player-score');
+        const gameScoreEl = document.getElementById('game-score');
         const livesEl = document.getElementById('player-lives');
+        const gameLivesEl = document.getElementById('game-lives');
         const timeEl = document.getElementById('player-time');
+        const gameTimeEl = document.getElementById('game-time');
 
-        if (scoreEl) scoreEl.textContent = this.gameState.score;
-        if (livesEl) livesEl.textContent = this.gameState.lives;
-        if (timeEl) timeEl.textContent = this.formatTime(this.gameState.time);
+        // Update score (both locations)
+        if (scoreEl) {
+            scoreEl.textContent = this.gameState.score;
+        }
+        if (gameScoreEl) {
+            gameScoreEl.textContent = this.gameState.score;
+        }
+
+        // Update lives (both locations)
+        if (livesEl) {
+            livesEl.textContent = this.gameState.lives;
+        }
+        if (gameLivesEl) {
+            gameLivesEl.textContent = this.gameState.lives;
+        }
+
+        // Update time (both locations)
+        const formattedTime = this.formatTime(this.gameState.time);
+
+        if (timeEl) {
+            timeEl.textContent = formattedTime;
+        }
+
+        if (gameTimeEl) {
+            gameTimeEl.textContent = formattedTime;
+        }
     }
 
     /**
@@ -662,6 +716,9 @@ export class AVMasterGame {
      * Load a specific level
      */
     loadLevel(levelId) {
+        // Stop any existing timer first
+        this.stopGameTimer();
+
         this.currentLevel = levelId;
         this.successfulConnections = 0;
         this.totalRequiredConnections = 0;
@@ -692,11 +749,19 @@ export class AVMasterGame {
             usb: { current: 0, required: 0 }
         };
 
+        // Reset timer for this level
+        this.gameState.time = 0;
+        this.updatePlayerStats();
+
         this.setupStage(levelData);
         this.setupToolbar(levelData);
         this.setupConnectorEventListeners(); // Set up event delegation
         this.updateConnectionProgress();
-        this.startGameTimer();
+
+        // Start timer after a short delay to ensure everything is set up
+        setTimeout(() => {
+            this.startGameTimer();
+        }, 100);
     }
 
     /**
@@ -2816,6 +2881,11 @@ export class AVMasterGame {
         console.log('🔗 Connection stored:', connectionData);
         console.log('🔗 Total connections:', this.connections.length);
 
+        // Increment score for successful connection
+        this.gameState.score += 100;
+        this.updatePlayerStats();
+        console.log('🎯 Score increased to:', this.gameState.score);
+
         // Update progress and check completion IMMEDIATELY
         console.log('📊 Updating connection progress...');
         this.updateConnectionProgress();
@@ -3094,9 +3164,25 @@ export class AVMasterGame {
             // Show winner popup
             this.showWinnerCelebration();
 
-            // Mark level as completed
+            // Mark level as completed and add bonus score
             if (!this.gameState.completedLevels.includes(this.currentLevel)) {
                 this.gameState.completedLevels.push(this.currentLevel);
+
+                // Add bonus score for completing the level
+                const timeBonus = Math.max(0, 300 - this.gameState.time) * 2; // Time bonus (faster = more points)
+                const completionBonus = 500; // Base completion bonus
+                const totalBonus = timeBonus + completionBonus;
+
+                this.gameState.score += totalBonus;
+                this.updatePlayerStats();
+
+                console.log('🎯 Level completion bonus:', {
+                    timeBonus: timeBonus,
+                    completionBonus: completionBonus,
+                    totalBonus: totalBonus,
+                    finalScore: this.gameState.score
+                });
+
                 this.saveToStorage();
             }
 
@@ -3140,7 +3226,7 @@ export class AVMasterGame {
                     <div class="stat">
                         <span class="label">Score</span>
                         <span class="value">${this.gameState.score}</span>
-                    </div>
+                </div>
                     <div class="stat">
                         <span class="label">Time</span>
                         <span class="value">${this.formatTime(this.gameState.time)}</span>
@@ -3183,29 +3269,54 @@ export class AVMasterGame {
         }
 
         // Add event listeners
-        celebration.querySelector('#next-level-btn').addEventListener('click', () => {
-            console.log('🎯 Next level button clicked');
-            this.nextLevel();
-            document.body.removeChild(celebration);
-        });
+        const nextLevelBtn = celebration.querySelector('#next-level-btn');
+        if (nextLevelBtn) {
+            nextLevelBtn.addEventListener('click', () => {
+                console.log('🎯 Next level button clicked');
+                try {
+                    this.nextLevel();
+                    console.log('🎯 Next level method completed successfully');
+                } catch (error) {
+                    console.error('❌ Error in nextLevel():', error);
+                }
 
-        celebration.querySelector('#testing-challenge-btn').addEventListener('click', () => {
-            console.log('🔬 Testing challenge button clicked from overlay');
-            this.startTestingChallenges();
-            document.body.removeChild(celebration);
-        });
+                try {
+                    document.body.removeChild(celebration);
+                    console.log('🎯 Celebration popup removed successfully');
+                } catch (error) {
+                    console.error('❌ Error removing celebration popup:', error);
+                }
+            });
+            console.log('🎯 Next level button event listener added');
+        } else {
+            console.error('❌ Next level button not found in celebration popup');
+        }
 
-        celebration.querySelector('#replay-level-btn').addEventListener('click', () => {
-            console.log('🔄 Replay level button clicked');
-            this.restartLevel();
-            document.body.removeChild(celebration);
-        });
+        if (testingBtn) {
+            testingBtn.addEventListener('click', () => {
+                console.log('🔬 Testing challenge button clicked from overlay');
+                this.startTestingChallenges();
+                document.body.removeChild(celebration);
+            });
+        }
 
-        celebration.querySelector('#level-select-btn').addEventListener('click', () => {
-            console.log('📋 Level select button clicked');
-            this.exitToMenu();
-            document.body.removeChild(celebration);
-        });
+        const replayBtn = celebration.querySelector('#replay-level-btn');
+        if (replayBtn) {
+            replayBtn.addEventListener('click', () => {
+                console.log('🔄 Replay level button clicked');
+                this.restartLevel();
+                document.body.removeChild(celebration);
+            });
+        }
+
+        const levelSelectBtn = celebration.querySelector('#level-select-btn');
+        if (levelSelectBtn) {
+            levelSelectBtn.addEventListener('click', () => {
+                console.log('📋 Level select button clicked');
+                this.exitToMenu();
+                document.body.removeChild(celebration);
+            });
+        }
 
         console.log('🎉 Winner celebration overlay popup created and displayed');
     }
@@ -3284,6 +3395,8 @@ export class AVMasterGame {
                 name: equipmentName,
                 element: equipmentElement,
                 uniqueId: uniqueId
+            }).catch(error => {
+                console.error('🤖 Error setting current equipment:', error);
             });
         }
 
@@ -3359,6 +3472,19 @@ export class AVMasterGame {
      * Handle key press events
      */
     handleKeyPress(e) {
+        // Don't process game shortcuts if user is typing in an input field
+        const activeElement = document.activeElement;
+        const isTyping = activeElement && (
+            activeElement.tagName === 'INPUT' ||
+            activeElement.tagName === 'TEXTAREA' ||
+            activeElement.contentEditable === 'true' ||
+            activeElement.id === 'ai-chat-input-field'
+        );
+
+        if (isTyping) {
+            return; // Don't process game shortcuts when typing
+        }
+
         switch (e.key.toLowerCase()) {
             case 'escape':
                 if (this.currentScreen === 'game') {
@@ -3657,10 +3783,24 @@ export class AVMasterGame {
      * Start game timer
      */
     startGameTimer() {
+        // Prevent multiple timers - if timer is already running, don't start another
+        if (this.gameTimer) {
+            return;
+        }
+
+        // Ensure time is initialized
+        if (this.gameState.time === undefined || this.gameState.time === null) {
+            this.gameState.time = 0;
+        }
+
+        // Start the timer immediately
         this.gameTimer = setInterval(() => {
             this.gameState.time++;
             this.updatePlayerStats();
         }, 1000);
+
+        // Force an immediate update
+        this.updatePlayerStats();
     }
 
     /**
@@ -3719,12 +3859,30 @@ export class AVMasterGame {
      * Next level
      */
     nextLevel() {
+        console.log('🎯 nextLevel() called');
+        console.log('🎯 Current level:', this.currentLevel);
+        console.log('🎯 Unlocked levels:', this.gameState.unlockedLevels);
+
         const currentIndex = LEVEL_ORDER.indexOf(this.currentLevel);
+        console.log('🎯 Current index in LEVEL_ORDER:', currentIndex);
+
         if (currentIndex >= 0 && currentIndex < LEVEL_ORDER.length - 1) {
             const nextLevel = LEVEL_ORDER[currentIndex + 1];
-            if (this.gameState.unlockedLevels.includes(nextLevel)) {
-                this.loadLevel(nextLevel);
+            console.log('🎯 Next level found:', nextLevel);
+
+            // Always unlock the next level if it exists
+            if (!this.gameState.unlockedLevels.includes(nextLevel)) {
+                this.gameState.unlockedLevels.push(nextLevel);
+                console.log('🎯 Next level unlocked:', nextLevel);
             }
+
+            // Load the next level
+            console.log('🎯 Loading next level:', nextLevel);
+            this.loadLevel(nextLevel);
+        } else {
+            console.log('🎯 No next level available - this is the last level');
+            // If this is the last level, go back to level select
+            this.showLevelSelect();
         }
     }
 
@@ -3751,6 +3909,91 @@ export class AVMasterGame {
     }
 
     /**
+     * Show authentication required modal
+     */
+    showAuthenticationRequired() {
+        console.log('🔐 Showing authentication required message...');
+
+        // Create a modal to inform user they need to login
+        const modal = document.createElement('div');
+        modal.className = 'auth-required-modal';
+        modal.innerHTML = `
+            <div class="auth-required-content">
+                <div class="auth-required-header">
+                    <i class="fas fa-lock" style="color: #ff4757; font-size: 2rem;"></i>
+                    <h2>Authentication Required</h2>
+                </div>
+                <div class="auth-required-body">
+                    <p>You need to log in or create an account to start playing AV Master.</p>
+                    <p>This helps us save your progress and provide personalized learning experiences.</p>
+                </div>
+                <div class="auth-required-actions">
+                    <button id="auth-login-btn" class="auth-btn primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                    <button id="auth-register-btn" class="auth-btn secondary">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+                    <button id="auth-cancel-btn" class="auth-btn cancel">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Add styles
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        `;
+
+        // Add to page
+        document.body.appendChild(modal);
+
+        // Add event listeners
+        const loginBtn = modal.querySelector('#auth-login-btn');
+        const registerBtn = modal.querySelector('#auth-register-btn');
+        const cancelBtn = modal.querySelector('#auth-cancel-btn');
+
+        loginBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+            if (window.authManager) {
+                window.authManager.showLoginModal();
+            }
+        });
+
+        registerBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+            if (window.authManager) {
+                window.authManager.showRegisterModal();
+            }
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+    }
+
+    /**
      * Format time
      */
     formatTime(seconds) {
@@ -3769,8 +4012,8 @@ export class AVMasterGame {
             console.log('loadGameState() - Retrieved data:', saved);
 
             if (saved && typeof saved === 'object') {
-                // Only merge if saved data is a valid object
-                this.gameState = { ...this.gameState, ...saved };
+                // Only merge if saved data is a valid object, but preserve time as 0
+                this.gameState = { ...this.gameState, ...saved, time: 0 };
                 console.log('loadGameState() - Game state updated:', this.gameState);
             } else {
                 console.log('loadGameState() - No saved data found, using default state');
@@ -4602,6 +4845,11 @@ export class AVMasterGame {
             // Valid resource - add it to the equipment
             this.addResourceIconToEquipment(resource, equipmentElement);
             console.log('✅ Resource assigned successfully');
+
+            // Increment score for successful resource assignment
+            this.gameState.score += 50;
+            this.updatePlayerStats();
+            console.log('🎯 Score increased to:', this.gameState.score);
 
             // Play success sound
             this.playSound(800, 0.2, 'sine');

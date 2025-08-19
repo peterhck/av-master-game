@@ -1,0 +1,38 @@
+{
+    "name": "av-master-game",
+    "version": "1.0.0",
+    "description": "AV Master - Interactive Audio Visual Equipment Learning Game",
+    "main": "index.html",
+    "scripts": {
+        "start": "cd backend && npm start",
+        "dev": "cd backend && npm run dev",
+        "build": "echo 'Frontend is static HTML/CSS/JS - no build step needed'",
+        "deploy": "npm run build && echo 'Ready for deployment'",
+        "test": "echo 'Tests can be run from testsprite_tests directory'",
+        "install-deps": "cd backend && npm install",
+        "setup": "npm run install-deps && echo 'Setup complete'",
+        "clean": "rm -rf node_modules backend/node_modules && echo 'Cleaned node_modules'"
+    },
+    "keywords": [
+        "audio",
+        "visual",
+        "equipment",
+        "learning",
+        "game",
+        "interactive",
+        "education"
+    ],
+    "author": "AV Master Team",
+    "license": "MIT",
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=8.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-username/av-master-game.git"
+    },
+    "homepage": "https://your-domain.com",
+    "dependencies": {},
+    "devDependencies": {}
+}

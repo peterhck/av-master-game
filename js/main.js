@@ -4,6 +4,7 @@
 import { AVMasterGame } from './core/GameEngine.js';
 import { getLevelData } from './data/LevelData.js';
 import { getConnectorColor, saveToStorage, loadFromStorage } from './utils/Helpers.js';
+import { AuthManager } from './modules/AuthManager.js';
 
 // Global game instance
 let game = null;
@@ -98,38 +99,43 @@ async function initializeGame() {
         }
         console.log('✅ Step 2 complete: All DOM elements validated');
 
-        // Step 3: Create game instance
-        console.log('\n🎮 Step 3: Creating game instance...');
-        game = new AVMasterGame();
-        console.log('✅ Step 3 complete: Game instance created');
+        // Step 3: Initialize authentication
+        console.log('\n🔐 Step 3: Initializing authentication...');
+        window.authManager = new AuthManager();
+        console.log('✅ Step 3 complete: Authentication initialized');
 
-        // Step 4: Initialize game engine
-        console.log('\n⚙️ Step 4: Initializing game engine...');
+        // Step 4: Create game instance
+        console.log('\n🎮 Step 4: Creating game instance...');
+        game = new AVMasterGame();
+        console.log('✅ Step 4 complete: Game instance created');
+
+        // Step 5: Initialize game engine
+        console.log('\n⚙️ Step 5: Initializing game engine...');
         console.log('🔍 DOM state before init:', {
             mainMenu: !!document.getElementById('main-menu'),
             startGameBtn: !!document.getElementById('start-game-btn'),
             currentScreen: document.querySelector('.screen.active')?.id
         });
         game.init();
-        console.log('✅ Step 4 complete: Game engine initialized');
+        console.log('✅ Step 5 complete: Game engine initialized');
         console.log('🔍 DOM state after init:', {
             mainMenu: !!document.getElementById('main-menu'),
             startGameBtn: !!document.getElementById('start-game-btn'),
             currentScreen: document.querySelector('.screen.active')?.id
         });
 
-        // Step 5: Setup global event listeners
-        console.log('\n🎯 Step 5: Setting up global event listeners...');
+        // Step 6: Setup global event listeners
+        console.log('\n🎯 Step 6: Setting up global event listeners...');
         setupGlobalEventListeners();
-        console.log('✅ Step 5 complete: Global event listeners set up');
+        console.log('✅ Step 6 complete: Global event listeners set up');
 
-        // Step 6: Make game globally accessible
-        console.log('\n🌐 Step 6: Making game globally accessible...');
+        // Step 7: Make game globally accessible
+        console.log('\n🌐 Step 7: Making game globally accessible...');
         window.game = game;
-        console.log('✅ Step 6 complete: Game made globally accessible');
+        console.log('✅ Step 7 complete: Game made globally accessible');
 
-        // Step 7: Test button clickability
-        console.log('\n🧪 Step 7: Testing button clickability...');
+        // Step 8: Test button clickability
+        console.log('\n🧪 Step 8: Testing button clickability...');
         setTimeout(() => {
             const testBtn = document.getElementById('start-game-btn');
             if (testBtn) {
@@ -196,6 +202,19 @@ function setupGlobalEventListeners() {
  */
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
+        // Don't process shortcuts if user is typing in an input field
+        const activeElement = document.activeElement;
+        const isTyping = activeElement && (
+            activeElement.tagName === 'INPUT' ||
+            activeElement.tagName === 'TEXTAREA' ||
+            activeElement.contentEditable === 'true' ||
+            activeElement.id === 'ai-chat-input-field'
+        );
+
+        if (isTyping) {
+            return; // Don't process shortcuts when typing
+        }
+
         // Ctrl+Shift+U (or Cmd+Shift+U on Mac) - Unlock all levels
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'u') {
             e.preventDefault();

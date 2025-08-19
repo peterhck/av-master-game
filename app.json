@@ -1,0 +1,58 @@
+{
+    "name": "AV Master Game",
+    "description": "Interactive Audio Visual Equipment Learning Game",
+    "repository": "https://github.com/your-username/av-master-game",
+    "logo": "https://your-domain.com/logo.png",
+    "keywords": [
+        "audio",
+        "visual",
+        "equipment",
+        "learning",
+        "game",
+        "interactive",
+        "education"
+    ],
+    "env": {
+        "NODE_ENV": {
+            "description": "Environment",
+            "value": "production"
+        },
+        "PORT": {
+            "description": "Port for the application",
+            "value": "3001"
+        },
+        "SUPABASE_URL": {
+            "description": "Supabase project URL",
+            "required": true
+        },
+        "SUPABASE_SERVICE_ROLE_KEY": {
+            "description": "Supabase service role key",
+            "required": true
+        },
+        "OPENAI_API_KEY": {
+            "description": "OpenAI API key",
+            "required": true
+        },
+        "JWT_SECRET": {
+            "description": "JWT secret for authentication",
+            "required": true,
+            "generator": "secret"
+        }
+    },
+    "formation": {
+        "web": {
+            "quantity": 1,
+            "size": "basic"
+        }
+    },
+    "addons": [
+        {
+            "plan": "heroku-postgresql:mini"
+        }
+    ],
+    "buildpacks": [
+        {
+            "url": "heroku/nodejs"
+        }
+    ]
+}

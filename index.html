@@ -32,6 +32,29 @@
 
         <!-- Main Menu -->
         <div id="main-menu" class="screen">
+            <!-- Authentication UI for Main Menu -->
+            <div class="menu-auth-section">
+                <div id="menu-auth-container" class="auth-container">
+                    <button id="menu-login-btn" class="auth-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                    <button id="menu-register-btn" class="auth-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Register
+                    </button>
+                </div>
+                <div id="menu-user-container" class="user-container" style="display: none;">
+                    <span id="menu-user-name" class="user-name">User Name</span>
+                    <button id="menu-profile-btn" class="auth-btn" title="Profile">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button id="menu-logout-btn" class="auth-btn" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
             <div class="menu-content">
                 <div class="logo">
                     <i class="fas fa-microphone-alt"></i>
@@ -275,6 +298,29 @@
         <!-- Game Play Area -->
         <div id="game" class="screen">
             <div class="game-header">
+                <!-- Authentication UI -->
+                <div class="auth-section">
+                    <div id="auth-container" class="auth-container">
+                        <button id="login-btn" class="auth-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login
+                        </button>
+                        <button id="register-btn" class="auth-btn">
+                            <i class="fas fa-user-plus"></i>
+                            Register
+                        </button>
+                    </div>
+                    <div id="user-container" class="user-container" style="display: none;">
+                        <span id="user-name" class="user-name">User Name</span>
+                        <button id="profile-btn" class="auth-btn" title="Profile">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <button id="logout-btn" class="auth-btn" title="Logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="game-info">
                     <button id="pause-game" class="pause-btn" title="Pause Game">
                         <i class="fas fa-pause"></i>
@@ -521,6 +567,10 @@
                 <button id="ai-chat-voice" class="ai-chat-btn" title="Toggle Voice Mode">
                     <i class="fas fa-microphone"></i>
                 </button>
+                <button id="ai-chat-collapse" class="ai-chat-btn chat-collapse-btn" title="Collapse"
+                    style="display: none;">
+                    <i class="fas fa-compress-alt"></i>
+                </button>
                 <button id="ai-chat-minimize" class="ai-chat-btn" title="Minimize">
                     <i class="fas fa-minus"></i>
                 </button>
@@ -530,16 +580,6 @@
             </div>
         </div>
         <div class="ai-chat-messages" id="ai-chat-messages">
-            <div class="ai-message">
-                <div class="ai-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="ai-message-content">
-                    <p>Hello! I'm your AI tutor for audio-visual equipment. I can help you understand any piece of
-                        equipment, show you real-world examples, and answer questions about the AV industry. What would
-                        you like to know?</p>
-                </div>
-            </div>
         </div>
         <div class="ai-chat-input">
             <input type="text" id="ai-chat-input-field" placeholder="Ask me anything about AV equipment...">
@@ -577,7 +617,7 @@
         </div>
     </div>
 
-    <script type="module" src="js/main.js?v=1.7"></script>
+    <script type="module" src="js/main.js?v=5.5"></script>
 </body>
 
 </html>
