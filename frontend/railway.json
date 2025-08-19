@@ -2,10 +2,10 @@
     "$schema": "https://railway.app/railway.schema.json",
     "build": {
         "builder": "DOCKERFILE",
-        "dockerfilePath": "Dockerfile"
+        "dockerfilePath": "frontend/Dockerfile"
     },
     "deploy": {
-        "startCommand": "npm start",
+        "startCommand": "cd frontend && node server.js",
         "healthcheckPath": "/health",
         "healthcheckTimeout": 120,
         "restartPolicyType": "ON_FAILURE",
@@ -16,13 +16,8 @@
         "production": {
             "variables": {
                 "NODE_ENV": "production",
-                "PORT": "3001",
-                "CORS_ORIGIN": "*",
-                "LOG_LEVEL": "info",
-                "RATE_LIMIT_WINDOW_MS": "900000",
-                "RATE_LIMIT_MAX_REQUESTS": "100",
-                "BCRYPT_ROUNDS": "12",
-                "JWT_EXPIRES_IN": "7d"
+                "PORT": "8080",
+                "CORS_ORIGIN": "*"
             }
         }
     }

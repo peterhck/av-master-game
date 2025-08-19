@@ -185,26 +185,8 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Serve static files from the app root directory (frontend files)
-const staticPath = path.join(__dirname, '..');
-console.log('📁 Serving static files from:', staticPath);
-
-// Check if frontend files exist
-const fs = require('fs');
-const indexPath = path.join(staticPath, 'index.html');
-if (fs.existsSync(indexPath)) {
-    console.log('✅ index.html found at:', indexPath);
-    console.log('📄 File size:', fs.statSync(indexPath).size, 'bytes');
-} else {
-    console.log('❌ index.html not found at:', indexPath);
-    try {
-        console.log('📂 Parent directory contents:', fs.readdirSync(staticPath));
-    } catch (error) {
-        console.log('❌ Could not read parent directory:', error.message);
-    }
-}
-
-app.use(express.static(staticPath));
+// Backend API server - no static file serving
+console.log('🚀 Starting backend API server only');
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -240,62 +222,22 @@ app.get('/test', (req, res) => {
     });
 });
 
-// Frontend test endpoint
-app.get('/frontend-test', (req, res) => {
-    res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head><title>Frontend Test</title></head>
-        <body>
-            <h1>Frontend Test Page</h1>
-            <p>If you can see this, the server is serving HTML correctly.</p>
-            <p><a href="/">Try the main frontend</a></p>
-            <p><a href="/health">Health Check</a></p>
-            <p><a href="/test">Backend Test</a></p>
-        </body>
-        </html>
-    `);
-});
-
-// Serve frontend for root path
+// API info endpoint
 app.get('/', (req, res) => {
-    const indexPath = path.join(__dirname, '..', 'index.html');
-    console.log('🌐 Serving frontend for root path:', indexPath);
-    res.sendFile(indexPath, (err) => {
-        if (err) {
-            console.error('❌ Error serving frontend:', err);
-            console.log('📂 Current directory:', __dirname);
-            try {
-                console.log('📂 Parent directory contents:', fs.readdirSync(path.join(__dirname, '..')));
-            } catch (error) {
-                console.log('❌ Could not read parent directory:', error.message);
-            }
-
-            // Fallback HTML response
-            res.status(200).send(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>AV Master Game</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; }
-                        .error { color: red; }
-                        .success { color: green; }
-                    </style>
-                </head>
-                <body>
-                    <h1>AV Master Game</h1>
-                    <p class="error">Frontend files not found at: ${indexPath}</p>
-                    <p>Backend is running successfully!</p>
-                    <p><a href="/health">Health Check</a></p>
-                    <p><a href="/test">Test Endpoint</a></p>
-                    <p><a href="/cors-test">CORS Test</a></p>
-                </body>
-                </html>
-            `);
-        } else {
-            console.log('✅ Frontend served successfully');
-        }
+    res.json({
+        message: 'AV Master Backend API Server',
+        version: '1.0.0',
+        endpoints: {
+            health: '/health',
+            test: '/test',
+            cors: '/cors-test',
+            auth: '/api/auth',
+            ai: '/api/ai',
+            game: '/api/game',
+            voice: '/api/voice',
+            user: '/api/user'
+        },
+        timestamp: new Date().toISOString()
     });
 });
 
@@ -381,18 +323,13 @@ io.on('connection', (socket) => {
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-// Serve the main HTML file for all non-API routes (SPA routing)
+// 404 handler for unknown routes
 app.use('*', (req, res) => {
-    const indexPath = path.join(__dirname, '..', 'index.html');
-    res.sendFile(indexPath, (err) => {
-        if (err) {
-            console.error('Error serving index.html:', err);
-            res.status(404).json({
-                error: 'Frontend not available',
-                message: 'index.html not found',
-                path: req.originalUrl
-            });
-        }
+    res.status(404).json({
+        error: 'API endpoint not found',
+        message: 'This is a backend API server. Frontend should be served separately.',
+        path: req.originalUrl,
+        availableEndpoints: ['/health', '/test', '/cors-test', '/api/auth', '/api/ai', '/api/game', '/api/voice', '/api/user']
     });
 });
 

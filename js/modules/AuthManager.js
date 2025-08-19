@@ -3,7 +3,7 @@
 
 export class AuthManager {
     constructor() {
-        this.backendUrl = ''; // Use relative URLs since frontend and backend are on same domain
+        this.backendUrl = process.env.BACKEND_URL || 'https://av-master-backend-production.up.railway.app'; // Backend API URL
         this.currentUser = null;
         this.token = localStorage.getItem('auth_token');
         this.isAuthenticated = false;
