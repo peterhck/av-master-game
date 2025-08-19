@@ -38,21 +38,18 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Serve static files from the parent directory (frontend files)
-app.use(express.static(path.join(__dirname, '..')));
-
 // Health check endpoint
 app.get('/health', (req, res) => {
     const fs = require('fs');
     const parentDir = path.join(__dirname, '..');
     let parentDirContents = [];
-    
+
     try {
         parentDirContents = fs.readdirSync(parentDir);
     } catch (error) {
         console.error('Error reading parent directory:', error);
     }
-    
+
     res.status(200).json({
         status: 'OK',
         message: 'AV Master Game Backend is running',
@@ -72,6 +69,9 @@ app.get('/health', (req, res) => {
         }
     });
 });
+
+// Serve static files from the parent directory (frontend files)
+app.use(express.static(path.join(__dirname, '..')));
 
 // Serve the main HTML file for root
 app.get('/', (req, res) => {
@@ -121,6 +121,28 @@ try {
 } catch (error) {
     console.log('⚠️ Logger not available:', error.message);
     logger = console;
+}
+
+// Log startup information
+console.log('🚀 Starting robust server...');
+console.log('📁 Current directory:', __dirname);
+console.log('📁 Parent directory:', path.join(__dirname, '..'));
+console.log('📄 Checking for index.html...');
+
+const fs = require('fs');
+const indexPath = path.join(__dirname, '..', 'index.html');
+if (fs.existsSync(indexPath)) {
+    console.log('✅ index.html found at:', indexPath);
+    console.log('📄 File size:', fs.statSync(indexPath).size, 'bytes');
+} else {
+    console.log('❌ index.html not found at:', indexPath);
+    try {
+        const parentDir = path.join(__dirname, '..');
+        const files = fs.readdirSync(parentDir);
+        console.log('📂 Parent directory contents:', files);
+    } catch (error) {
+        console.error('❌ Error reading parent directory:', error);
+    }
 }
 
 // Try to initialize Supabase
