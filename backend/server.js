@@ -98,7 +98,21 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files from the parent directory (frontend files)
-app.use(express.static(path.join(__dirname, '..')));
+const staticPath = path.join(__dirname, '..');
+console.log('📁 Serving static files from:', staticPath);
+
+// Check if frontend files exist
+const fs = require('fs');
+const indexPath = path.join(staticPath, 'index.html');
+if (fs.existsSync(indexPath)) {
+    console.log('✅ index.html found at:', indexPath);
+    console.log('📄 File size:', fs.statSync(indexPath).size, 'bytes');
+} else {
+    console.log('❌ index.html not found at:', indexPath);
+    console.log('📂 Parent directory contents:', fs.readdirSync(staticPath));
+}
+
+app.use(express.static(staticPath));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -131,6 +145,23 @@ app.get('/test', (req, res) => {
         message: 'Backend is working!',
         cors: 'enabled',
         timestamp: new Date().toISOString()
+    });
+});
+
+// Serve frontend for root path
+app.get('/', (req, res) => {
+    const indexPath = path.join(__dirname, '..', 'index.html');
+    console.log('🌐 Serving frontend for root path:', indexPath);
+    res.sendFile(indexPath, (err) => {
+        if (err) {
+            console.error('❌ Error serving frontend:', err);
+            res.status(500).json({
+                error: 'Frontend not available',
+                message: err.message
+            });
+        } else {
+            console.log('✅ Frontend served successfully');
+        }
     });
 });
 
