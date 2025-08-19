@@ -127,7 +127,12 @@ if (process.env.OPENAI_API_KEY) {
 
 // CORS configuration - MUST BE FIRST
 app.use(cors({
-    origin: true, // Allow all origins
+    origin: [
+        'https://av-master-frontend-production.up.railway.app',
+        'http://localhost:8080',
+        'http://localhost:3000',
+        'http://localhost:5173'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
@@ -145,7 +150,18 @@ app.use(helmet({
 
 // Manual CORS headers as backup
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    const allowedOrigins = [
+        'https://av-master-frontend-production.up.railway.app',
+        'http://localhost:8080',
+        'http://localhost:3000',
+        'http://localhost:5173'
+    ];
+
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
