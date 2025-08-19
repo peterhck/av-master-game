@@ -24,16 +24,56 @@ const { initializeOpenAI } = require('./config/openai');
 let authRoutes, aiRoutes, gameRoutes, voiceRoutes, userRoutes;
 let authenticateToken, errorHandler;
 
-// Only load auth routes if Supabase environment variables are available
-if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    try {
+// Load auth routes (with fallback if Supabase not available)
+try {
+    if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
         authRoutes = require('./routes/auth').router;
-        console.log('✅ Auth routes loaded');
-    } catch (error) {
-        console.log('⚠️ Auth routes not available:', error.message);
+        console.log('✅ Auth routes loaded with Supabase');
+    } else {
+        throw new Error('Supabase environment variables not configured');
     }
-} else {
-    console.log('⚠️ Auth routes skipped - missing Supabase environment variables');
+} catch (error) {
+    console.log('⚠️ Auth routes not available:', error.message);
+    // Create fallback auth routes
+    authRoutes = require('express').Router();
+
+    // Login endpoint
+    authRoutes.post('/login', (req, res) => {
+        res.status(503).json({
+            error: 'Authentication service unavailable',
+            message: 'Supabase not configured. Please configure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.',
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    // Register endpoint
+    authRoutes.post('/register', (req, res) => {
+        res.status(503).json({
+            error: 'Authentication service unavailable',
+            message: 'Supabase not configured. Please configure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.',
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    // Profile endpoint
+    authRoutes.get('/profile', (req, res) => {
+        res.status(503).json({
+            error: 'Authentication service unavailable',
+            message: 'Supabase not configured. Please configure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.',
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    // Health check endpoint
+    authRoutes.get('/health', (req, res) => {
+        res.json({
+            status: 'Auth service status',
+            message: 'Supabase not configured',
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    console.log('✅ Fallback auth routes created');
 }
 
 // Load AI routes (with fallback if OpenAI not available)
@@ -106,6 +146,10 @@ try {
 }
 
 const app = express();
+
+// Trust proxy for Railway deployment
+app.set('trust proxy', 1);
+
 const server = createServer(app);
 const io = new Server(server, {
     cors: {

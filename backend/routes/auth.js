@@ -26,7 +26,7 @@ router.get('/test-db', async (req, res) => {
             .from('users')
             .select('count')
             .limit(1);
-
+        
         if (error) {
             return res.status(500).json({
                 error: 'Database connection failed',
@@ -34,7 +34,7 @@ router.get('/test-db', async (req, res) => {
                 code: error.code
             });
         }
-
+        
         res.json({
             status: 'OK',
             message: 'Database connection successful',
@@ -43,6 +43,37 @@ router.get('/test-db', async (req, res) => {
     } catch (error) {
         res.status(500).json({
             error: 'Database test failed',
+            details: error.message
+        });
+    }
+});
+
+// Test Supabase Auth configuration
+router.get('/test-auth', async (req, res) => {
+    try {
+        // Test if we can access auth admin functions
+        const { data, error } = await supabase.auth.admin.listUsers({
+            page: 1,
+            perPage: 1
+        });
+        
+        if (error) {
+            return res.status(500).json({
+                error: 'Supabase Auth test failed',
+                details: error.message,
+                code: error.status
+            });
+        }
+        
+        res.json({
+            status: 'OK',
+            message: 'Supabase Auth is working',
+            userCount: data.users?.length || 0,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Supabase Auth test failed',
             details: error.message
         });
     }
@@ -127,7 +158,7 @@ router.post('/register', [
         if (authError) {
             console.error('Supabase Auth error:', authError);
             logger.error('Error creating auth user:', authError);
-            return res.status(500).json({ 
+            return res.status(500).json({
                 error: 'Failed to create user account',
                 details: authError.message,
                 code: authError.status
@@ -192,7 +223,7 @@ router.post('/register', [
                 logger.error('Error creating user profile:', profileError);
                 // Clean up auth user if profile creation fails
                 await supabase.auth.admin.deleteUser(authUser.user.id);
-                return res.status(500).json({ 
+                return res.status(500).json({
                     error: 'Failed to create user profile',
                     details: profileError.message,
                     code: profileError.code
