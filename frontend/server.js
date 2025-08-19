@@ -27,7 +27,17 @@ app.use((req, res, next) => {
 });
 
 // Serve static files from the parent directory (where index.html, styles.css, js/ are located)
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '..'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        } else if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        } else if (path.endsWith('.html')) {
+            res.setHeader('Content-Type', 'text/html');
+        }
+    }
+}));
 
 // Health check
 app.get('/health', (req, res) => {
