@@ -56,7 +56,7 @@ router.get('/test-auth', async (req, res) => {
             page: 1,
             perPage: 1
         });
-        
+
         if (error) {
             return res.status(500).json({
                 error: 'Supabase Auth test failed',
@@ -64,7 +64,7 @@ router.get('/test-auth', async (req, res) => {
                 code: error.status
             });
         }
-        
+
         res.json({
             status: 'OK',
             message: 'Supabase Auth is working',
@@ -96,17 +96,33 @@ router.get('/test-schema', async (req, res) => {
             });
         }
         
-        // Get table information
-        const { data: tableInfo, error: tableError } = await supabase
-            .rpc('get_table_info', { table_name: 'users' })
-            .catch(() => ({ data: null, error: { message: 'RPC not available' } }));
+        // Try to get table structure by attempting to select specific columns
+        const { data: idData, error: idError } = await supabase
+            .from('users')
+            .select('id')
+            .limit(1);
+            
+        const { data: emailData, error: emailError } = await supabase
+            .from('users')
+            .select('email')
+            .limit(1);
+            
+        const { data: nameData, error: nameError } = await supabase
+            .from('users')
+            .select('first_name, last_name')
+            .limit(1);
         
         res.json({
             status: 'OK',
             message: 'Database schema test successful',
             tableExists: true,
             sampleData: data,
-            tableInfo: tableInfo,
+            columnTests: {
+                id: idError ? 'missing' : 'exists',
+                email: emailError ? 'missing' : 'exists',
+                first_name: nameError ? 'missing' : 'exists',
+                last_name: nameError ? 'missing' : 'exists'
+            },
             timestamp: new Date().toISOString()
         });
     } catch (error) {
@@ -195,7 +211,7 @@ router.post('/register', [
 
         if (checkError) {
             console.error('Error checking existing users:', checkError);
-            return res.status(500).json({ 
+            return res.status(500).json({
                 error: 'Failed to check existing users',
                 details: checkError.message
             });
@@ -204,7 +220,7 @@ router.post('/register', [
         const userExists = existingAuthUser.users?.some(user => user.email === email);
         if (userExists) {
             console.log('User already exists:', email);
-            return res.status(400).json({ 
+            return res.status(400).json({
                 error: 'User already exists',
                 message: 'A user with this email already exists'
             });
