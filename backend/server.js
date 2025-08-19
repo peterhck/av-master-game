@@ -373,6 +373,11 @@ server.listen(PORT, () => {
     logger.info(`🚀 AV Master Backend Server running on port ${PORT}`);
     logger.info(`📊 Environment: ${process.env.NODE_ENV}`);
     logger.info(`🔗 Health check: http://localhost:${PORT}/health`);
+    console.log(`🚀 Server started successfully on port ${PORT}`);
+}).on('error', (error) => {
+    console.error('❌ Server failed to start:', error);
+    logger.error(`Server failed to start: ${error.message}`);
+    process.exit(1);
 });
 
 // Graceful shutdown
@@ -390,6 +395,19 @@ process.on('SIGINT', () => {
         logger.info('Process terminated');
         process.exit(0);
     });
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+    console.error('❌ Uncaught Exception:', error);
+    logger.error(`Uncaught Exception: ${error.message}`);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+    logger.error(`Unhandled Rejection: ${reason}`);
+    process.exit(1);
 });
 
 module.exports = { app, server, io };
