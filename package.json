@@ -4,9 +4,9 @@
     "description": "AV Master - Interactive Audio Visual Equipment Learning Game",
     "main": "index.html",
     "scripts": {
-        "start": "node server.js",
+        "start": "cd backend && node server.js",
         "start:frontend": "npx http-server . -p 8080 -c-1",
-        "start:backend": "node server.js",
+        "start:backend": "cd backend && node server.js",
         "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
         "dev:frontend": "npx http-server . -p 8001 -c-1",
         "dev:backend": "cd backend && npm run dev",
