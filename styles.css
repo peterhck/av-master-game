@@ -1378,6 +1378,7 @@ body {
         opacity: 0;
         transform: translateX(20px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -2172,28 +2173,28 @@ body {
         margin: 2% auto;
         max-height: 90vh;
     }
-    
+
     .modal-body {
         padding: 20px;
         max-height: 70vh;
     }
-    
+
     .tutorial-header h3 {
         font-size: 1.5rem;
     }
-    
+
     .tutorial-hero h2 {
         font-size: 2rem;
     }
-    
+
     .signal-flow {
         flex-direction: column;
     }
-    
+
     .flow-arrow {
         transform: rotate(90deg);
     }
-    
+
     .interface-grid,
     .equipment-grid,
     .troubleshooting-grid,
@@ -2203,11 +2204,11 @@ body {
     .steps-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .tutorial-dots {
         gap: 6px;
     }
-    
+
     .dot {
         width: 10px;
         height: 10px;
@@ -5296,6 +5297,127 @@ body {
 .web-content-section {
     margin-top: 20px;
     border-top: 2px solid #e9ecef;
+}
+
+/* Authentication Required Modal */
+.auth-required-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.auth-required-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border: 2px solid #00ff88;
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+.auth-required-header {
+    margin-bottom: 1.5rem;
+}
+
+.auth-required-header h2 {
+    color: #00ff88;
+    font-size: 1.8rem;
+    margin: 1rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.auth-required-body {
+    margin-bottom: 2rem;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+.auth-required-body p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.auth-required-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.auth-required-actions .auth-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.auth-required-actions .auth-btn.primary {
+    background: linear-gradient(45deg, #00ff88, #00ccff);
+    color: #1a1a2e;
+}
+
+.auth-required-actions .auth-btn.primary:hover {
+    background: linear-gradient(45deg, #00ccff, #00ff88);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+}
+
+.auth-required-actions .auth-btn.secondary {
+    background: linear-gradient(45deg, #ff6b6b, #ffa500);
+    color: white;
+}
+
+.auth-required-actions .auth-btn.secondary:hover {
+    background: linear-gradient(45deg, #ffa500, #ff6b6b);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+}
+
+.auth-required-actions .auth-btn.cancel {
+    background: #666;
+    color: white;
+}
+
+.auth-required-actions .auth-btn.cancel:hover {
+    background: #888;
+    transform: translateY(-2px);
+}
+
+/* Responsive design for auth required modal */
+@media (max-width: 768px) {
+    .auth-required-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .auth-required-actions {
+        flex-direction: column;
+    }
+    
+    .auth-required-actions .auth-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
     padding-top: 15px;
 }
 

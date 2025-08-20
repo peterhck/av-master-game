@@ -529,7 +529,7 @@ export class TutorialManager {
                 realWorld: "You now have the foundation to begin a career in live production. The skills you develop in this game will serve you well in real-world scenarios, from small events to major productions."
             }
         ];
-        
+
         this.init();
     }
 
@@ -652,8 +652,8 @@ export class TutorialManager {
 
             if (nextBtn) {
                 const isLastStep = this.currentStep === this.tutorialSteps.length - 1;
-                nextBtn.innerHTML = isLastStep ? 
-                    'Finish <i class="fas fa-check"></i>' : 
+                nextBtn.innerHTML = isLastStep ?
+                    'Finish <i class="fas fa-check"></i>' :
                     'Next <i class="fas fa-chevron-right"></i>';
             }
 

@@ -110,17 +110,18 @@ export class AVMasterGame {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // Check if user is authenticated (temporarily disabled for testing)
-                    if (window.authManager && !window.authManager.isAuthenticated) {
-                        console.log('⚠️ Authentication temporarily disabled for testing');
-                        // window.authManager.setPendingGameAction('start-game');
-                        // this.showAuthenticationRequired();
-                        // return;
+                    // Require authentication for starting game
+                    if (window.authManager) {
+                        window.authManager.requireAuthForAction('start-game', () => {
+                            // Initialize audio system on first user interaction
+                            this.audioSystem.initializeOnUserInteraction();
+                            this.showLevelSelect();
+                        });
+                    } else {
+                        // Initialize audio system on first user interaction
+                        this.audioSystem.initializeOnUserInteraction();
+                        this.showLevelSelect();
                     }
-
-                    // Initialize audio system on first user interaction
-                    this.audioSystem.initializeOnUserInteraction();
-                    this.showLevelSelect();
                 });
 
                 // Add mouse events for debugging
@@ -159,15 +160,14 @@ export class AVMasterGame {
                 tutorialBtn.addEventListener('click', () => {
                     console.log('🎯 tutorial-btn clicked!');
 
-                    // Check if user is authenticated (temporarily disabled for testing)
-                    if (window.authManager && !window.authManager.isAuthenticated) {
-                        console.log('⚠️ Authentication temporarily disabled for testing');
-                        // window.authManager.setPendingGameAction('tutorial');
-                        // this.showAuthenticationRequired();
-                        // return;
+                    // Require authentication for tutorial
+                    if (window.authManager) {
+                        window.authManager.requireAuthForAction('tutorial', () => {
+                            this.showTutorial();
+                        });
+                    } else {
+                        this.showTutorial();
                     }
-
-                    this.showTutorial();
                 });
                 console.log('✓ tutorial-btn event listener added');
             } else {
@@ -179,19 +179,37 @@ export class AVMasterGame {
                 settingsBtn.addEventListener('click', () => {
                     console.log('🎯 settings-btn clicked!');
 
-                    // Check if user is authenticated (temporarily disabled for testing)
-                    if (window.authManager && !window.authManager.isAuthenticated) {
-                        console.log('⚠️ Authentication temporarily disabled for testing');
-                        // window.authManager.setPendingGameAction('settings');
-                        // this.showAuthenticationRequired();
-                        // return;
+                    // Require authentication for settings
+                    if (window.authManager) {
+                        window.authManager.requireAuthForAction('settings', () => {
+                            this.showSettings();
+                        });
+                    } else {
+                        this.showSettings();
                     }
-
-                    this.showSettings();
                 });
                 console.log('✓ settings-btn event listener added');
             } else {
                 console.log('⚠ settings-btn not found');
+            }
+
+            const continueGameBtn = document.getElementById('continue-game');
+            if (continueGameBtn) {
+                continueGameBtn.addEventListener('click', () => {
+                    console.log('🎯 continue-game clicked!');
+
+                    // Require authentication for continue game
+                    if (window.authManager) {
+                        window.authManager.requireAuthForAction('continue-game', () => {
+                            this.continueGame();
+                        });
+                    } else {
+                        this.continueGame();
+                    }
+                });
+                console.log('✓ continue-game event listener added');
+            } else {
+                console.log('⚠ continue-game button not found');
             }
 
             console.log('setupEventListeners() - Setting up level select events...');
@@ -208,11 +226,24 @@ export class AVMasterGame {
                     console.log('🎯 Level card clicked:', levelId);
                     console.log('🔍 Level card element:', levelCard);
                     console.log('🔍 Unlocked levels:', this.gameState.unlockedLevels);
-                    if (levelId && this.gameState.unlockedLevels.includes(levelId)) {
-                        console.log('✅ Level is unlocked, selecting:', levelId);
-                        this.selectLevel(levelId);
+                    
+                    // Require authentication for level selection
+                    if (window.authManager) {
+                        window.authManager.requireAuthForAction('level-select', () => {
+                            if (levelId && this.gameState.unlockedLevels.includes(levelId)) {
+                                console.log('✅ Level is unlocked, selecting:', levelId);
+                                this.selectLevel(levelId);
+                            } else {
+                                console.log('❌ Level is locked or invalid:', levelId);
+                            }
+                        });
                     } else {
-                        console.log('❌ Level is locked or invalid:', levelId);
+                        if (levelId && this.gameState.unlockedLevels.includes(levelId)) {
+                            console.log('✅ Level is unlocked, selecting:', levelId);
+                            this.selectLevel(levelId);
+                        } else {
+                            console.log('❌ Level is locked or invalid:', levelId);
+                        }
                     }
                 } else {
                     console.log('❌ Click was not on a level card');
@@ -3910,6 +3941,20 @@ export class AVMasterGame {
      */
     showSettings() {
         this.showMessage('Settings coming soon!', 'info');
+    }
+
+    /**
+     * Continue game from last saved state
+     */
+    continueGame() {
+        // Check if there's a saved game state
+        if (this.gameState.currentLevel) {
+            console.log('🎮 Continuing game from level:', this.gameState.currentLevel);
+            this.loadLevel(this.gameState.currentLevel);
+        } else {
+            console.log('🎮 No saved game state, showing level select');
+            this.showLevelSelect();
+        }
     }
 
     /**

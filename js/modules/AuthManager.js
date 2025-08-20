@@ -10,6 +10,9 @@ export class AuthManager {
         this.token = localStorage.getItem('auth_token');
         this.isAuthenticated = false;
         this.pendingGameAction = null; // Store pending game action after login
+        this.sessionCheckInterval = null; // For periodic session validation
+        this.requireAuthForGame = true; // Whether game requires authentication
+        this.authCheckInProgress = false; // Prevent multiple simultaneous auth checks
 
         this.init();
     }
@@ -21,6 +24,7 @@ export class AuthManager {
         }
 
         this.setupEventListeners();
+        this.startSessionMonitoring();
         console.log('🔐 Auth Manager initialized');
     }
 
@@ -83,6 +87,13 @@ export class AuthManager {
     }
 
     async validateToken() {
+        if (this.authCheckInProgress) {
+            console.log('🔐 Auth check already in progress, skipping...');
+            return;
+        }
+
+        this.authCheckInProgress = true;
+        
         try {
             const response = await fetch(`${this.backendUrl}/api/auth/profile`, {
                 headers: {
@@ -103,6 +114,147 @@ export class AuthManager {
         } catch (error) {
             console.error('Token validation error:', error);
             this.clearAuth();
+        } finally {
+            this.authCheckInProgress = false;
+        }
+    }
+
+    /**
+     * Check if user is authenticated and show login if not
+     * @param {string} action - The action that requires authentication
+     * @param {boolean} showLoginPrompt - Whether to show login prompt if not authenticated
+     * @returns {boolean} - Whether user is authenticated
+     */
+    checkAuthentication(action = null, showLoginPrompt = true) {
+        if (this.isAuthenticated && this.currentUser) {
+            console.log('✅ User is authenticated:', this.currentUser.email);
+            return true;
+        }
+
+        console.log('❌ User is not authenticated');
+        
+        if (action) {
+            this.setPendingGameAction(action);
+        }
+
+        if (showLoginPrompt) {
+            this.showAuthenticationRequired(action);
+        }
+
+        return false;
+    }
+
+    /**
+     * Show authentication required modal
+     */
+    showAuthenticationRequired(action = null) {
+        console.log('🔐 Showing authentication required for action:', action);
+        
+        // Create modal if it doesn't exist
+        let modal = document.getElementById('auth-required-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'auth-required-modal';
+            modal.className = 'modal-overlay';
+            document.body.appendChild(modal);
+        }
+
+        const actionText = action ? ` to ${action.replace('-', ' ')}` : '';
+        
+        modal.innerHTML = `
+            <div class="auth-required-content">
+                <div class="auth-required-header">
+                    <i class="fas fa-lock" style="color: #ff4757; font-size: 2rem;"></i>
+                    <h2>Authentication Required</h2>
+                </div>
+                <div class="auth-required-body">
+                    <p>You need to log in or create an account${actionText}.</p>
+                    <p>This helps us save your progress and provide personalized learning experiences.</p>
+                </div>
+                <div class="auth-required-actions">
+                    <button id="auth-login-btn" class="auth-btn primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                    <button id="auth-register-btn" class="auth-btn secondary">
+                        <i class="fas fa-user-plus"></i>
+                        Create Account
+                    </button>
+                    <button id="auth-cancel-btn" class="auth-btn cancel">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Add styles
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        `;
+
+        // Add to page
+        document.body.appendChild(modal);
+
+        // Add event listeners
+        const loginBtn = modal.querySelector('#auth-login-btn');
+        const registerBtn = modal.querySelector('#auth-register-btn');
+        const cancelBtn = modal.querySelector('#auth-cancel-btn');
+
+        loginBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+            this.showLoginModal();
+        });
+
+        registerBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+            this.showRegisterModal();
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+    }
+
+    /**
+     * Start periodic session monitoring
+     */
+    startSessionMonitoring() {
+        // Check session every 5 minutes
+        this.sessionCheckInterval = setInterval(() => {
+            if (this.isAuthenticated && this.token) {
+                this.validateToken();
+            }
+        }, 5 * 60 * 1000); // 5 minutes
+
+        console.log('🔐 Session monitoring started');
+    }
+
+    /**
+     * Stop session monitoring
+     */
+    stopSessionMonitoring() {
+        if (this.sessionCheckInterval) {
+            clearInterval(this.sessionCheckInterval);
+            this.sessionCheckInterval = null;
+            console.log('🔐 Session monitoring stopped');
         }
     }
 
@@ -264,6 +416,7 @@ export class AuthManager {
         localStorage.setItem('user_data', JSON.stringify(user));
 
         this.updateUI();
+        this.startSessionMonitoring();
         console.log('🔐 User authenticated:', user.email);
     }
 
@@ -277,6 +430,7 @@ export class AuthManager {
         localStorage.removeItem('user_data');
 
         this.updateUI();
+        this.stopSessionMonitoring();
         console.log('🔐 Auth cleared');
     }
 
@@ -299,12 +453,45 @@ export class AuthManager {
                 case 'settings':
                     window.game.showSettings();
                     break;
+                case 'continue-game':
+                    window.game.continueGame();
+                    break;
+                case 'level-select':
+                    window.game.showLevelSelect();
+                    break;
                 default:
-                    console.log('Unknown pending action:', this.pendingGameAction);
+                    console.log('🎮 Unknown pending action:', this.pendingGameAction);
             }
 
             this.pendingGameAction = null; // Clear after execution
         }
+    }
+
+    /**
+     * Require authentication for a specific game action
+     * @param {string} action - The action name
+     * @param {Function} callback - Function to call if authenticated
+     * @param {boolean} showLoginPrompt - Whether to show login prompt
+     */
+    requireAuthForAction(action, callback, showLoginPrompt = true) {
+        if (this.checkAuthentication(action, showLoginPrompt)) {
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        }
+    }
+
+    /**
+     * Get current authentication status
+     * @returns {Object} - Authentication status object
+     */
+    getAuthStatus() {
+        return {
+            isAuthenticated: this.isAuthenticated,
+            currentUser: this.currentUser,
+            hasToken: !!this.token,
+            requireAuth: this.requireAuthForGame
+        };
     }
 
     updateUI() {
