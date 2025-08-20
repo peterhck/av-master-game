@@ -415,28 +415,28 @@ export class AITutor {
         if (languageConfig.name !== 'English') {
             const languageName = languageConfig.name.toLowerCase();
             const languageCodePrefix = languageCode.split('-')[0];
-            
+
             // Look for voices that explicitly mention the language in their name
             selectedVoice = voices.find(voice => {
                 const voiceName = voice.name.toLowerCase();
                 const voiceLang = voice.lang.toLowerCase();
-                
+
                 // Must have the language name or code in the voice name
-                const hasLanguageInName = voiceName.includes(languageName) || 
-                                         voiceName.includes(languageCodePrefix) ||
-                                         voiceName.includes(languageCode.toLowerCase());
-                
+                const hasLanguageInName = voiceName.includes(languageName) ||
+                    voiceName.includes(languageCodePrefix) ||
+                    voiceName.includes(languageCode.toLowerCase());
+
                 // Must also have a matching language code
                 const hasMatchingLang = voiceLang.startsWith(languageCodePrefix);
-                
+
                 return hasLanguageInName && hasMatchingLang;
             });
-            
+
             if (selectedVoice) {
                 console.log('🎤 Found explicit language voice for', languageConfig.name, ':', selectedVoice.name, '(', selectedVoice.lang, ')');
                 return selectedVoice;
             }
-            
+
             // If no fluent voice found for non-English language, DO NOT fall back to English
             // Instead, inform the user that no fluent voice is available
             console.warn('🎤 No fluent voice available for', languageConfig.name, '- will use text-only mode');
@@ -485,13 +485,13 @@ export class AITutor {
         const voices = this.synthesis ? this.synthesis.getVoices() : [];
         const currentLang = this.languageMap[this.currentLanguage];
         const fluentVoice = this.findBestVoiceForLanguage(voices, currentLang);
-        
+
         if (!fluentVoice && this.currentLanguage !== 'en') {
             // No fluent voice available for this language
             this.addMessageToChat('system', `Voice mode is not available for ${currentLang.name}. Please switch to English or use text mode for the best experience.`);
             return; // Don't enable voice mode
         }
-        
+
         this.isVoiceMode = !this.isVoiceMode;
         const aiVoiceToggle = document.getElementById('ai-voice-toggle');
         const aiChatVoice = document.getElementById('ai-chat-voice');

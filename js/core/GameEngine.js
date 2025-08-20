@@ -3898,7 +3898,11 @@ export class AVMasterGame {
      * Show tutorial
      */
     showTutorial() {
-        this.showMessage('Tutorial coming soon!', 'info');
+        if (window.tutorialManager) {
+            window.tutorialManager.showTutorial();
+        } else {
+            this.showMessage('Tutorial system loading...', 'info');
+        }
     }
 
     /**

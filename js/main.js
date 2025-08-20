@@ -6,6 +6,7 @@ import { AVMasterGame } from './core/GameEngine.js';
 import { getLevelData } from './data/LevelData.js';
 import { getConnectorColor, saveToStorage, loadFromStorage } from './utils/Helpers.js';
 import { AuthManager } from './modules/AuthManager.js';
+import { TutorialManager } from './modules/TutorialManager.js';
 
 // Global game instance
 let game = null;
@@ -104,6 +105,11 @@ async function initializeGame() {
         console.log('\n🔐 Step 3: Initializing authentication...');
         window.authManager = new AuthManager();
         console.log('✅ Step 3 complete: Authentication initialized');
+
+        // Step 3.5: Initialize tutorial system
+        console.log('\n📚 Step 3.5: Initializing tutorial system...');
+        window.tutorialManager = new TutorialManager();
+        console.log('✅ Step 3.5 complete: Tutorial system initialized');
 
         // Step 4: Create game instance
         console.log('\n🎮 Step 4: Creating game instance...');
